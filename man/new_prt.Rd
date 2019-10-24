@@ -2,13 +2,32 @@
 % Please edit documentation in R/prt.R
 \name{new_prt}
 \alias{new_prt}
-\title{Constructor for prt objects}
+\alias{as_prt}
+\alias{is_prt}
+\alias{length.prt}
+\title{Methods for creating and inspecting prt objects}
 \usage{
 new_prt(files)
+
+as_prt(tbl, n_chunks = 1L, dir = tempfile())
+
+is_prt(x)
+
+\method{length}{prt}(x)
 }
 \arguments{
 \item{files}{Character vector of file name(s).}
+
+\item{tbl}{An object inheriting from \code{\link[base:data.frame]{base::data.frame()}}. Requires both a
+\code{\link[base:nrow]{base::nrow()}} and \code{\link[base:split]{base::split()}} method.}
+
+\item{n_chunks}{Count variable specifying the number of chunks \code{tbl} is
+split into.}
+
+\item{dir}{Directory where the chunked \code{\link[fst:fst]{fst::fst()}} objects reside in.}
+
+\item{x}{A \code{prt} object.}
 }
 \description{
-Constructor for prt objects
+Methods for creating and inspecting prt objects
 }
