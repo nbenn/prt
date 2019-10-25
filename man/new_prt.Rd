@@ -10,6 +10,7 @@
 \alias{as.data.table.prt}
 \alias{as.list.prt}
 \alias{as.data.frame.prt}
+\alias{as.matrix.prt}
 \title{Methods for creating and inspecting prt objects}
 \usage{
 new_prt(files)
@@ -29,6 +30,8 @@ is_prt(x)
 \method{as.list}{prt}(x)
 
 \method{as.data.frame}{prt}(x)
+
+\method{as.matrix}{prt}(x)
 }
 \arguments{
 \item{files}{Character vector of file name(s).}

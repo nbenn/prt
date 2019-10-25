@@ -3,6 +3,7 @@
 S3method(as.data.frame,prt)
 S3method(as.data.table,prt)
 S3method(as.list,prt)
+S3method(as.matrix,prt)
 S3method(dim,prt)
 S3method(dimnames,prt)
 S3method(length,prt)

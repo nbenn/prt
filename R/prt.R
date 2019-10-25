@@ -67,7 +67,7 @@ length.prt <- function(x) length(unclass(x))
 #' @export
 #'
 dim.prt <- function(x) {
-  as.integer(c(sum(prt_vapply(x, nrow, numeric(1L))), ncol(x[[1L]])))
+  as.integer(c(sum(prt_nrows(x)), ncol(x[[1L]])))
 }
 
 #' @rdname new_prt
@@ -85,9 +85,7 @@ dimnames.prt <- function(x) {
 #' @export
 #'
 as.data.table.prt <- function(x) {
-  data.table::rbindlist(
-    lapply(prt_files(x), fst::read_fst, as.data.table = TRUE)
-  )
+  prt_read(x, rows = NULL, columns = NULL)
 }
 
 #' @rdname new_prt
@@ -105,4 +103,12 @@ as.list.prt <- function(x) {
 as.data.frame.prt <- function(x) {
   res <- data.table::setDF(as.data.table(x))
   res
+}
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+as.matrix.prt <- function(x) {
+  as.matrix(as.data.table(x))
 }
