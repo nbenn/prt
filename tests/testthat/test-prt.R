@@ -7,7 +7,7 @@ setup({
 
 teardown(unlink(tmp, recursive = TRUE))
 
-test_that("prt creation", {
+test_that("prt creation/conversion", {
 
   ref <- mtcars_data_frame()
 
@@ -22,7 +22,7 @@ test_that("prt creation", {
   expect_identical(ncol(prt_1), ncol(ref))
   expect_identical(nrow(prt_1), nrow(ref))
 
-  expect_identical(dimnames(prt_1), list(NULL, colnames(ref))))
+  expect_identical(dimnames(prt_1), list(NULL, colnames(ref)))
   expect_identical(colnames(prt_1), colnames(ref))
   expect_identical(rownames(prt_1), NULL)
 
@@ -38,7 +38,7 @@ test_that("prt creation", {
   expect_true(is_prt(prt_2))
   expect_identical(length(prt_2), 2L)
 
-  expect_identical(dimnames(prt_2), list(NULL, colnames(ref))))
+  expect_identical(dimnames(prt_2), list(NULL, colnames(ref)))
   expect_identical(colnames(prt_2), colnames(ref))
   expect_identical(rownames(prt_2), NULL)
 
@@ -46,4 +46,42 @@ test_that("prt creation", {
                    data.table::as.data.table(ref))
   expect_identical(as.list(prt_1), as.list(ref))
   expect_identical(as.data.frame(prt_1), as.data.frame(ref))
+})
+
+test_that("file_fst head/tail", {
+
+  ref <- mtcars_data_table()
+
+  dir <- mtcars_fst_file(tempfile(tmpdir = tmp), 2L)
+  dat <- new_prt(list.files(dir, full.names = TRUE))
+
+  expect_identical(head(dat), head(ref))
+  expect_identical(head(dat, n = 10L), head(ref, n = 10L))
+  expect_identical(head(dat, n = nrow(ref)), head(ref, n = nrow(ref)))
+  expect_identical(head(dat, n = 100L), head(ref, n = 100L))
+  expect_identical(head(dat, n = -1L), head(ref, n = -1L))
+  expect_identical(head(dat, n = 0), head(ref, n = 0))
+  expect_identical(head(dat, n = Inf), head(ref, n = Inf))
+  expect_identical(head(dat, n = -Inf), head(ref, n = -Inf))
+  expect_identical(head(dat, n = "foo"), head(ref, n = "foo"))
+
+  expect_error(head(dat, n = NA))
+  expect_error(head(ref, n = NA))
+  expect_error(head(dat, n = c(1L, 2L)))
+  expect_error(head(ref, n = c(1L, 2L)))
+
+  expect_identical(tail(dat), tail(ref))
+  expect_identical(tail(dat, n = 10L), tail(ref, n = 10L))
+  expect_identical(tail(dat, n = nrow(ref)), tail(ref, n = nrow(ref)))
+  expect_identical(tail(dat, n = 100L), tail(ref, n = 100L))
+  expect_identical(tail(dat, n = -1L), tail(ref, n = -1L))
+  expect_identical(tail(dat, n = 0), tail(ref, n = 0))
+  expect_identical(tail(dat, n = Inf), tail(ref, n = Inf))
+  expect_identical(tail(dat, n = -Inf), tail(ref, n = -Inf))
+  expect_identical(tail(dat, n = "foo"), tail(ref, n = "foo"))
+
+  expect_error(tail(dat, n = NA))
+  expect_error(tail(ref, n = NA))
+  expect_error(tail(dat, n = c(1L, 2L)))
+  expect_error(tail(ref, n = c(1L, 2L)))
 })

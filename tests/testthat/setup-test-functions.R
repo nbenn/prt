@@ -2,7 +2,9 @@
 mtcars_data_frame <- function() {
   env <- new.env()
   name <- utils::data("mtcars", package = "datasets", envir = env)
-  env[[name]]
+  res <- env[[name]]
+  rownames(res) <- NULL
+  res
 }
 
 mtcars_data_table <- function() {

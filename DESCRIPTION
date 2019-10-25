@@ -11,7 +11,8 @@ License: GPL-3
 Imports:
     assertthat,
     fst,
-    data.table
+    data.table,
+    utils
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

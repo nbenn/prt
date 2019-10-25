@@ -78,13 +78,19 @@ dimnames.prt <- function(x) {
   list(NULL, colnames(x[[1L]]))
 }
 
+#' @param ... Generic consistency: additional arguments are ignored and a
+#' warning is issued.
+#'
 #' @rdname new_prt
 #'
 #' @importFrom data.table as.data.table
 #'
 #' @export
 #'
-as.data.table.prt <- function(x) {
+as.data.table.prt <- function(x, ...) {
+
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+
   prt_read(x, rows = NULL, columns = NULL)
 }
 
@@ -92,15 +98,26 @@ as.data.table.prt <- function(x) {
 #'
 #' @export
 #'
-as.list.prt <- function(x) {
+as.list.prt <- function(x, ...) {
+
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+
   c(as.data.table(x))
 }
 
+#' @param row.names,optional Generic consistency: passing anything other than
+#' the default value issues a warning.
+#'
 #' @rdname new_prt
 #'
 #' @export
 #'
-as.data.frame.prt <- function(x) {
+as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
+
+  if (!is.null(row.names)) warning("Ignoring `row.names` argument.")
+  if (!isFALSE(optional)) warning("Ignoring `optional` argument.")
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+
   res <- data.table::setDF(as.data.table(x))
   res
 }
@@ -109,6 +126,45 @@ as.data.frame.prt <- function(x) {
 #'
 #' @export
 #'
-as.matrix.prt <- function(x) {
+as.matrix.prt <- function(x, ...) {
+
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+
   as.matrix(as.data.table(x))
+}
+
+#' @param n Count variable indicating the number of rows to return.
+#'
+#' @rdname new_prt
+#'
+#' @importFrom utils head
+#'
+#' @export
+#'
+head.prt <- function(x, n = 6L, ...) {
+
+  assert_that(length(n) == 1L)
+
+  if (n < 0L) n <- max(nrow(x) + n, 0L)
+  else n <- min(n, nrow(x))
+
+  prt_read(x, rows = seq_len(n), columns = NULL)
+}
+
+#' @rdname new_prt
+#'
+#' @importFrom utils tail
+#'
+#' @export
+#'
+tail.prt <- function(x, n = 6L, ...) {
+
+  assert_that(length(n) == 1L)
+
+  nrx <- nrow(x)
+
+  if (n < 0L) n <- max(nrx + n, 0L)
+  else n <- min(n, nrx)
+
+  prt_read(x, rows = seq.int(to = nrx, length.out = n), columns = NULL)
 }

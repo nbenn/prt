@@ -11,6 +11,8 @@
 \alias{as.list.prt}
 \alias{as.data.frame.prt}
 \alias{as.matrix.prt}
+\alias{head.prt}
+\alias{tail.prt}
 \title{Methods for creating and inspecting prt objects}
 \usage{
 new_prt(files)
@@ -25,13 +27,17 @@ is_prt(x)
 
 \method{dimnames}{prt}(x)
 
-\method{as.data.table}{prt}(x)
+\method{as.data.table}{prt}(x, ...)
 
-\method{as.list}{prt}(x)
+\method{as.list}{prt}(x, ...)
 
-\method{as.data.frame}{prt}(x)
+\method{as.data.frame}{prt}(x, row.names = NULL, optional = FALSE, ...)
 
-\method{as.matrix}{prt}(x)
+\method{as.matrix}{prt}(x, ...)
+
+\method{head}{prt}(x, n = 6L, ...)
+
+\method{tail}{prt}(x, n = 6L, ...)
 }
 \arguments{
 \item{files}{Character vector of file name(s).}
@@ -45,6 +51,14 @@ split into.}
 \item{dir}{Directory where the chunked \code{\link[fst:fst]{fst::fst()}} objects reside in.}
 
 \item{x}{A \code{prt} object.}
+
+\item{...}{Generic consistency: additional arguments are ignored and a
+warning is issued.}
+
+\item{row.names, optional}{Generic consistency: passing anything other than
+the default value issues a warning.}
+
+\item{n}{Count variable indicating the number of rows to return.}
 }
 \description{
 Methods for creating and inspecting prt objects
