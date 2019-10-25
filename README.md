@@ -8,12 +8,14 @@
 [![Travis build
 status](https://travis-ci.org/nbenn/prt.svg?branch=master)](https://travis-ci.org/nbenn/prt)
 [![Azure pipelines build
-status](https://img.shields.io/azure-devops/build/nbenn/prt/2)](https://dev.azure.com/nbenn/prt/_build/latest?definitionId=1&branchName=master)
+status](https://dev.azure.com/nbenn/prt/_apis/build/status/nbenn.prt?branchName=master)](https://dev.azure.com/nbenn/prt/_build/latest?definitionId=1&branchName=master)
 [![Azure pipelines test
-status](https://img.shields.io/azure-devops/tests/nbenn/prt/2?color=brightgreen&compact_message)](https://dev.azure.com/nbenn/prt/_build/latest?definitionId=1&branchName=master)
+status](https://img.shields.io/azure-devops/tests/nbenn/prt/1?color=brightgreen&compact_message)](https://dev.azure.com/nbenn/prt/_build/latest?definitionId=1&branchName=master)
 [![Azure pipelines coverage
-status](https://img.shields.io/azure-devops/coverage/nbenn/prt/2)](https://dev.azure.com/nbenn/prt/_build/latest?definitionId=1&branchName=master)
-<!-- badges: end --> The goal of prt is to …
+status](https://img.shields.io/azure-devops/coverage/nbenn/prt/1)](https://dev.azure.com/nbenn/prt/_build/latest?definitionId=1&branchName=master)
+<!-- badges: end -->
+
+The goal of prt is to …
 
 ## Installation
 
