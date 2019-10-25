@@ -2,21 +2,22 @@ Package: prt
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R:
-    person(given = "First",
-           family = "Last",
+    person(given = "Nicolas",
+           family = "Bennett",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "nicolas.bennett@stat.math.ethz.ch")
 Description: What the package does (one paragraph).
 License: GPL-3
 Imports:
     assertthat,
-    fst
+    fst,
+    data.table
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
-Suggests: 
+Suggests:
     testthat,
     xml2,
-    covr
+    covr,
+    tibble

@@ -14,7 +14,12 @@ new_prt <- function(files) {
     all(file.exists(files)), length(file) >= 1L
   )
 
-  structure(lapply(files, fst::fst), class = "prt")
+  fst <- lapply(files, fst::fst)
+  cols <- lapply(fst, colnames)
+
+  assert_that(all(vapply(cols, identical, logical(1L), cols[[1L]])))
+
+  structure(fst, class = "prt")
 }
 
 #' @param tbl An object inheriting from [base::data.frame()]. Requires both a
@@ -56,3 +61,48 @@ is_prt <- function(x) inherits(x, "prt")
 #' @export
 #'
 length.prt <- function(x) length(unclass(x))
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+dim.prt <- function(x) {
+  as.integer(c(sum(prt_vapply(x, nrow, numeric(1L))), ncol(x[[1L]])))
+}
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+dimnames.prt <- function(x) {
+  list(NULL, colnames(x[[1L]]))
+}
+
+#' @rdname new_prt
+#'
+#' @importFrom data.table as.data.table
+#'
+#' @export
+#'
+as.data.table.prt <- function(x) {
+  data.table::rbindlist(
+    lapply(prt_files(x), fst::read_fst, as.data.table = TRUE)
+  )
+}
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+as.list.prt <- function(x) {
+  c(as.data.table(x))
+}
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+as.data.frame.prt <- function(x) {
+  res <- data.table::setDF(as.data.table(x))
+  res
+}

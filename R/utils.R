@@ -18,3 +18,12 @@ split_indices <- function(len, n_chunks) {
     as.integer(bins)
   }
 }
+
+prt_lapply <- function(x, ...) lapply(unclass(x), ...)
+
+prt_vapply <- function(x, ...) vapply(unclass(x), ...)
+
+prt_files <- function(x) {
+  get_file_name <- function(y) .subset2(y, "meta")[["path"]]
+  prt_vapply(x, get_file_name, character(1L))
+}

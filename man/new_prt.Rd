@@ -5,6 +5,11 @@
 \alias{as_prt}
 \alias{is_prt}
 \alias{length.prt}
+\alias{dim.prt}
+\alias{dimnames.prt}
+\alias{as.data.table.prt}
+\alias{as.list.prt}
+\alias{as.data.frame.prt}
 \title{Methods for creating and inspecting prt objects}
 \usage{
 new_prt(files)
@@ -14,6 +19,16 @@ as_prt(tbl, n_chunks = 1L, dir = tempfile())
 is_prt(x)
 
 \method{length}{prt}(x)
+
+\method{dim}{prt}(x)
+
+\method{dimnames}{prt}(x)
+
+\method{as.data.table}{prt}(x)
+
+\method{as.list}{prt}(x)
+
+\method{as.data.frame}{prt}(x)
 }
 \arguments{
 \item{files}{Character vector of file name(s).}
