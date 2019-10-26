@@ -118,3 +118,8 @@ fst_read <- function(file, rows = NULL, columns = NULL) {
     res[1L + rows - rng[[1L]], ]
   }
 }
+
+dots_n <- function(...) {
+  nargs()
+}
+
