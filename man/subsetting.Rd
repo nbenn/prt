@@ -3,9 +3,12 @@
 \name{subsetting}
 \alias{subsetting}
 \alias{[[.prt}
+\alias{$.prt}
 \title{Subsetting operations}
 \usage{
 \method{[[}{prt}(x, i, j, ..., exact = TRUE)
+
+\method{$}{prt}(x, name)
 }
 \arguments{
 \item{x}{A \code{prt} object.}
@@ -17,6 +20,10 @@ index.}
 
 \item{exact}{Generic compatibility: only the default value of \code{TRUE} is
 supported.}
+
+\item{name}{
+    A literal character string or a \link{name} (possibly \link{backtick}
+    quoted).}
 }
 \description{
 Subsetting operations

@@ -40,6 +40,25 @@
   }
 }
 
+#' @rdname subsetting
+#'
+#' @inheritParams base::`[.data.frame`
+#'
+#' @export
+#'
+`$.prt` <- function(x, name) {
+
+  j <- match(name, colnames(x))
+
+  if (is.na(j)) {
+    warning("Unknown or uninitialised column: `", name, "`.")
+    NULL
+  } else {
+    prt_subset2(x, j, i = NULL)
+  }
+}
+
+
 prt_subset2 <- function(x, j, i = NULL) {
 
   if (is.matrix(j)) {
@@ -69,7 +88,6 @@ prt_subset2 <- function(x, j, i = NULL) {
 
     res <- prt_read(x, rows = j[2L], columns = j[1L])
     return(res[[1L]])
-
   }
 
   assert_that(length(j) == 1L)
