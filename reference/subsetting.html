@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • prt</title>
+<title>Subsetting operations — subsetting • prt</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Subsetting operations — subsetting" />
+<meta property="og:description" content="Subsetting operations" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -54,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -96,48 +98,51 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Subsetting operations</h1>
+    
+    <div class="hidden name"><code>subsetting.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Subsetting operations</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"># S3 method for prt
+[[(x, i, j, ..., exact = TRUE)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="new_prt.html">new_prt()</a></code> <code><a href="new_prt.html">as_prt()</a></code> <code><a href="new_prt.html">is_prt()</a></code> <code><a href="new_prt.html">length(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">dim(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">dimnames(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.data.table(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.list(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.data.frame(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.matrix(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">head(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">tail(<i>&lt;prt&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Methods for creating and inspecting prt objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="subsetting.html">`[[`(<i>&lt;prt&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Subsetting operations</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>A <code>prt</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>i, j</th>
+      <td><p>Row/column indexes. If <code>j</code> is omitted, <code>i</code> is used as column
+index.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Generic compatibility: any further arguments are ignored.</p></td>
+    </tr>
+    <tr>
+      <th>exact</th>
+      <td><p>Generic compatibility: only the default value of <code>TRUE</code> is
+supported.</p></td>
+    </tr>
     </table>
-  </div>
 
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#arguments">Arguments</a></li>
     </ul>
+
   </div>
 </div>
 
