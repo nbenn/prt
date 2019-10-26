@@ -11,6 +11,10 @@ mtcars_data_table <- function() {
   data.table::setDT(data.table::copy(mtcars_data_frame()))
 }
 
+mtcars_tibble <- function() {
+  tibble::as_tibble(mtcars_data_frame())
+}
+
 mtcars_fst_file <- function(dir = tempdir(), n_chunks = 1L,
                             dat = mtcars_data_frame()) {
 

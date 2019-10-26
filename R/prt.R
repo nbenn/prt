@@ -67,7 +67,7 @@ length.prt <- function(x) length(unclass(x))
 #' @export
 #'
 dim.prt <- function(x) {
-  as.integer(c(sum(prt_nrows(x)), ncol(x[[1L]])))
+  as.integer(c(sum(prt_nrows(x)), ncol(.subset2(x, 1L))))
 }
 
 #' @rdname new_prt
@@ -75,7 +75,7 @@ dim.prt <- function(x) {
 #' @export
 #'
 dimnames.prt <- function(x) {
-  list(NULL, colnames(x[[1L]]))
+  list(NULL, colnames(.subset2(x, 1L)))
 }
 
 #' @param ... Generic consistency: additional arguments are ignored and a

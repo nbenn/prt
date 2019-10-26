@@ -63,11 +63,13 @@ num_ind_to_part_ind <- function(ind, lengths, part_no = NULL) {
 
 prt_read <- function(x, rows = NULL, columns = NULL) {
 
+  if (is.numeric(columns)) columns <- colnames(x)[columns]
+
   if (is.null(rows)) {
 
     res <- lapply(prt_files(x), fst::read_fst, columns = columns,
                   as.data.table = TRUE)
-    data.table::rbindlist(res)
+    res <- data.table::rbindlist(res)
 
   } else {
 
@@ -88,9 +90,9 @@ prt_read <- function(x, rows = NULL, columns = NULL) {
 
       res <- data.table::setorderv(res, tmp)
     }
-
-    res
   }
+
+  res
 }
 
 fst_read <- function(file, rows = NULL, columns = NULL) {
