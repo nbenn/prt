@@ -12,8 +12,8 @@ test_that("convert numeric index to partition number", {
                    num_ind_to_part_no(4:7, c(5, 5)))
 
   expect_identical(num_ind_to_part_no(c(3, 11), c(5, 5, 5)), c(1L, 3L))
+  expect_identical(num_ind_to_part_no(c(3, 11), c(5, 5)), c(1L, 1L))
 
-  expect_error(num_ind_to_part_no(c(3, 11), c(5, 5)))
   expect_error(num_ind_to_part_no(c(-3, 4), c(5, 5)))
   expect_error(num_ind_to_part_no(c(0, 4), c(5, 5)))
 })
@@ -30,14 +30,14 @@ test_that("convert numeric index to partition index", {
   expect_identical(num_ind_to_part_ind(4:7, c(5, 5, 5)),
                    num_ind_to_part_ind(4:7, c(5, 5)))
 
-  expect_identical(num_ind_to_part_ind(c(3, 11), c(5, 5, 5)), c(3L, 1L))
-
   expect_identical(num_ind_to_part_ind(4:7, c(5, 5)),
     num_ind_to_part_ind(4:7, c(5, 5),
                         part_no = num_ind_to_part_no(4:7, c(5, 5)))
   )
 
-  expect_error(num_ind_to_part_ind(c(3, 11), c(5, 5)))
+  expect_identical(num_ind_to_part_ind(c(3, 11), c(5, 5, 5)), c(3L, 1L))
+  expect_identical(num_ind_to_part_ind(c(3, 11), c(5, 5)), c(3L, 11L))
+
   expect_error(num_ind_to_part_ind(c(-3, 4), c(5, 5)))
   expect_error(num_ind_to_part_ind(c(0, 4), c(5, 5)))
   expect_error(num_ind_to_part_ind(c(1, 2), c(5, 5), 1))
@@ -45,10 +45,7 @@ test_that("convert numeric index to partition index", {
 
 tmp <- tempfile()
 
-setup({
-  dir.create(tmp)
-})
-
+setup(dir.create(tmp))
 teardown(unlink(tmp, recursive = TRUE))
 
 test_that("read fst data", {
@@ -56,38 +53,39 @@ test_that("read fst data", {
   ref <- mtcars_data_table()
 
   dir_1 <- mtcars_fst_file(tempfile(tmpdir = tmp))
-  filename <- list.files(dir_1, full.names = TRUE)
-  prt_1 <- new_prt(filename)
+  prt_1 <- new_prt(list.files(dir_1, full.names = TRUE))
+  fst <- unclass(prt_1)[[1L]]
 
   ind <- sample(nrow(ref), 5L)
 
-  expect_identical(fst_read(filename, 1:3), ref[1:3, ])
-  expect_identical(fst_read(filename, 3:1), ref[3:1, ])
-  expect_identical(fst_read(filename, ind), ref[ind, ])
-  expect_identical(fst_read(filename, NULL), ref)
-  expect_identical(fst_read(filename, integer()), ref[integer(), ])
+  expect_identical(fst_read(fst, 1:3), ref[1:3, ])
+  expect_identical(fst_read(fst, 3:1), ref[3:1, ])
+  expect_identical(fst_read(fst, ind), ref[ind, ])
+  expect_identical(fst_read(fst, NULL), ref)
+  expect_identical(fst_read(fst, integer()), ref[integer(), ])
 
   cols <- c("disp", "drat")
 
-  expect_identical(fst_read(filename, 1:3, cols), ref[1:3, cols, with = FALSE])
-  expect_identical(fst_read(filename, 3:1, cols), ref[3:1, cols, with = FALSE])
-  expect_identical(fst_read(filename, ind, cols), ref[ind, cols, with = FALSE])
-  expect_identical(fst_read(filename, NULL, cols), ref[, cols, with = FALSE])
-  expect_identical(fst_read(filename, integer(), cols),
+  expect_identical(fst_read(fst, 1:3, cols), ref[1:3, cols, with = FALSE])
+  expect_identical(fst_read(fst, 3:1, cols), ref[3:1, cols, with = FALSE])
+  expect_identical(fst_read(fst, ind, cols), ref[ind, cols, with = FALSE])
+  expect_identical(fst_read(fst, NULL, cols), ref[, cols, with = FALSE])
+  expect_identical(fst_read(fst, integer(), cols),
                    ref[integer(), cols, with = FALSE])
 
   cols <- c("disp")
 
-  expect_identical(fst_read(filename, 1:3, cols), ref[1:3, cols, with = FALSE])
-  expect_identical(fst_read(filename, 3:1, cols), ref[3:1, cols, with = FALSE])
-  expect_identical(fst_read(filename, ind, cols), ref[ind, cols, with = FALSE])
-  expect_identical(fst_read(filename, NULL, cols), ref[, cols, with = FALSE])
-  expect_identical(fst_read(filename, integer(), cols),
+  expect_identical(fst_read(fst, 1:3, cols), ref[1:3, cols, with = FALSE])
+  expect_identical(fst_read(fst, 3:1, cols), ref[3:1, cols, with = FALSE])
+  expect_identical(fst_read(fst, ind, cols), ref[ind, cols, with = FALSE])
+  expect_identical(fst_read(fst, NULL, cols), ref[, cols, with = FALSE])
+  expect_identical(fst_read(fst, integer(), cols),
                    ref[integer(), cols, with = FALSE])
 
-  expect_error(fst_read(filename, 1:3, "cols"))
-  expect_error(fst_read(filename, 1:3, NA))
-  expect_error(fst_read(filename, 1:3, character()))
+  expect_error(fst_read(fst, 1:3, "cols"))
+  expect_error(fst_read(fst, 1:3, NA))
+
+  expect_identical(fst_read(fst, 1:3, character()), data.table::data.table())
 })
 
 test_that("read prt data", {
@@ -95,8 +93,7 @@ test_that("read prt data", {
   ref <- mtcars_data_table()
 
   dir_2 <- mtcars_fst_file(tempfile(tmpdir = tmp), 2L)
-  filenames <- list.files(dir_2, full.names = TRUE)
-  prt_2 <- new_prt(filenames)
+  prt_2 <- new_prt(list.files(dir_2, full.names = TRUE))
 
   ind <- sample(nrow(ref), 10L)
 
@@ -116,5 +113,5 @@ test_that("read prt data", {
 
   expect_error(prt_read(prt_2, 1:3, "cols"))
   expect_error(prt_read(prt_2, 1:3, NA))
-  expect_error(prt_read(prt_2, 1:3, character()))
+  expect_identical(fst_read(prt_2, 1:3, character()), data.table::data.table())
 })

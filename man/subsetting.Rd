@@ -4,11 +4,14 @@
 \alias{subsetting}
 \alias{[[.prt}
 \alias{$.prt}
+\alias{[.prt}
 \title{Subsetting operations}
 \usage{
 \method{[[}{prt}(x, i, j, ..., exact = TRUE)
 
 \method{$}{prt}(x, name)
+
+\method{[}{prt}(x, i, j, drop = FALSE)
 }
 \arguments{
 \item{x}{A \code{prt} object.}
@@ -24,6 +27,9 @@ supported.}
 \item{name}{
     A literal character string or a \link{name} (possibly \link{backtick}
     quoted).}
+
+\item{drop}{Coerce to a vector if fetching one column via \code{tbl[, j]}.
+Default \code{FALSE}, ignored when accessing a column via \code{tbl[j]}.}
 }
 \description{
 Subsetting operations

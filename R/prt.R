@@ -14,12 +14,18 @@ new_prt <- function(files) {
     all(file.exists(files)), length(file) >= 1L
   )
 
-  fst <- lapply(files, fst::fst)
-  cols <- lapply(fst, colnames)
+  make_prt(lapply(files, fst::fst))
+}
+
+make_prt <- function(x) {
+
+  assert_that(is.list(x), all(vapply(x, inherits, logical(1L), "fst_table")))
+
+  cols <- lapply(x, colnames)
 
   assert_that(all(vapply(cols, identical, logical(1L), cols[[1L]])))
 
-  structure(fst, class = "prt")
+  structure(x, class = "prt")
 }
 
 #' @param tbl An object inheriting from [base::data.frame()]. Requires both a

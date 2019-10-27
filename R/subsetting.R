@@ -58,6 +58,43 @@
   }
 }
 
+#' @rdname subsetting
+#'
+#' @param drop Coerce to a vector if fetching one column via `tbl[, j]`.
+#' Default `FALSE`, ignored when accessing a column via `tbl[j]`.
+#'
+#' @export
+#'
+`[.prt` <- function(x, i, j, drop = FALSE) {
+
+  n_real_args <- nargs() - !missing(drop)
+
+  if (n_real_args <= 2L) {
+
+    if (!missing(drop)) warning("`drop` ignored")
+
+    if (missing(i)) i <- NULL
+    else i <- vec_as_col_index(i, x)
+
+    res <- prt_read(x, rows = NULL, columns = i)
+
+  } else {
+
+    if (missing(i)) i <- NULL
+    else i <- vec_as_row_index(i, x)
+
+    if (missing(j)) j <- NULL
+    else j <- vec_as_col_index(j, x)
+
+    res <- prt_read(x, rows = i, columns = j)
+
+    if (drop && ncol(res) == 1L) {
+      res <- res[[1L]]
+    }
+  }
+
+  res
+}
 
 prt_subset2 <- function(x, j, i = NULL) {
 
@@ -84,7 +121,7 @@ prt_subset2 <- function(x, j, i = NULL) {
 
   } else if (length(j) == 2L && is.numeric(j)) {
 
-    assert_that(is.null(i))
+    assert_that(is.null(i), !anyNA(j))
 
     res <- prt_read(x, rows = j[2L], columns = j[1L])
     return(res[[1L]])
@@ -115,6 +152,18 @@ prt_subset2 <- function(x, j, i = NULL) {
 
   res <- prt_read(x, rows = i, columns = j)
   res[[1L]]
+}
+
+vec_as_col_index <- function(j, x) {
+
+  stopifnot(!is.null(j))
+
+  if (anyNA(j)) {
+    pos <- paste(which(is.na(j)), collapse = ", ")
+    stop("Can't use NA as column index with `[` at position(s) ", pos, ".")
+  }
+
+  vctrs::vec_as_index(j, ncol(x), colnames(x))
 }
 
 vec_as_row_index <- function(i, x) {
