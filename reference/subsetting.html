@@ -110,7 +110,13 @@
     </div>
 
     <pre class="usage"># S3 method for prt
-[[(x, i, j, ..., exact = TRUE)</pre>
+[[(x, i, j, ..., exact = TRUE)
+
+# S3 method for prt
+$(x, name)
+
+# S3 method for prt
+[(x, i, j, drop = FALSE)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -132,6 +138,16 @@ index.</p></td>
       <th>exact</th>
       <td><p>Generic compatibility: only the default value of <code>TRUE</code> is
 supported.</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>A literal character string or a <a href='https://rdrr.io/r/base/name.html'>name</a> (possibly <a href='https://rdrr.io/r/base/Quotes.html'>backtick</a>
+    quoted).</p></td>
+    </tr>
+    <tr>
+      <th>drop</th>
+      <td><p>Coerce to a vector if fetching one column via <code>tbl[, j]</code>.
+Default <code>FALSE</code>, ignored when accessing a column via <code>tbl[j]</code>.</p></td>
     </tr>
     </table>
 
