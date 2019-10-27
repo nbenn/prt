@@ -153,3 +153,7 @@ fst_read <- function(x, rows = NULL, columns = NULL) {
 dots_n <- function(...) {
   nargs()
 }
+
+isFALSE <- function(x) {
+  is.logical(x) && length(x) == 1L && !is.na(x) && !x
+}
