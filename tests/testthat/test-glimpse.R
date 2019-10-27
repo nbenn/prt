@@ -32,16 +32,6 @@ teardown(unlink(tmp, recursive = TRUE))
 prt_cars <- create_prt(demo_data_frame("mtcars"), dir = tmp, n_chunks = 2L)
 prt_iris <- create_prt(demo_data_frame("iris"), dir = tmp, n_chunks = 2L)
 
-df_all <- data.frame(
-  a = c(1, 2.5, NA),
-  b = c(1:2, NA),
-  c = c(T, F, NA),
-  d = I(c("a", "b", NA)),
-  e = factor(c("a", "b", NA)),
-  f = as.Date("2015-12-09") + c(1:2, NA),
-  g = as.POSIXct("2015-12-09 10:51:34 UTC") + c(1:2, NA)
-)
-
 prt_all <- create_prt(df_all, dir = tmp)
 
 test_that("glimpse output matches known output", {

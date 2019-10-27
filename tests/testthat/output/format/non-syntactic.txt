@@ -1,0 +1,6 @@
+# A prt:        1 × 2
+# Partitioning: 1 parts [1]
+#   rows
+  `mean(x)` `var(x)`
+      <dbl>    <dbl>
+1         5        3

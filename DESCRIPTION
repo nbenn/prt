@@ -17,7 +17,8 @@ Imports:
     tibble,
     cli,
     pillar,
-    crayon
+    crayon,
+    fansi
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

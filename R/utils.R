@@ -162,14 +162,32 @@ print_width <- function(width = NULL, allow_inf = TRUE) {
 
   if (!is.null(width)) return(width)
 
-  width <- getOption("tibble.width")
+  width <- get_opt("width")
 
   if (!is.null(width) && !allow_inf && is.finite(width)) width
   else getOption("width")
 }
 
+get_opt <- function(x) {
+
+  x_tibble <- paste0("tibble.", x)
+
+  res <- getOption(x_tibble)
+
+  if (!is.null(res)) return(res)
+
+  switch(x_tibble,
+    tibble.print_max = 20L,
+    tibble.print_min = 5L,
+    tibble.width = NULL,
+    tibble.max_extra_cols = 100L,
+    stop("Cannot determine default option for ", x_tibble, ".")
+  )
+}
+
 cat_line <- function(...) {
-  cat(paste0(..., "\n"), sep = "")
+  line <- trimws(paste0(...), "right")
+  cat(paste0(line, "\n"), sep = "")
 }
 
 big_mark <- function(x, ...) {
@@ -186,8 +204,7 @@ big_mark <- function(x, ...) {
 #' @export
 #'
 tbl_sum.prt <- function(x) {
-  c("A prt (partitioned fst)" = dim_desc(x),
-    "Partitioning" = part_desc(x))
+  c("A prt" = dim_desc(x), "Partitioning" = part_desc(x))
 }
 
 dim_desc <- function(x) {
@@ -259,4 +276,33 @@ str_trunc <- function(x, max_width) {
   }
 
   x
+}
+
+format_comment <- function(x, width) {
+  if (length(x) == 0L) return(character())
+  vapply(x, wrap, character(1L), prefix = "# ",
+         width = min(width, getOption("width")))
+}
+
+wrap <- function(..., indent = 0, prefix = "", width) {
+  x <- paste0(..., collapse = "")
+  wrapped <- strwrap2(x, width - nchar_width(prefix), indent)
+  wrapped <- paste0(prefix, wrapped)
+  wrapped <- gsub("\u00a0", " ", wrapped)
+  wrapped <- trimws(wrapped, "right")
+  paste0(wrapped, collapse = "\n")
+}
+
+strwrap2 <- function(x, width, indent) {
+  fansi::strwrap_ctl(x, width = max(width, 0), indent = indent,
+                     exdent = indent + 2)
+}
+
+add_in_between <- function(x, n, what) {
+  c(x[seq_len(n)], what, x[seq.int(n + 1L, 2L * n)])
+}
+
+ellipsis <- function(fancy = l10n_info()$`UTF-8`) {
+  if (fancy) cli::symbol$ellipsis
+  else "..."
 }

@@ -113,3 +113,9 @@ test_that("read prt data", {
   expect_error(prt_read(prt_2, 1:3, NA))
   expect_identical(fst_read(prt_2, 1:3, character()), data.table::data.table())
 })
+
+test_that("big_mark() works for large numbers", {
+  expect_match(big_mark(123), "123")
+  expect_match(big_mark(123456), "123.456")
+  expect_match(big_mark(123456789), "123.456.789")
+})

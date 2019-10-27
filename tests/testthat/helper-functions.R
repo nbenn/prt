@@ -4,7 +4,7 @@ output_file <- function(filename) file.path("output", filename)
 expect_output_file_opts <- function(x, filename, ...) {
   withr::with_options(
     list(crayon.enabled = FALSE, ...),
-    expect_output_file(x, output_file(filename), update = FALSE)
+    expect_known_output(x, output_file(filename), update = FALSE)
   )
 }
 
@@ -49,3 +49,13 @@ create_prt <- function(dat = demo_data_frame(), dir = tempdir(),
 
   new_prt(list.files(dir, full.names = TRUE))
 }
+
+df_all <- data.frame(
+  a = c(1, 2.5, NA),
+  b = c(1:2, NA),
+  c = c(T, F, NA),
+  d = I(c("a", "b", NA)),
+  e = factor(c("a", "b", NA)),
+  f = as.Date("2015-12-09") + c(1:2, NA),
+  g = as.POSIXct("2015-12-09 10:51:34 UTC") + c(1:2, NA)
+)

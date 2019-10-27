@@ -1,0 +1,25 @@
+# A
+#   prt:
+#   150
+#   ×
+#   5
+# Partitioning:
+#   2
+#   parts
+#   [75,
+#   75]
+#   rows
+# …
+#   with
+#   144
+#   more
+#   rows,
+#   and
+#   5
+#   more
+#   variables:
+#   Sepal.Length <dbl>,
+#   Sepal.Width <dbl>,
+#   Petal.Length <dbl>,
+#   Petal.Width <dbl>,
+#   Species <fct>
