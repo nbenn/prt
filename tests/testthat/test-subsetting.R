@@ -4,10 +4,9 @@ tmp <- tempfile()
 setup(dir.create(tmp))
 teardown(unlink(tmp, recursive = TRUE))
 
-ref <- mtcars_data_table()
-
-dir <- mtcars_fst_file(tempfile(tmpdir = tmp), 2L)
-dat <- new_prt(list.files(dir, full.names = TRUE))
+ref <- demo_data_table(dataset = "mtcars")
+dat <- create_prt(dat = demo_data_frame(dataset = "mtcars"), dir = tmp,
+                  n_chunks = 2L)
 
 test_that("[[ subsetting ignores exact argument", {
   expect_warning(dat[["disp"]], NA)

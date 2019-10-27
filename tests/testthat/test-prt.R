@@ -1,17 +1,14 @@
 
 tmp <- tempfile()
 
-setup({
-  dir.create(tmp)
-})
-
+setup(dir.create(tmp))
 teardown(unlink(tmp, recursive = TRUE))
 
 test_that("prt creation/conversion", {
 
-  ref <- mtcars_data_frame()
+  ref <- demo_data_frame(dataset = "mtcars")
 
-  dir_1 <- mtcars_fst_file(tempfile(tmpdir = tmp))
+  dir_1 <- fst_files(dat = ref, dir = tempfile(tmpdir = tmp), n_chunks = 1L)
   prt_1 <- new_prt(list.files(dir_1, full.names = TRUE))
 
   expect_is(prt_1, "prt")
@@ -31,7 +28,7 @@ test_that("prt creation/conversion", {
   expect_identical(as.list(prt_1), as.list(ref))
   expect_identical(as.data.frame(prt_1), as.data.frame(ref))
 
-  dir_2 <- mtcars_fst_file(tempfile(tmpdir = tmp), 2L)
+  dir_2 <- fst_files(dat = ref, dir = tempfile(tmpdir = tmp), n_chunks = 2L)
   prt_2 <- new_prt(list.files(dir_2, full.names = TRUE))
 
   expect_is(prt_2, "prt")
@@ -50,10 +47,10 @@ test_that("prt creation/conversion", {
 
 test_that("file_fst head/tail", {
 
-  ref <- mtcars_data_table()
+  ref <- demo_data_table(dataset = "mtcars")
 
-  dir <- mtcars_fst_file(tempfile(tmpdir = tmp), 2L)
-  dat <- new_prt(list.files(dir, full.names = TRUE))
+  dat <- create_prt(dat = demo_data_frame(dataset = "mtcars"), dir = tmp,
+                    n_chunks = 2L)
 
   expect_identical(head(dat), head(ref))
   expect_identical(head(dat, n = 10L), head(ref, n = 10L))

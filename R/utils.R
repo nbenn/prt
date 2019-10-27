@@ -157,3 +157,106 @@ dots_n <- function(...) {
 isFALSE <- function(x) {
   is.logical(x) && length(x) == 1L && !is.na(x) && !x
 }
+
+print_width <- function(width = NULL, allow_inf = TRUE) {
+
+  if (!is.null(width)) return(width)
+
+  width <- getOption("tibble.width")
+
+  if (!is.null(width) && !allow_inf && is.finite(width)) width
+  else getOption("width")
+}
+
+cat_line <- function(...) {
+  cat(paste0(..., "\n"), sep = "")
+}
+
+big_mark <- function(x, ...) {
+  mark <- if (identical(getOption("OutDec"), ",")) "." else ","
+  formatC(x, big.mark = mark, format = "d", ...)
+}
+
+#' @inheritParams tibble::tbl_sum
+#'
+#' @rdname glimpse
+#'
+#' @importFrom tibble tbl_sum
+#'
+#' @export
+#'
+tbl_sum.prt <- function(x) {
+  c("A prt (partitioned fst)" = dim_desc(x),
+    "Partitioning" = part_desc(x))
+}
+
+dim_desc <- function(x) {
+  paste0(vapply(dim(x), big_mark, character(1L)),
+         collapse = spaces_around(times()))
+}
+
+part_desc <- function(x) {
+  paste0(length(x), " parts [",
+         paste(prt_nrows(x), collapse = ", "), "] rows")
+}
+
+times <- function(fancy = l10n_info()$`UTF-8`) {
+  if (fancy) cli::symbol$times
+  else "x"
+}
+
+spaces_around <- function(x) {
+  paste0(" ", x, " ")
+}
+
+tick <- function(x) {
+  ifelse(is.na(x), "NA", encodeString(x, quote = "`"))
+}
+
+tick_if_needed <- function(x) {
+  needs_ticks <- !is_syntactic(x)
+  x[needs_ticks] <- tick(x[needs_ticks])
+  x
+}
+
+is_syntactic <- function(x) {
+  ret <- make.names(x) == x
+  ret[is.na(x)] <- FALSE
+  ret
+}
+
+nchar_width <- function(x) {
+  nchar(x, type = "width")
+}
+
+justify <- function(x, right = TRUE, space = " ") {
+  if (length(x) == 0L) return(character())
+  width <- nchar_width(x)
+  max_width <- max(width)
+  spaces_template <- paste(rep(space, max_width), collapse = "")
+  spaces <- vapply(max_width - width, substr, character(1L),
+                   x = spaces_template, start = 1L)
+  if (right) {
+    paste0(spaces, x)
+  } else {
+    paste0(x, spaces)
+  }
+}
+
+collapse <- function(x) paste(x, collapse = ", ")
+
+str_trunc <- function(x, max_width) {
+
+  width <- nchar(x)
+
+  nchar_ellipsis <- nchar_width(cli::symbol$ellipsis)
+
+  for (i in seq_along(x)) {
+    if (width[i] <= max_width[i]) next
+
+    x[i] <- paste0(substr(x[i], 1, max_width[i] - nchar_ellipsis),
+                   cli::symbol$ellipsis)
+  }
+
+  x
+}

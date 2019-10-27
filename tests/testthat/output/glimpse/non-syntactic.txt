@@ -1,0 +1,5 @@
+Rows: 1
+Columns: 2
+Partitioning: 1 parts [1] rows
+$ `mean(x)` <dbl> 5
+$ `var(x)`  <dbl> 3

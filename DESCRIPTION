@@ -13,7 +13,11 @@ Imports:
     fst,
     data.table,
     utils,
-    vctrs
+    vctrs,
+    tibble,
+    cli,
+    pillar,
+    crayon
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -22,4 +26,4 @@ Suggests:
     testthat,
     xml2,
     covr,
-    tibble
+    withr

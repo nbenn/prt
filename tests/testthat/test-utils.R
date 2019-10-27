@@ -50,10 +50,9 @@ teardown(unlink(tmp, recursive = TRUE))
 
 test_that("read fst data", {
 
-  ref <- mtcars_data_table()
-
-  dir_1 <- mtcars_fst_file(tempfile(tmpdir = tmp))
-  prt_1 <- new_prt(list.files(dir_1, full.names = TRUE))
+  ref <- demo_data_table(dataset = "mtcars")
+  prt_1 <- create_prt(dat = demo_data_frame(dataset = "mtcars"), dir = tmp,
+                      n_chunks = 1L)
   fst <- unclass(prt_1)[[1L]]
 
   ind <- sample(nrow(ref), 5L)
@@ -90,10 +89,9 @@ test_that("read fst data", {
 
 test_that("read prt data", {
 
-  ref <- mtcars_data_table()
-
-  dir_2 <- mtcars_fst_file(tempfile(tmpdir = tmp), 2L)
-  prt_2 <- new_prt(list.files(dir_2, full.names = TRUE))
+  ref <- demo_data_table(dataset = "mtcars")
+  prt_2 <- create_prt(dat = demo_data_frame(dataset = "mtcars"), dir = tmp,
+                      n_chunks = 2L)
 
   ind <- sample(nrow(ref), 10L)
 
