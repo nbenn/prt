@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • prt</title>
+<title>Printing prt — print.prt • prt</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Printing prt — print.prt" />
+<meta property="og:description" content="Printing prt" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -54,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -96,60 +98,64 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Printing prt</h1>
+    
+    <div class="hidden name"><code>formatting.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Printing prt</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='co'># S3 method for prt</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n_extra</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="formatting.html">print(<i>&lt;prt&gt;</i>)</a></code> <code><a href="formatting.html">format(<i>&lt;prt&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Printing prt</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="glimpse.html">glimpse(<i>&lt;prt&gt;</i>)</a></code> <code><a href="glimpse.html">str(<i>&lt;prt&gt;</i>)</a></code> <code><a href="glimpse.html">tbl_sum(<i>&lt;prt&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get a glimpse of your data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="new_prt.html">new_prt()</a></code> <code><a href="new_prt.html">as_prt()</a></code> <code><a href="new_prt.html">is_prt()</a></code> <code><a href="new_prt.html">length(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">dim(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">dimnames(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.data.table(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.list(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.data.frame(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">as.matrix(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">head(<i>&lt;prt&gt;</i>)</a></code> <code><a href="new_prt.html">tail(<i>&lt;prt&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Methods for creating and inspecting prt objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="subsetting.html">`[[`(<i>&lt;prt&gt;</i>)</a></code> <code><a href="subsetting.html">`$`(<i>&lt;prt&gt;</i>)</a></code> <code><a href="subsetting.html">`[`(<i>&lt;prt&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Subsetting operations</p></td>
-      </tr>
-    </tbody>
+<span class='co'># S3 method for prt</span>
+<span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n_extra</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>Object to format or print.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed on to individual methods.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Number of rows to show. If <code>NULL</code>, the default, will print all rows
+if less than option <code>tibble.print_max</code>. Otherwise, will print
+<code>tibble.print_min</code> rows.</p></td>
+    </tr>
+    <tr>
+      <th>width</th>
+      <td><p>Width of text output to generate. This defaults to <code>NULL</code>, which
+means use <code><a href='https://rdrr.io/r/base/options.html'>getOption("tibble.width")</a></code> or (if also <code>NULL</code>)
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("width")</a></code>; the latter displays only the columns that fit on one
+screen. You can also set <code><a href='https://rdrr.io/r/base/options.html'>options(tibble.width = Inf)</a></code> to override this
+default and always print all columns.</p></td>
+    </tr>
+    <tr>
+      <th>n_extra</th>
+      <td><p>Number of extra columns to print abbreviated information for,
+if the width is too small for the entire tibble. If <code>NULL</code>, the default,
+will print information about at most <code>tibble.max_extra_cols</code> extra columns.</p></td>
+    </tr>
     </table>
-  </div>
 
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#arguments">Arguments</a></li>
     </ul>
+
   </div>
 </div>
 
