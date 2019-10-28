@@ -163,14 +163,14 @@ vec_as_col_index <- function(j, x) {
     stop("Can't use NA as column index with `[` at position(s) ", pos, ".")
   }
 
-  vctrs::vec_as_index(j, ncol(x), colnames(x))
+  vctrs::vec_as_index(j, as.integer(ncol(x)), colnames(x))
 }
 
 vec_as_row_index <- function(i, x) {
 
   stopifnot(!is.null(i))
 
-  nr <- nrow(x)
+  nr <- as.integer(nrow(x))
 
   if (is.character(i)) {
 

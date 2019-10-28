@@ -8,6 +8,7 @@
 \alias{length.prt}
 \alias{n_part}
 \alias{dimnames.prt}
+\alias{names.prt}
 \alias{as.data.table.prt}
 \alias{as.list.prt}
 \alias{as.data.frame.prt}
@@ -29,6 +30,8 @@ is_prt(x)
 n_part(x)
 
 \method{dimnames}{prt}(x)
+
+\method{names}{prt}(x)
 
 \method{as.data.table}{prt}(x, ...)
 

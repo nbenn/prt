@@ -108,10 +108,17 @@ prt_read <- function(x, rows = NULL, columns = NULL) {
 fst_read <- function(x, rows = NULL, columns = NULL) {
 
   if (!is.null(columns)) {
+
     # unfortunately, data.table is not capable of representing zero column
     # non-zero row tables, unlike tibble and data.frame
     if (length(columns) == 0) return(data.table::data.table())
-    else assert_that(is.character(columns))
+
+    if (is.numeric(columns)) {
+      columns <- colnames(x)[columns]
+      assert_that(!anyNA(columns))
+    } else {
+      assert_that(is.character(columns), all(columns %in% colnames(x)))
+    }
   }
 
   if (is.null(rows)) {

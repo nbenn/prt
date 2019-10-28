@@ -92,6 +92,12 @@ dimnames.prt <- function(x) {
   list(NULL, colnames(.subset2(x, 1L)))
 }
 
+#' @rdname new_prt
+#'
+#' @export
+#'
+names.prt <- function(x) colnames(x)
+
 #' @param ... Generic consistency: additional arguments are ignored and a
 #' warning is issued.
 #'
