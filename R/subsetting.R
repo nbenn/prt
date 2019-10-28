@@ -17,7 +17,7 @@
     warning("`exact` ignored.")
   }
 
-  n_dots <- dots_n()
+  n_dots <- ...length()
 
   if (n_dots > 0) {
     warning("Extra arguments ignored.")

@@ -95,7 +95,7 @@ dimnames.prt <- function(x) {
 #'
 as.data.table.prt <- function(x, ...) {
 
-  if (dots_n() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
 
   prt_read(x, rows = NULL, columns = NULL)
 }
@@ -106,7 +106,7 @@ as.data.table.prt <- function(x, ...) {
 #'
 as.list.prt <- function(x, ...) {
 
-  if (dots_n() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
 
   c(as.data.table(x))
 }
@@ -122,7 +122,7 @@ as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
 
   if (!is.null(row.names)) warning("Ignoring `row.names` argument.")
   if (!isFALSE(optional)) warning("Ignoring `optional` argument.")
-  if (dots_n() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
 
   res <- data.table::setDF(as.data.table(x))
   res
@@ -134,7 +134,7 @@ as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
 #'
 as.matrix.prt <- function(x, ...) {
 
-  if (dots_n() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) warning("Ignoring further `...` arguments.")
 
   as.matrix(as.data.table(x))
 }

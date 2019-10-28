@@ -150,14 +150,6 @@ fst_read <- function(x, rows = NULL, columns = NULL) {
   }
 }
 
-dots_n <- function(...) {
-  nargs()
-}
-
-isFALSE <- function(x) {
-  is.logical(x) && length(x) == 1L && !is.na(x) && !x
-}
-
 print_width <- function(width = NULL, allow_inf = TRUE) {
 
   if (!is.null(width)) return(width)

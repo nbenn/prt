@@ -18,7 +18,8 @@ Imports:
     cli,
     pillar,
     crayon,
-    fansi
+    fansi,
+    backports
 Suggests:
     testthat,
     xml2,
