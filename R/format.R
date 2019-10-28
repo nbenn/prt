@@ -79,20 +79,13 @@ format.trunc_dt <- function(x, width = NULL, ...) {
 
   width <- print_width(width)
 
-  header <- x$summary
+  header <- format_header(x)
   header <- paste0(justify(paste0(names(header), ":"),
                            right = FALSE, space = "\u00a0"),
                    " ", header)
 
   comment <- format_comment(header, width = width)
-  squeezed <- pillar::squeeze(x$mcf, width = width - max(nchar(x$row_id)) - 1L)
-
-  attribs <- attributes(squeezed)
-
-  if (x$rows_missing > 0L) squeezed <- add_empty_row(squeezed)
-  squeezed <- add_row_id(squeezed, pillar::style_subtle(x$row_id))
-
-  attributes(squeezed) <- attribs
+  squeezed <- squeeze_dt(x, width = width)
 
   footer <- format_comment(pre_dots(format_footer(x, squeezed)), width = width)
 
@@ -102,6 +95,33 @@ format.trunc_dt <- function(x, width = NULL, ...) {
     pillar::style_subtle(footer)
   )
 }
+
+#' knit_print method for trunc dt
+#'
+#' @keywords internal
+#'
+#' @export
+#'
+knit_print.trunc_dt <- function(x, options) {
+
+  header <- format_header(x)
+  summary <- paste0(names(header), ": ", header)
+
+  squeezed <- squeeze_dt(x, width = x$width)
+
+  kable <- knitr::knit_print(squeezed)
+  extra <- format_footer(x, squeezed)
+
+  if (length(extra) > 0) {
+    extra <- wrap("(", collapse(extra), ")", width = x$width)
+  } else {
+    extra <- "\n"
+  }
+
+  res <- paste(c("", "", summary, "", kable, "", extra), collapse = "\n")
+  knitr::asis_output(crayon::strip_style(res), cacheable = TRUE)
+}
+
 
 shrink_dt <- function(df, rows) {
 
@@ -139,6 +159,24 @@ add_row_id <- function(x, rowid) {
     c(list(list(capital_format = rep(strrep(" ", row_width), 2L),
                 shaft_format = format(rowid))), y)
   })
+}
+
+squeeze_dt <- function(x, width) {
+
+  res <- pillar::squeeze(x$mcf, width = width - max(nchar(x$row_id)) - 1L)
+
+  attribs <- attributes(res)
+
+  if (x$rows_missing > 0L) res <- add_empty_row(res)
+  res <- add_row_id(res, pillar::style_subtle(x$row_id))
+
+  attributes(res) <- attribs
+
+  res
+}
+
+format_header <- function(x) {
+  x$summary
 }
 
 format_footer <- function(x, squeezed_colonnade) {
