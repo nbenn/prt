@@ -66,14 +66,22 @@ is_prt <- function(x) inherits(x, "prt")
 #'
 #' @export
 #'
-length.prt <- function(x) length(unclass(x))
+dim.prt <- function(x) {
+  as.integer(c(sum(prt_nrows(x)), ncol(.subset2(x, 1L))))
+}
 
 #' @rdname new_prt
 #'
 #' @export
 #'
-dim.prt <- function(x) {
-  as.integer(c(sum(prt_nrows(x)), ncol(.subset2(x, 1L))))
+length.prt <- function(x) ncol(x)
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+n_part <- function(x) {
+  length(unclass(x))
 }
 
 #' @rdname new_prt
@@ -90,6 +98,7 @@ dimnames.prt <- function(x) {
 #' @rdname new_prt
 #'
 #' @importFrom data.table as.data.table
+#' @method as.data.table prt
 #'
 #' @export
 #'
@@ -101,6 +110,8 @@ as.data.table.prt <- function(x, ...) {
 }
 
 #' @rdname new_prt
+#'
+#' @method as.list prt
 #'
 #' @export
 #'
@@ -116,6 +127,8 @@ as.list.prt <- function(x, ...) {
 #'
 #' @rdname new_prt
 #'
+#' @method as.data.frame prt
+#'
 #' @export
 #'
 as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
@@ -129,6 +142,8 @@ as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
 }
 
 #' @rdname new_prt
+#'
+#' @method as.matrix prt
 #'
 #' @export
 #'

@@ -26,7 +26,7 @@ glimpse.prt <- function(x, width = NULL, ...) {
 str.prt <- function(object, ...) {
 
   ncol <- ncol(object)
-  npart <- length(object)
+  npart <- n_part(object)
 
   cat("'prt':\t", nrow(object), " obs. of ", ncol, " variable",
       if (ncol != 1) "s",  " in ", npart, " partition",

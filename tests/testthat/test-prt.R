@@ -13,11 +13,12 @@ test_that("prt creation/conversion", {
 
   expect_is(prt_1, "prt")
   expect_true(is_prt(prt_1))
-  expect_identical(length(prt_1), 1L)
+  expect_identical(n_part(prt_1), 1L)
 
   expect_identical(dim(prt_1), dim(ref))
   expect_identical(ncol(prt_1), ncol(ref))
   expect_identical(nrow(prt_1), nrow(ref))
+  expect_identical(length(prt_1), ncol(prt_1))
 
   expect_identical(dimnames(prt_1), list(NULL, colnames(ref)))
   expect_identical(colnames(prt_1), colnames(ref))
@@ -33,7 +34,12 @@ test_that("prt creation/conversion", {
 
   expect_is(prt_2, "prt")
   expect_true(is_prt(prt_2))
-  expect_identical(length(prt_2), 2L)
+  expect_identical(n_part(prt_2), 2L)
+
+  expect_identical(dim(prt_2), dim(ref))
+  expect_identical(ncol(prt_2), ncol(ref))
+  expect_identical(nrow(prt_2), nrow(ref))
+  expect_identical(length(prt_2), ncol(prt_2))
 
   expect_identical(dimnames(prt_2), list(NULL, colnames(ref)))
   expect_identical(colnames(prt_2), colnames(ref))

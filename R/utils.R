@@ -205,7 +205,7 @@ dim_desc <- function(x) {
 }
 
 part_desc <- function(x) {
-  paste0(length(x), " parts [",
+  paste0(n_part(x), " parts [",
          paste(prt_nrows(x), collapse = ", "), "] rows")
 }
 

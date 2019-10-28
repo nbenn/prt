@@ -4,8 +4,9 @@
 \alias{new_prt}
 \alias{as_prt}
 \alias{is_prt}
-\alias{length.prt}
 \alias{dim.prt}
+\alias{length.prt}
+\alias{n_part}
 \alias{dimnames.prt}
 \alias{as.data.table.prt}
 \alias{as.list.prt}
@@ -21,9 +22,11 @@ as_prt(tbl, n_chunks = 1L, dir = tempfile())
 
 is_prt(x)
 
+\method{dim}{prt}(x)
+
 \method{length}{prt}(x)
 
-\method{dim}{prt}(x)
+n_part(x)
 
 \method{dimnames}{prt}(x)
 
