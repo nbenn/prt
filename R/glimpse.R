@@ -23,9 +23,42 @@ glimpse.prt <- function(x, width = NULL, ...) {
 #'
 #' @export
 #'
-str.prt <- function(object, width = NULL, ...) {
-  gplimpse_prt(x = object, width = width)
-  invisible(NULL)
+str.prt <- function(object, ...) {
+
+  ncol <- ncol(object)
+  npart <- length(object)
+
+  cat("'prt':\t", nrow(object), " obs. of ", ncol, " variable",
+      if (ncol != 1) "s",  " in ", npart, " partition",
+      if (npart != 1) "s", if (ncol > 0) ":", "\n", sep = "")
+
+  dots <- list(...)
+
+  if (length(dots) && any("vec.len" == names(dots))) {
+    len <- dots[["vec.len"]]
+  } else {
+    len <- utils::strOptions()$vec.len
+  }
+
+  if (length(dots)) {
+    if (any("give.length" == names(dots))) {
+      warning("Ignoring `give.length` argument.")
+      dots$give.length <- NULL
+    }
+    if (any("no.list" == names(dots))) {
+      dots$no.list <- NULL
+    }
+  }
+
+  dat <- head(object, len * 3L + 1L)
+
+  args <- c(
+    list(c(dat)),
+    dots,
+    list(no.list = TRUE, give.length = FALSE)
+  )
+
+  invisible(do.call("str", args))
 }
 
 gplimpse_prt <- function(x, width = NULL) {

@@ -8,7 +8,7 @@
 \usage{
 \method{glimpse}{prt}(x, width = NULL, ...)
 
-\method{str}{prt}(object, width = NULL, ...)
+\method{str}{prt}(object, ...)
 
 \method{tbl_sum}{prt}(x)
 }

@@ -81,3 +81,35 @@ test_that("glimpse(width = Inf) raises legible error", {
     fixed = TRUE
   )
 })
+
+test_that("str output matches known output", {
+
+  expect_null(str(prt_cars))
+
+  expect_output_file_opts(
+    str(prt_cars),
+    "str/mtcars.txt"
+  )
+
+  expect_output_file_opts(
+    str(prt_cars, vec.len = 10),
+    "str/mtcars-10.txt"
+  )
+
+  expect_output_file_opts(
+    str(prt_cars, vec.len = 100),
+    "str/mtcars-100.txt"
+  )
+
+  expect_output_file_opts(
+    str(prt_cars, no.list = TRUE),
+    "str/mtcars.txt"
+  )
+
+  expect_output_file_opts(
+    str(prt_cars, max.level = 1),
+    "str/mtcars.txt"
+  )
+
+  expect_warning(str(prt_cars, give.length = TRUE))
+})
