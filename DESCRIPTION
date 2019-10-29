@@ -19,7 +19,8 @@ Imports:
     pillar,
     crayon,
     fansi,
-    backports
+    backports,
+    rlang
 Suggests:
     testthat,
     xml2,

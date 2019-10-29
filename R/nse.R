@@ -12,10 +12,10 @@ subset.prt <- function(x, subset, select, drop = FALSE, ...) {
   if (...length() > 0L) warning("Ignoring `...` arguments.")
 
   if (missing(subset)) subset <- NULL
-  else subset <- substitute(subset)
+  else subset <- rlang::enquo(subset)
 
   if (missing(select)) select <- NULL
-  else select <- substitute(select)
+  else select <- rlang::enquo(select)
 
   subset_quo(x, i = subset, j = select)
 }
@@ -24,7 +24,7 @@ subset_quo <- function(x, i = NULL, j = NULL) {
 
   cols <- as.list(seq_along(x))
   names(cols) <- colnames(x)
-  cols <- eval(j, cols)
+  cols <- rlang::eval_tidy(j, cols)
 
   if (!is.null(cols)) cols <- vec_as_col_index(cols, x)
 
@@ -38,7 +38,7 @@ subset_quo <- function(x, i = NULL, j = NULL) {
 
     if (all(is.na(need_cols))) {
 
-      rows <- eval(i, list())
+      rows <- rlang::eval_tidy(i, list())
       rows <- vec_as_row_index(rows, x)
 
       prt_read(x, rows = rows, columns = cols)
@@ -59,7 +59,7 @@ subset_prt <- function(x, cols, i = NULL, j = NULL) {
 
   tmp <- prt_read(x, rows = NULL, columns = cols)
 
-  rows <- eval(i, tmp)
+  rows <- rlang::eval_tidy(i, tmp)
   rows <- vec_as_row_index(rows, x)
 
   prt_read(x, rows = rows, columns = j)
@@ -69,7 +69,7 @@ subset_fst <- function(x, cols, i = NULL, j = NULL) {
 
   tmp <- fst_read(x, columns = cols)
 
-  rows <- eval(i, tmp)
+  rows <- rlang::eval_tidy(i, tmp)
   rows <- vec_as_row_index(rows, x)
 
   fst_read(x, rows = rows, columns = j)
