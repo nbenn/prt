@@ -110,7 +110,10 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>select</span>, <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>, <span class='no'>subset</span>, <span class='no'>select</span>, <span class='kw'>part_safe</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+
+<span class='fu'>subset_quo</span>(<span class='no'>x</span>, <span class='kw'>subset</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>select</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>part_safe</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,6 +131,14 @@
       <th>select</th>
       <td><p>expression, indicating columns to select from a
     data frame.</p></td>
+    </tr>
+    <tr>
+      <th>part_safe</th>
+      <td><p>Logical flax indicating whether the <code>subset</code> expression
+can be safely be applied to individual partitions. The default is <code>FALSE</code>,
+which means that whenever <code>subset</code> contains a symbol which does not refer
+to a column, the <code>subset</code> expression is evaluated over the entire <code>prt</code>
+object instead of over individual partitions.</p></td>
     </tr>
     <tr>
       <th>drop</th>
