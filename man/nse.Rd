@@ -3,9 +3,13 @@
 \name{nse}
 \alias{nse}
 \alias{subset.prt}
+\alias{subset_quo}
 \title{NSE subsetting operations}
 \usage{
-\method{subset}{prt}(x, subset, select, drop = FALSE, ...)
+\method{subset}{prt}(x, subset, select, part_safe = FALSE,
+  drop = FALSE, ...)
+
+subset_quo(x, subset = NULL, select = NULL, part_safe = FALSE)
 }
 \arguments{
 \item{x}{object to be subsetted.}
@@ -15,6 +19,12 @@
 
 \item{select}{expression, indicating columns to select from a
     data frame.}
+
+\item{part_safe}{Logical flax indicating whether the \code{subset} expression
+can be safely be applied to individual partitions. The default is \code{FALSE},
+which means that whenever \code{subset} contains a symbol which does not refer
+to a column, the \code{subset} expression is evaluated over the entire \code{prt}
+object instead of over individual partitions.}
 
 \item{drop}{passed on to \code{[} indexing operator.}
 

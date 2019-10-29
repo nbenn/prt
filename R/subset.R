@@ -74,17 +74,17 @@
     if (!missing(drop)) warning("`drop` ignored")
 
     if (missing(i)) i <- NULL
-    else i <- vec_as_col_index(i, x)
+    else i <- vec_as_col_index(i, colnames(x))
 
     res <- prt_read(x, rows = NULL, columns = i)
 
   } else {
 
     if (missing(i)) i <- NULL
-    else i <- vec_as_row_index(i, x)
+    else i <- vec_as_row_index(i, nrow(x))
 
     if (missing(j)) j <- NULL
-    else j <- vec_as_col_index(j, x)
+    else j <- vec_as_col_index(j, colnames(x))
 
     res <- prt_read(x, rows = i, columns = j)
 
@@ -146,7 +146,7 @@ prt_subset2 <- function(x, j, i = NULL) {
   }
 
   if (!is.null(i)) {
-    i <- vec_as_row_index(i, x)
+    i <- vec_as_row_index(i, nrow(x))
     assert_that(length(i) == 1L)
   }
 
@@ -154,7 +154,7 @@ prt_subset2 <- function(x, j, i = NULL) {
   res[[1L]]
 }
 
-vec_as_col_index <- function(j, x) {
+vec_as_col_index <- function(j, cols) {
 
   stopifnot(!is.null(j))
 
@@ -163,14 +163,12 @@ vec_as_col_index <- function(j, x) {
     stop("Can't use NA as column index with `[` at position(s) ", pos, ".")
   }
 
-  vctrs::vec_as_index(j, as.integer(ncol(x)), colnames(x))
+  vctrs::vec_as_index(j, length(cols), cols)
 }
 
-vec_as_row_index <- function(i, x) {
+vec_as_row_index <- function(i, n_row) {
 
   stopifnot(!is.null(i))
-
-  nr <- as.integer(nrow(x))
 
   if (is.character(i)) {
 
@@ -178,19 +176,19 @@ vec_as_row_index <- function(i, x) {
 
   } else if (is.numeric(i)) {
 
-    i <- fix_oob(i, nr)
+    i <- fix_oob(i, n_row)
 
   } else if (is.logical(i)) {
 
-    if (length(i) != 1L && length(i) != nr) {
+    if (length(i) != 1L && length(i) != n_row) {
       warning("Length of logical index must be 1",
-              if (nr != 1) paste0(" or ", nr),
+              if (n_row != 1) paste0(" or ", n_row),
               ", not ", length(i))
-      return(seq_len(nr)[i])
+      return(seq_len(n_row)[i])
     }
   }
 
-  vctrs::vec_as_index(i, nr)
+  vctrs::vec_as_index(i, n_row)
 }
 
 fix_oob <- function(i, n) {

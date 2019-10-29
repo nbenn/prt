@@ -1,7 +1,4 @@
 
-#' @importFrom assertthat assert_that is.count is.string
-NULL
-
 #' Methods for creating and inspecting prt objects
 #'
 #' @param files Character vector of file name(s).
