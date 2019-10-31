@@ -14,6 +14,12 @@ skip_on_non_utf8_locale <- function() {
   }
 }
 
+skip_on_r_lt_3_4 <- function() {
+  if (getRversion() < "3.4.0") {
+    skip("R version < 3.4.0")
+  }
+}
+
 demo_data_frame <- function(dataset = "mtcars") {
   env <- new.env()
   name <- utils::data(list = dataset, package = "datasets", envir = env)

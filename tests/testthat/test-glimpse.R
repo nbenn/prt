@@ -97,11 +97,6 @@ test_that("str output matches known output", {
   )
 
   expect_output_file_opts(
-    str(prt_cars, vec.len = 100),
-    "str/mtcars-100.txt"
-  )
-
-  expect_output_file_opts(
     str(prt_cars, no.list = TRUE),
     "str/mtcars.txt"
   )
@@ -112,4 +107,14 @@ test_that("str output matches known output", {
   )
 
   expect_warning(str(prt_cars, give.length = TRUE))
+})
+
+test_that("truncation of str output", {
+
+  skip_on_r_lt_3_4()
+
+  expect_output_file_opts(
+    str(prt_cars, vec.len = 100),
+    "str/mtcars-100.txt"
+  )
 })
