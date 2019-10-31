@@ -51,6 +51,11 @@ subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE) {
 
     if (all(is.na(need_cols))) {
 
+      if (part_safe) {
+        message("`part_safe` has no effect as `subset` has to be ",
+                "evaluated over the entire `prt` at once.")
+      }
+
       rows <- eval_rows(subset, nrow(x))
 
       prt_read(x, rows = rows, columns = cols)
@@ -79,7 +84,7 @@ eval_rows <- function(quo, n_row, dat = NULL) {
 
 subset_prt <- function(x, cols, i = NULL, j = NULL) {
 
-  message("Evaluating row subsetting over entire `prt` at one. If ",
+  message("Evaluating row subsetting over the entire `prt` at once. If ",
           "applicable consider the `part_safe` argument.")
 
   tmp <- prt_read(x, rows = NULL, columns = cols)

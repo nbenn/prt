@@ -1,5 +1,5 @@
 # A prt:        3 × 2
-# Partitioning: 1 parts [3] rows
+# Partitioning: [3] rows
   成交日期 合同录入日期
      <int>        <int>
 1        1            4

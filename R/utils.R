@@ -75,10 +75,13 @@ prt_read <- function(x, rows = NULL, columns = NULL) {
 
   if (is.numeric(columns)) columns <- colnames(x)[columns]
 
-  if (is.null(rows)) {
+  if (n_part(x) == 1L) {
 
-    res <- lapply(prt_files(x), fst::read_fst, columns = columns,
-                  as.data.table = TRUE)
+    res <- fst_read(unclass(x)[[1L]], rows = rows, columns = columns)
+
+  } else if (is.null(rows)) {
+
+    res <- prt_lapply(x, fst_read, rows = NULL, columns = columns)
     res <- data.table::rbindlist(res)
 
   } else {
@@ -212,8 +215,8 @@ dim_desc <- function(x) {
 }
 
 part_desc <- function(x) {
-  paste0(n_part(x), " parts [",
-         paste(prt_nrows(x), collapse = ", "), "] rows")
+  part_rows <- vapply(prt_nrows(x), big_mark, character(1L))
+  paste0("[", paste(part_rows, collapse = ", "), "] rows")
 }
 
 times <- function(fancy = l10n_info()$`UTF-8`) {

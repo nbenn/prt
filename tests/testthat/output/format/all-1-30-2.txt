@@ -1,6 +1,5 @@
 # A prt:        3 × 7
-# Partitioning: 1 parts [3]
-#   rows
+# Partitioning: [3] rows
       a     b c     d
   <dbl> <int> <lgl> <chr>
 1     1     1 TRUE  a

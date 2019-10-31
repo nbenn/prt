@@ -1,5 +1,5 @@
 # A prt:        12 × 1
-# Partitioning: 1 parts [12] rows
+# Partitioning: [12] rows
    x
    <dttm>
 1  2016-01-01 12:34:57

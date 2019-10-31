@@ -1,6 +1,6 @@
 Rows: 3
 Columns: 7
-Partitioning: 1 parts [3] rows
+Partitioning: [3] rows
 $ a <dbl> 1.0, 2.5, NA
 $ b <int> 1, 2, NA
 $ c <lgl> TRUE, FALSE, NA

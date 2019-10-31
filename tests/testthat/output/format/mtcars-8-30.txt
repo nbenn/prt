@@ -1,6 +1,5 @@
 # A prt:        32 × 11
-# Partitioning: 2 parts [16,
-#   16] rows
+# Partitioning: [16, 16] rows
      mpg   cyl  disp    hp
    <dbl> <dbl> <dbl> <dbl>
 1   21       6 160     110

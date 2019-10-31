@@ -1,6 +1,5 @@
 # A prt:        150 × 5
-# Partitioning: 2 parts [75,
-#   75] rows
+# Partitioning: [75, 75] rows
     Sepal.Length Sepal.Width
            <dbl>       <dbl>
 1            5.1         3.5

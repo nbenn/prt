@@ -4,8 +4,6 @@
 #   ×
 #   5
 # Partitioning:
-#   2
-#   parts
 #   [75,
 #   75]
 #   rows

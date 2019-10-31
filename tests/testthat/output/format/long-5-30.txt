@@ -1,6 +1,5 @@
 # A prt:        10,000 × 1
-# Partitioning: 1 parts
-#   [10000] rows
+# Partitioning: [10,000] rows
            a
        <int>
 1          1
