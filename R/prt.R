@@ -172,7 +172,10 @@ head.prt <- function(x, n = 6L, ...) {
   if (n < 0L) n <- max(nrow(x) + n, 0L)
   else n <- min(n, nrow(x))
 
-  prt_read(x, rows = seq_len(n), columns = NULL)
+  if (n == nrow(x)) rows <- NULL
+  else rows <- seq_len(n)
+
+  prt_read(x, rows = rows, columns = NULL)
 }
 
 #' @rdname new_prt
@@ -190,5 +193,8 @@ tail.prt <- function(x, n = 6L, ...) {
   if (n < 0L) n <- max(nrx + n, 0L)
   else n <- min(n, nrx)
 
-  prt_read(x, rows = seq.int(to = nrx, length.out = n), columns = NULL)
+  if (n == nrx) rows <- NULL
+  else rows <- seq.int(to = nrx, length.out = n)
+
+  prt_read(x, rows = rows, columns = NULL)
 }

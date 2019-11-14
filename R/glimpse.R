@@ -11,57 +11,21 @@
 #' @export
 #'
 glimpse.prt <- function(x, width = NULL, ...) {
-  gplimpse_prt(x = x, width = width)
+  gplimpse_dt(x = x, width = width)
   invisible(x)
 }
 
-#' @inheritParams utils::str
+#' Printing utilities
 #'
-#' @rdname glimpse
+#' @inheritParams glimpse.prt
 #'
-#' @importFrom utils str
+#' @keywords internal
+#'
+#' @rdname internal
 #'
 #' @export
 #'
-str.prt <- function(object, ...) {
-
-  ncol <- ncol(object)
-  npart <- n_part(object)
-
-  cat("'prt':\t", nrow(object), " obs. of ", ncol, " variable",
-      if (ncol != 1) "s",  " in ", npart, " partition",
-      if (npart != 1) "s", if (ncol > 0) ":", "\n", sep = "")
-
-  dots <- list(...)
-
-  if (length(dots) && any("vec.len" == names(dots))) {
-    len <- dots[["vec.len"]]
-  } else {
-    len <- utils::strOptions()$vec.len
-  }
-
-  if (length(dots)) {
-    if (any("give.length" == names(dots))) {
-      warning("Ignoring `give.length` argument.")
-      dots$give.length <- NULL
-    }
-    if (any("no.list" == names(dots))) {
-      dots$no.list <- NULL
-    }
-  }
-
-  dat <- head(object, len * 3L + 1L)
-
-  args <- c(
-    list(c(dat)),
-    dots,
-    list(no.list = TRUE, give.length = FALSE)
-  )
-
-  invisible(do.call("str", args))
-}
-
-gplimpse_prt <- function(x, width = NULL) {
+gplimpse_dt <- function(x, width = NULL) {
 
   width <- print_width(width, allow_inf = FALSE)
 
@@ -127,4 +91,76 @@ format_row.factor <- function(x) {
   } else {
     format(x, trim = TRUE, justify = "none")
   }
+}
+
+#' @rdname glimpse
+#'
+#' @export
+#'
+str_sum <- function(x) UseMethod("str_sum")
+
+#' @rdname glimpse
+#'
+#' @export
+#'
+str_sum.prt <- function(x) {
+
+  ncol <- ncol(x)
+  npart <- n_part(x)
+
+  paste0(
+    "'prt':\t", nrow(x), " obs. of ", ncol, " variable", if (ncol != 1) "s",
+    " in ", npart, " partition", if (npart != 1) "s", if (ncol > 0) ":", "\n"
+  )
+}
+
+#' @inheritParams utils::str
+#'
+#' @rdname glimpse
+#'
+#' @importFrom utils str
+#'
+#' @export
+#'
+str.prt <- function(object, ...) {
+  invisible(str_dt(object, ...))
+}
+
+#' @keywords internal
+#'
+#' @rdname internal
+#'
+#' @export
+#'
+str_dt <- function(x, ...) {
+
+  cat(str_sum(x))
+
+  dots <- list(...)
+
+  if (length(dots) && any("vec.len" == names(dots))) {
+    len <- dots[["vec.len"]]
+  } else {
+    len <- utils::strOptions()$vec.len
+  }
+
+  if (length(dots)) {
+    if (any("give.length" == names(dots))) {
+      warning("Ignoring `give.length` argument.")
+      dots$give.length <- NULL
+    }
+    if (any("no.list" == names(dots))) {
+      dots$no.list <- NULL
+    }
+  }
+
+  dat <- head(x, len * 3L + 1L)
+
+  args <- c(
+    list(c(dat)),
+    dots,
+    list(no.list = TRUE, give.length = FALSE)
+  )
+
+  do.call("str", args)
 }

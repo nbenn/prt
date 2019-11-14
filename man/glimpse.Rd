@@ -2,11 +2,17 @@
 % Please edit documentation in R/glimpse.R, R/utils.R
 \name{glimpse.prt}
 \alias{glimpse.prt}
+\alias{str_sum}
+\alias{str_sum.prt}
 \alias{str.prt}
 \alias{tbl_sum.prt}
 \title{Get a glimpse of your data}
 \usage{
 \method{glimpse}{prt}(x, width = NULL, ...)
+
+str_sum(x)
+
+\method{str_sum}{prt}(x)
 
 \method{str}{prt}(object, ...)
 

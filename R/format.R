@@ -29,6 +29,14 @@ print.trunc_dt <- function(x, ...) {
   invisible(x)
 }
 
+#' @inheritParams print.prt
+#'
+#' @keywords internal
+#'
+#' @rdname internal
+#'
+#' @export
+#'
 trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
 
   rows <- nrow(x)
@@ -44,7 +52,7 @@ trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
   if (is.null(n_extra)) n_extra <- get_opt("max_extra_cols")
 
   if (nrow(x) < 2 * n) {
-    df <- prt_read(x, rows = NULL, columns = NULL)
+    df <- head(x, nrow(x))
     rowid <- seq_len(nrow(x))
   } else {
     df <- rbind(head(x, n), tail(x, n))

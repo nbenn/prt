@@ -35,6 +35,8 @@ subset.prt <- function(x, subset, select, part_safe = FALSE, drop = FALSE,
 #'
 subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE) {
 
+  assert_that(is_prt(x))
+
   cols <- as.list(seq_along(x))
   names(cols) <- colnames(x)
   cols <- rlang::eval_tidy(select, cols)
