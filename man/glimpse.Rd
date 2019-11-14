@@ -4,6 +4,7 @@
 \alias{glimpse.prt}
 \alias{str_sum}
 \alias{str_sum.prt}
+\alias{str_sum.data.frame}
 \alias{str.prt}
 \alias{tbl_sum.prt}
 \title{Get a glimpse of your data}
@@ -13,6 +14,8 @@
 str_sum(x)
 
 \method{str_sum}{prt}(x)
+
+\method{str_sum}{data.frame}(x)
 
 \method{str}{prt}(object, ...)
 

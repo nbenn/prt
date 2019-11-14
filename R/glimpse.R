@@ -114,6 +114,20 @@ str_sum.prt <- function(x) {
   )
 }
 
+#' @rdname glimpse
+#'
+#' @export
+#'
+str_sum.data.frame <- function(x) {
+
+  ncol <- ncol(x)
+  cls <- paste0("'", class(x), "'", collapse = ", ")
+
+  paste0(
+    cls, ":\t", nrow(x), " obs. of ", ncol, " variable", if (ncol != 1) "s\n"
+  )
+}
+
 #' @inheritParams utils::str
 #'
 #' @rdname glimpse
