@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a glimpse of your data — glimpse.prt • prt</title>
+<title>Printing utilities — trunc_dt • prt</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Get a glimpse of your data — glimpse.prt" />
-<meta property="og:description" content="Get a glimpse of your data" />
+<meta property="og:title" content="Printing utilities — trunc_dt" />
+<meta property="og:description" content="Printing utilities" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,49 +100,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a glimpse of your data</h1>
+    <h1>Printing utilities</h1>
     
-    <div class="hidden name"><code>glimpse.Rd</code></div>
+    <div class="hidden name"><code>internal.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get a glimpse of your data</p>
+    <p>Printing utilities</p>
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for prt</span>
-<span class='fu'>glimpse</span>(<span class='no'>x</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>trunc_dt</span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n_extra</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='fu'>str_sum</span>(<span class='no'>x</span>)
+<span class='fu'>gplimpse_dt</span>(<span class='no'>x</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
 
-<span class='co'># S3 method for prt</span>
-<span class='fu'>str_sum</span>(<span class='no'>x</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'>tbl_sum</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>str_dt</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An object to glimpse at.</p></td>
+      <td><p>Object to format or print.</p></td>
+    </tr>
+    <tr>
+      <th>n</th>
+      <td><p>Number of rows to show. If <code>NULL</code>, the default, will print all rows
+if less than option <code>tibble.print_max</code>. Otherwise, will print
+<code>tibble.print_min</code> rows.</p></td>
     </tr>
     <tr>
       <th>width</th>
-      <td><p>Width of output: defaults to the setting of the option
-<code>tibble.width</code> (if finite) or the width of the console.</p></td>
+      <td><p>Width of text output to generate. This defaults to <code>NULL</code>, which
+means use <code><a href='https://rdrr.io/r/base/options.html'>getOption("tibble.width")</a></code> or (if also <code>NULL</code>)
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("width")</a></code>; the latter displays only the columns that fit on one
+screen. You can also set <code><a href='https://rdrr.io/r/base/options.html'>options(tibble.width = Inf)</a></code> to override this
+default and always print all columns.</p></td>
+    </tr>
+    <tr>
+      <th>n_extra</th>
+      <td><p>Number of extra columns to print abbreviated information for,
+if the width is too small for the entire tibble. If <code>NULL</code>, the default,
+will print information about at most <code>tibble.max_extra_cols</code> extra columns.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Other arguments passed on to individual methods.</p></td>
-    </tr>
-    <tr>
-      <th>object</th>
-      <td><p>any <span style="R">R</span> object about which you want to have some
-    information.</p></td>
     </tr>
     </table>
 
