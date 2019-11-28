@@ -6,8 +6,7 @@
 \alias{subset_quo}
 \title{NSE subsetting operations}
 \usage{
-\method{subset}{prt}(x, subset, select, part_safe = FALSE,
-  drop = FALSE, ...)
+\method{subset}{prt}(x, subset, select, part_safe = FALSE, drop = FALSE, ...)
 
 subset_quo(x, subset = NULL, select = NULL, part_safe = FALSE)
 }
