@@ -171,7 +171,13 @@ add_row_id <- function(x, rowid) {
 
 squeeze_dt <- function(x, width) {
 
-  res <- pillar::squeeze(x$mcf, width = width - max(nchar(x$row_id)) - 1L)
+  term_width <- getOption("width")
+  id_width <- max(nchar(x$row_id))
+
+  on.exit(options(width = term_width))
+  options(width = term_width - id_width - 1L)
+
+  res <- pillar::squeeze(x$mcf, width = width - id_width - 1L)
 
   attribs <- attributes(res)
 
