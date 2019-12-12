@@ -86,8 +86,10 @@ eval_rows <- function(quo, n_row, dat = NULL) {
 
 subset_prt <- function(x, cols, i = NULL, j = NULL) {
 
-  message("Evaluating row subsetting over the entire `prt` at once. If ",
-          "applicable consider the `part_safe` argument.")
+  if (n_part(x) > 1L) {
+    message("Evaluating row subsetting over the entire `prt` at once. If ",
+            "applicable consider the `part_safe` argument.")
+  }
 
   tmp <- prt_read(x, rows = NULL, columns = cols)
 
