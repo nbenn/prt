@@ -79,8 +79,6 @@ eval_rows <- function(quo, n_row, dat = NULL) {
 
   rows <- rlang::eval_tidy(quo, dat)
 
-  assert_that(is.logical(rows))
-
   vec_as_row_index(rows, n_row)
 }
 
