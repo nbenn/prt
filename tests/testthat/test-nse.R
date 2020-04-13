@@ -19,18 +19,17 @@ test_that("nse subsetting", {
   expect_error(subset(tbl_cars, c(T, T, F)),
                class = "vctrs_error_subscript_size")
 
-  expect_identical(subset(prt_cars, 1:5), dt_cars[1:5, ])
+  expect_error(subset(prt_cars, 1:5))
+
   expect_identical(subset(prt_cars, select = 1:5), dt_cars[, 1:5])
 
   inds <- 1:5
-  expect_identical(subset(prt_cars, inds),
-                          dt_cars[inds, ])
+  expect_error(subset(prt_cars, inds))
   expect_identical(subset(prt_cars, select = inds),
                           dt_cars[, inds, with = FALSE])
 
   get_ind <- function(x = 5L) seq_len(x)
-  expect_identical(subset(prt_cars, get_ind()),
-                          dt_cars[get_ind(), ])
+  expect_error(subset(prt_cars, get_ind()))
   expect_identical(subset(prt_cars, select = get_ind()),
                           dt_cars[, get_ind(), with = FALSE])
 
