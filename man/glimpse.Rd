@@ -27,7 +27,7 @@ str_sum(x)
 \item{width}{Width of output: defaults to the setting of the option
 \code{tibble.width} (if finite) or the width of the console.}
 
-\item{...}{Other arguments passed on to individual methods.}
+\item{...}{Unused, for extensibility.}
 
 \item{object}{any \R object about which you want to have some
     information.}

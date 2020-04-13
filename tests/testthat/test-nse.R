@@ -15,9 +15,9 @@ test_that("nse subsetting", {
     subset(dt_cars, c(rep(TRUE, 5), rep(FALSE, nrow(mtcars) - 5)))
   )
 
-  expect_warning(res <- subset(prt_cars, c(T, T, F)))
-  expect_warning(ref <- subset(tbl_cars, c(T, T, F)))
-  expect_identical(res, data.table::setDT(ref))
+  expect_warning(subset(prt_cars, c(T, T, F)))
+  expect_error(subset(tbl_cars, c(T, T, F)),
+               class = "vctrs_error_subscript_size")
 
   expect_error(subset(prt_cars, 1:5))
 

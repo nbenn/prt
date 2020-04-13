@@ -139,7 +139,7 @@ prt_subset2 <- function(x, j, i = NULL) {
     else stop("Single element subsetting with logical values only supports ",
               "`TRUE`.")
   } else if (is.numeric(j)) {
-    j <- vctrs::vec_as_index(j, nrow(x))
+    j <- vctrs::vec_as_location(j, nrow(x))
   } else if (is.character(j)) {
     j <- match(j, colnames(x))
     if (is.na(j)) return(NULL)
@@ -163,7 +163,7 @@ vec_as_col_index <- function(j, cols) {
     stop("Can't use NA as column index with `[` at position(s) ", pos, ".")
   }
 
-  vctrs::vec_as_index(j, length(cols), cols)
+  vctrs::vec_as_location(j, length(cols), cols)
 }
 
 vec_as_row_index <- function(i, n_row) {
@@ -188,7 +188,7 @@ vec_as_row_index <- function(i, n_row) {
     }
   }
 
-  vctrs::vec_as_index(i, n_row)
+  vctrs::vec_as_location(i, n_row)
 }
 
 fix_oob <- function(i, n) {
