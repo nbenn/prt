@@ -2,14 +2,14 @@
 % Please edit documentation in R/format.R, R/glimpse.R, R/utils.R
 \name{trunc_dt}
 \alias{trunc_dt}
-\alias{gplimpse_dt}
+\alias{glimpse_dt}
 \alias{str_dt}
 \alias{dim_desc}
 \title{Printing utilities}
 \usage{
 trunc_dt(x, n = NULL, width = NULL, n_extra = NULL)
 
-gplimpse_dt(x, width = NULL)
+glimpse_dt(x, width = NULL)
 
 str_dt(x, ...)
 

@@ -11,7 +11,7 @@
 #' @export
 #'
 glimpse.prt <- function(x, width = NULL, ...) {
-  gplimpse_dt(x = x, width = width)
+  glimpse_dt(x = x, width = width)
   invisible(x)
 }
 
@@ -25,7 +25,7 @@ glimpse.prt <- function(x, width = NULL, ...) {
 #'
 #' @export
 #'
-gplimpse_dt <- function(x, width = NULL) {
+glimpse_dt <- function(x, width = NULL) {
 
   width <- print_width(width, allow_inf = FALSE)
 
@@ -106,10 +106,11 @@ str_sum <- function(x) UseMethod("str_sum")
 str_sum.prt <- function(x) {
 
   ncol <- ncol(x)
+  cls <- paste0("'", class(x), "'", collapse = ", ")
   npart <- n_part(x)
 
   paste0(
-    "'prt':\t", nrow(x), " obs. of ", ncol, " variable", if (ncol != 1) "s",
+    cls, ":\t", nrow(x), " obs. of ", ncol, " variable", if (ncol != 1) "s",
     " in ", npart, " partition", if (npart != 1) "s", if (ncol > 0) ":", "\n"
   )
 }
