@@ -64,7 +64,7 @@ is_prt <- function(x) inherits(x, "prt")
 #' @export
 #'
 dim.prt <- function(x) {
-  as.integer(c(sum(prt_nrows(x)), ncol(.subset2(x, 1L))))
+  as.integer(c(sum(part_nrow(x)), ncol(.subset2(x, 1L))))
 }
 
 #' @rdname new_prt
@@ -80,6 +80,12 @@ length.prt <- function(x) ncol(x)
 n_part <- function(x) {
   length(unclass(x))
 }
+
+#' @rdname new_prt
+#'
+#' @export
+#'
+part_nrow <- function(x) prt_vapply(x, nrow, numeric(1L))
 
 #' @rdname new_prt
 #'

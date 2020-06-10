@@ -43,8 +43,6 @@ fst_filename <- function(x) {
   .subset2(x, "meta")[["path"]]
 }
 
-prt_nrows <- function(x) prt_vapply(x, nrow, numeric(1L))
-
 num_ind_to_part_no <- function(ind, lengths) {
 
   assert_that(all(ind > 0L, na.rm = TRUE))
@@ -86,7 +84,7 @@ prt_read <- function(x, rows = NULL, columns = NULL) {
 
   } else {
 
-    nrows <- prt_nrows(x)
+    nrows <- part_nrow(x)
     parts <- num_ind_to_part_no(rows, nrows)
     inds <- num_ind_to_part_ind(rows, nrows, parts)
 
@@ -221,7 +219,7 @@ dim_desc <- function(x) {
 }
 
 part_desc <- function(x) {
-  part_rows <- vapply(prt_nrows(x), big_mark, character(1L))
+  part_rows <- vapply(part_nrow(x), big_mark, character(1L))
   paste0("[", paste(part_rows, collapse = ", "), "] rows")
 }
 
