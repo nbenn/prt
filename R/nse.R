@@ -20,18 +20,30 @@ subset.prt <- function(x, subset, select, part_safe = FALSE, drop = FALSE,
 
   assert_that(is.flag(part_safe))
 
-  if (missing(subset)) subset <- NULL
-  else subset <- rlang::enquo(subset)
+  if (missing(subset)) {
 
-  if (rlang::is_quosure(subset) && rlang::quo_is_missing(subset)) {
     subset <- NULL
+
+  } else {
+
+    subset <- rlang::enquo(subset)
+
+    if (rlang::quo_is_missing(subset) || rlang::quo_is_null(subset)) {
+      subset <- NULL
+    }
   }
 
-  if (missing(select)) select <- NULL
-  else select <- rlang::enquo(select)
+  if (missing(select)) {
 
-  if (rlang::is_quosure(select) && rlang::quo_is_missing(select)) {
     select <- NULL
+
+  } else {
+
+    select <- rlang::enquo(select)
+
+    if (rlang::quo_is_missing(select) || rlang::quo_is_null(select)) {
+      select <- NULL
+    }
   }
 
   subset_quo(x, subset, select, part_safe)
