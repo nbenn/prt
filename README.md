@@ -88,11 +88,11 @@ of `data.table`s for any result of a subsetting operation and the
 complete disregard for `row.names`.
 
 In addition to standard subsetting operations involving the functions
-`[()`, `[[()` and `$()`, the base generic function `subset()` is
-implemented for the `prt` class, enabling subsetting operations using
-non-standard evaluation. Combined with random access to tables stored as
-`fst` files, this can make data access more efficient in cases where
-only a subset of the data is of interest.
+`\x60[\x60()`, `\x60[[\x60()` and `\x60$\x60()`, the base generic
+function `subset()` is implemented for the `prt` class, enabling
+subsetting operations using non-standard evaluation. Combined with
+random access to tables stored as `fst` files, this can make data access
+more efficient in cases where only a subset of the data is of interest.
 
 ``` r
 jan <- flights[flights$month == 1, ]
