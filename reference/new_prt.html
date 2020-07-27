@@ -112,45 +112,45 @@
     <p>Methods for creating and inspecting prt objects</p>
     </div>
 
-    <pre class="usage"><span class='fu'>new_prt</span>(<span class='no'>files</span>)
+    <pre class="usage"><span class='fu'>new_prt</span>(<span class='kw'>files</span>)
 
-<span class='fu'>as_prt</span>(<span class='no'>tbl</span>, <span class='kw'>n_chunks</span> <span class='kw'>=</span> <span class='fl'>1L</span>, <span class='kw'>dir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
+<span class='fu'>as_prt</span>(<span class='kw'>tbl</span>, n_chunks = <span class='fl'>1L</span>, dir = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
 
-<span class='fu'>is_prt</span>(<span class='no'>x</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='no'>x</span>)
+<span class='fu'>is_prt</span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>x</span>)
-
-<span class='fu'>n_part</span>(<span class='no'>x</span>)
-
-<span class='fu'>part_nrow</span>(<span class='no'>x</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/dimnames.html'>dimnames</a></span>(<span class='no'>x</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>x</span>)
+
+<span class='fu'>n_part</span>(<span class='kw'>x</span>)
+
+<span class='fu'>part_nrow</span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/dimnames.html'>dimnames</a></span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'>as.data.table</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>as.data.table</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>x</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>optional</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>x</span>, row.names = <span class='kw'>NULL</span>, optional = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>6L</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='no'>x</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>6L</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)
+
+<span class='co'># S3 method for prt</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -209,7 +209,7 @@ the default value issues a warning.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>
