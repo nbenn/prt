@@ -117,11 +117,3 @@ test_that("trunc_mat for wide-character columns", {
     "format/wide-8-60.txt"
   )
 })
-
-test_that("kmitr is happy", {
-
-  expect_output_file_opts(
-    knitr::knit_print(trunc_dt(prt_cars, n = 8L, width = 30L)),
-    "format/mtcars-8-30.txt"
-  )
-})

@@ -25,9 +25,10 @@ make_prt <- function(x) {
   structure(x, class = "prt")
 }
 
-#' @param tbl An object inheriting from [base::data.frame()]. Requires both a
-#' [base::nrow()] and [base::split()] method.
-#' @param n_chunks Count variable specifying the number of chunks `tbl` is
+#' @param x An object inheriting from [base::data.frame()] (requires both a
+#' [base::nrow()] and [base::split()] method), or a list of objects inheriting
+#' from [base::data.frame()].
+#' @param n_chunks Count variable specifying the number of chunks `x` is
 #' split into.
 #' @param dir Directory where the chunked [fst::fst()] objects reside in.
 #'
@@ -35,18 +36,51 @@ make_prt <- function(x) {
 #'
 #' @export
 #'
-as_prt <- function(tbl, n_chunks = 1L, dir = tempfile()) {
+as_prt <- function(x, n_chunks = NULL, dir = tempfile()) {
 
-  assert_that(inherits(tbl, "data.frame"), is.count(n_chunks), is.string(dir))
+  assert_that(is.string(dir))
 
-  if (!dir.exists(dir)) dir.create(dir)
+  if (!dir.exists(dir)) {
+    dir.create(dir)
+  }
+
+  is_df <- inherits(x, "data.frame")
+
+  if (is.null(n_chunks) && is_df) {
+
+    n_chunks <- 1L
+
+  } else if (is_df) {
+
+    assert_that(is.count(n_chunks))
+
+  } else {
+
+    assert_that(is.list(x), length(x) > 0L,
+                all(vapply(x, inherits, logical(1L), "data.frame")))
+
+    len <- length(x)
+
+    if (is.null(n_chunks)) {
+      n_chunks <- len
+    } else {
+      assert_that(isTRUE(all.equal(n_chunks, len)))
+    }
+  }
+
+  assert_that(is.string(dir))
 
   filenames <- file.path(dir, paste0(seq_len(n_chunks), ".fst"))
 
   assert_that(!any(file.exists(filenames)))
 
-  Map(fst::write_fst, split(tbl, split_indices(nrow(tbl), n_chunks)),
-      filenames)
+  if (is_df) {
+    x <- split(x, split_indices(nrow(x), n_chunks))
+  } else if (isTRUE(all.equal(n_chunks, 1L))) (
+    x <- list(x)
+  )
+
+  Map(fst::write_fst, x, filenames)
 
   new_prt(filenames)
 }

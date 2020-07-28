@@ -20,7 +20,7 @@
 \usage{
 new_prt(files)
 
-as_prt(tbl, n_chunks = 1L, dir = tempfile())
+as_prt(x, n_chunks = NULL, dir = tempfile())
 
 is_prt(x)
 
@@ -51,15 +51,12 @@ part_nrow(x)
 \arguments{
 \item{files}{Character vector of file name(s).}
 
-\item{tbl}{An object inheriting from \code{\link[base:data.frame]{base::data.frame()}}. Requires both a
-\code{\link[base:nrow]{base::nrow()}} and \code{\link[base:split]{base::split()}} method.}
+\item{x}{A \code{prt} object.}
 
-\item{n_chunks}{Count variable specifying the number of chunks \code{tbl} is
+\item{n_chunks}{Count variable specifying the number of chunks \code{x} is
 split into.}
 
 \item{dir}{Directory where the chunked \code{\link[fst:fst]{fst::fst()}} objects reside in.}
-
-\item{x}{A \code{prt} object.}
 
 \item{...}{Generic consistency: additional arguments are ignored and a
 warning is issued.}

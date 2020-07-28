@@ -30,10 +30,22 @@ test_that("prt creation/conversion", {
   expect_identical(as.data.frame(prt_1), as.data.frame(ref))
 
   expect_identical(as.matrix(prt_1), as.matrix(ref))
-  expect_identical(
-    as.data.frame(as_prt(ref, dir = tempfile(tmpdir = tmp), n_chunks = 1L)),
-    ref
-  )
+  expect_identical(ref, as.data.frame(
+    as_prt(ref, dir = tempfile(tmpdir = tmp))
+  ))
+  expect_identical(ref, as.data.frame(
+    as_prt(ref, dir = tempfile(tmpdir = tmp), n_chunks = 1L)
+  ))
+
+  lst_1 <- list(ref)
+
+  expect_identical(ref, as.data.frame(
+    as_prt(lst_1, dir = tempfile(tmpdir = tmp))
+  ))
+  expect_identical(ref, as.data.frame(
+    as_prt(lst_1, dir = tempfile(tmpdir = tmp), n_chunks = 1L)
+  ))
+  expect_error(as_prt(lst_1, dir = tempfile(tmpdir = tmp), n_chunks = 2L))
 
   dir_2 <- fst_files(dat = ref, dir = tempfile(tmpdir = tmp), n_chunks = 2L)
   prt_2 <- new_prt(list.files(dir_2, full.names = TRUE))
@@ -57,10 +69,19 @@ test_that("prt creation/conversion", {
   expect_identical(as.data.frame(prt_1), as.data.frame(ref))
 
   expect_identical(as.matrix(prt_2), as.matrix(ref))
-  expect_identical(
-    as.data.frame(as_prt(ref, dir = tempfile(tmpdir = tmp), n_chunks = 2L)),
-    ref
-  )
+  expect_identical(ref, as.data.frame(
+    as_prt(ref, dir = tempfile(tmpdir = tmp), n_chunks = 2L)
+  ))
+
+  lst_2 <- split(ref, split_indices(nrow(ref), 2L))
+
+  expect_identical(ref, as.data.frame(
+    as_prt(lst_2, dir = tempfile(tmpdir = tmp))
+  ))
+  expect_identical(ref, as.data.frame(
+    as_prt(lst_2, dir = tempfile(tmpdir = tmp), n_chunks = 2L)
+  ))
+  expect_error(as_prt(lst_2, dir = tempfile(tmpdir = tmp), n_chunks = 1L))
 
   expect_warning(as.data.table(prt_1, foo = "bar"),
                  "Ignoring further `...` arguments.")
