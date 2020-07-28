@@ -23,11 +23,17 @@ test_that("prt creation/conversion", {
   expect_identical(dimnames(prt_1), list(NULL, colnames(ref)))
   expect_identical(colnames(prt_1), colnames(ref))
   expect_identical(rownames(prt_1), NULL)
+  expect_identical(names(prt_1), names(ref))
 
-  expect_identical(data.table::as.data.table(prt_1),
-                   data.table::as.data.table(ref))
+  expect_identical(as.data.table(prt_1), as.data.table(ref))
   expect_identical(as.list(prt_1), as.list(ref))
   expect_identical(as.data.frame(prt_1), as.data.frame(ref))
+
+  expect_identical(as.matrix(prt_1), as.matrix(ref))
+  expect_identical(
+    as.data.frame(as_prt(ref, dir = tempfile(tmpdir = tmp), n_chunks = 1L)),
+    ref
+  )
 
   dir_2 <- fst_files(dat = ref, dir = tempfile(tmpdir = tmp), n_chunks = 2L)
   prt_2 <- new_prt(list.files(dir_2, full.names = TRUE))
@@ -44,11 +50,30 @@ test_that("prt creation/conversion", {
   expect_identical(dimnames(prt_2), list(NULL, colnames(ref)))
   expect_identical(colnames(prt_2), colnames(ref))
   expect_identical(rownames(prt_2), NULL)
+  expect_identical(names(prt_1), names(ref))
 
-  expect_identical(data.table::as.data.table(prt_1),
-                   data.table::as.data.table(ref))
+  expect_identical(as.data.table(prt_1), as.data.table(ref))
   expect_identical(as.list(prt_1), as.list(ref))
   expect_identical(as.data.frame(prt_1), as.data.frame(ref))
+
+  expect_identical(as.matrix(prt_2), as.matrix(ref))
+  expect_identical(
+    as.data.frame(as_prt(ref, dir = tempfile(tmpdir = tmp), n_chunks = 2L)),
+    ref
+  )
+
+  expect_warning(as.data.table(prt_1, foo = "bar"),
+                 "Ignoring further `...` arguments.")
+  expect_warning(as.list(prt_1, foo = "bar"),
+                 "Ignoring further `...` arguments.")
+  expect_warning(as.data.frame(prt_1, foo = "bar"),
+                 "Ignoring further `...` arguments.")
+  expect_warning(as.data.frame(prt_1, row.names = rownames(mtcars)),
+                 "Ignoring `row.names` argument.")
+  expect_warning(as.data.frame(prt_1, optional = TRUE),
+                 "Ignoring `optional` argument.")
+  expect_warning(as.matrix(prt_1, foo = "bar"),
+                 "Ignoring further `...` arguments.")
 })
 
 test_that("file_fst head/tail", {

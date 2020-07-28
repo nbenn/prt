@@ -5,6 +5,7 @@ test_that("format_row for values", {
   expect_equal(format_row(NA), "NA")
   expect_equal(format_row(TRUE), "TRUE")
   expect_equal(format_row(logical()), character())
+  expect_equal(format_row(matrix(1:6, ncol = 2)), "<matrix[3 x 2]>")
 })
 
 test_that("format_row for character", {
@@ -33,6 +34,17 @@ prt_cars <- create_prt(demo_data_frame("mtcars"), dir = tmp, n_chunks = 2L)
 prt_iris <- create_prt(demo_data_frame("iris"), dir = tmp, n_chunks = 2L)
 
 prt_all <- create_prt(df_all, dir = tmp)
+
+test_that("str_sum() works", {
+
+  expect_match(
+    str_sum(prt_cars), "'prt':\\s+32 obs\\. of 11 variables in 2 partitions"
+  )
+
+  expect_match(
+    str_sum(mtcars), "'data.frame':\\s+32 obs. of 11 variables"
+  )
+})
 
 test_that("glimpse output matches known output", {
 

@@ -54,4 +54,12 @@ test_that("nse subsetting", {
   inds <- sample(c(TRUE, FALSE), nrow(mtcars), replace = TRUE)
   expect_identical(subset(prt_cars, inds & mpg < 20),
                    subset(dt_cars, inds & mpg < 20))
+
+  expect_identical(subset(prt_cars), subset(dt_cars))
+  expect_identical(subset(prt_cars), dt_cars)
+
+  expect_warning(subset(prt_cars, foo = "bar"),
+                 "Ignoring `...` arguments.")
+  expect_warning(subset(prt_cars, drop = TRUE),
+                 "Ignoring `drop` argument.")
 })

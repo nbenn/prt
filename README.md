@@ -6,14 +6,14 @@
 <!-- badges: start -->
 
 [![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![Codecov test
+coverage](https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://codecov.io/gh/nbenn/prt)
 [![R build
 status](https://github.com/nbenn/prt/workflows/build/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Abuild)
 [![pkgdown build
 status](https://github.com/nbenn/prt/workflows/pkgdown/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Apkgdown)
 [![covr
 status](https://github.com/nbenn/prt/workflows/coverage/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Acoverage)
-[![Codecov test
-coverage](https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://codecov.io/gh/nbenn/prt)
 <!-- badges: end -->
 
 Building on `data.frame` serialization provided by
@@ -88,11 +88,12 @@ of `data.table`s for any result of a subsetting operation and the
 complete disregard for `row.names`.
 
 In addition to standard subsetting operations involving the functions
-`\x60[\x60()`, `\x60[[\x60()` and `\x60$\x60()`, the base generic
-function `subset()` is implemented for the `prt` class, enabling
-subsetting operations using non-standard evaluation. Combined with
-random access to tables stored as `fst` files, this can make data access
-more efficient in cases where only a subset of the data is of interest.
+<code>\`\[\`()</code>, <code>\`\[\[\`()</code> and <code>\`$\`()</code>,
+the base generic function `subset()` is implemented for the `prt` class,
+enabling subsetting operations using non-standard evaluation. Combined
+with random access to tables stored as `fst` files, this can make data
+access more efficient in cases where only a subset of the data is of
+interest.
 
 ``` r
 jan <- flights[flights$month == 1, ]
