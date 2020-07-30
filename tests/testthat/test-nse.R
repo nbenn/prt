@@ -38,10 +38,10 @@ test_that("nse subsetting", {
                    subset(dt_cars, (mpg < 20) & (hp > 100)))
 
   mpg_thresh <- 20
-  expect_message(res <- subset(prt_cars, mpg < mpg_thresh))
-  expect_identical(res, subset(dt_cars, mpg < mpg_thresh))
-  expect_silent(res <- subset(prt_cars, mpg < mpg_thresh, part_safe = TRUE))
-  expect_identical(res, subset(dt_cars, mpg < mpg_thresh))
+  expect_identical(subset(prt_cars, mpg < 20),
+                   subset(dt_cars, mpg < mpg_thresh))
+  expect_identical(subset(prt_cars, mpg < mpg_thresh, part_safe = TRUE),
+                   subset(dt_cars, mpg < mpg_thresh))
 
   expect_identical(subset(prt_cars, mpg < 20), subset(dt_cars, mpg < 20))
   expect_identical(subset(prt_cars, mpg < 20, c("cyl", "disp")),
@@ -52,7 +52,8 @@ test_that("nse subsetting", {
                    subset(dt_cars, mpg < 20, -c(cyl, disp)))
 
   inds <- sample(c(TRUE, FALSE), nrow(mtcars), replace = TRUE)
-  expect_identical(subset(prt_cars, inds & mpg < 20),
+  expect_warning(subset(prt_cars, inds & mpg < 20, part_safe = TRUE))
+  expect_identical(subset(prt_cars, inds & mpg < 20, part_safe = FALSE),
                    subset(dt_cars, inds & mpg < 20))
 
   expect_identical(subset(prt_cars), subset(dt_cars))

@@ -76,9 +76,7 @@ as_prt <- function(x, n_chunks = NULL, dir = tempfile()) {
 
   if (is_df) {
     x <- split(x, split_indices(nrow(x), n_chunks))
-  } else if (isTRUE(all.equal(n_chunks, 1L))) (
-    x <- list(x)
-  )
+  }
 
   Map(fst::write_fst, x, filenames)
 

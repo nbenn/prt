@@ -150,23 +150,33 @@ shrink_dt <- function(df, rows) {
 }
 
 add_empty_row <- function(x) {
-  if (length(x) == 0L) return(x)
+
+  add_shaft <- function(x, n) {
+    x[["shaft_format"]] <- add_in_between(x[["shaft_format"]], n, " ")
+    x
+  }
+
+  if (length(x) == 0L) {
+    return(x)
+  }
+
   n <- length(x[[1L]][[1L]][["shaft_format"]]) / 2L
-  lapply(x, function(y) {
-    lapply(y, function(z) {
-      z[["shaft_format"]] <- add_in_between(z[["shaft_format"]], n, " ")
-      z
-    })
-  })
+
+  lapply(x, lapply, add_shaft, n)
 }
 
 add_row_id <- function(x, rowid) {
-  if (length(x) == 0L) return(x)
-  row_width <- max(crayon::col_nchar(rowid))
-  lapply(x, function(y) {
-    c(list(list(capital_format = rep(strrep(" ", row_width), 2L),
-                shaft_format = format(rowid))), y)
-  })
+
+  do_add <- function(x, width, id) {
+    c(list(list(capital_format = rep(strrep(" ", width), 2L),
+                shaft_format = format(id))), x)
+  }
+
+  if (length(x) == 0L) {
+    return(x)
+  }
+
+  lapply(x, do_add, max(crayon::col_nchar(rowid)), rowid)
 }
 
 squeeze_dt <- function(x, width) {
@@ -181,7 +191,10 @@ squeeze_dt <- function(x, width) {
 
   attribs <- attributes(res)
 
-  if (x$rows_missing > 0L) res <- add_empty_row(res)
+  if (x$rows_missing > 0L) {
+    res <- add_empty_row(res)
+  }
+
   res <- add_row_id(res, pillar::style_subtle(x$row_id))
 
   attributes(res) <- attribs

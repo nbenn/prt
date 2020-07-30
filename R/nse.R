@@ -3,11 +3,8 @@
 #'
 #' @inheritParams base::subset
 #'
-#' @param part_safe Logical flax indicating whether the `subset` expression
-#' can be safely be applied to individual partitions. The default is `FALSE`,
-#' which means that whenever `subset` contains a symbol which does not refer
-#' to a column, the `subset` expression is evaluated over the entire `prt`
-#' object instead of over individual partitions.
+#' @param part_safe Logical flag indicating whether the `subset` expression
+#' can be safely be applied to individual partitions.
 #'
 #' @name nse
 #'
@@ -17,8 +14,6 @@ subset.prt <- function(x, subset, select, part_safe = FALSE, drop = FALSE,
 
   if (!isFALSE(drop)) warning("Ignoring `drop` argument.")
   if (...length() > 0L) warning("Ignoring `...` arguments.")
-
-  assert_that(is.flag(part_safe))
 
   if (missing(subset)) {
 
@@ -49,19 +44,26 @@ subset.prt <- function(x, subset, select, part_safe = FALSE, drop = FALSE,
   subset_quo(x, subset, select, part_safe)
 }
 
+#' @param env The environment in which `subset` and `select` are evaluated in.
+#' This environment is not applicable for quosures because they have their own
+#' environments.
+#'
 #' @rdname nse
 #'
 #' @export
 #'
-subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE) {
+subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE,
+                       env = parent.frame()) {
 
-  assert_that(is_prt(x))
+  assert_that(is_prt(x), is.flag(part_safe))
 
   cols <- as.list(seq_along(x))
   names(cols) <- colnames(x)
-  cols <- rlang::eval_tidy(select, cols)
+  cols <- rlang::eval_tidy(select, cols, env = env)
 
-  if (!is.null(cols)) cols <- vec_as_col_index(cols, colnames(x))
+  if (!is.null(cols)) {
+    cols <- vec_as_col_index(cols, colnames(x))
+  }
 
   if (is.null(subset)) {
 
@@ -78,33 +80,33 @@ subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE) {
                 "evaluated over the entire `prt` at once.")
       }
 
-      rows <- eval_rows(subset, nrow(x))
+      rows <- eval_rows(subset, nrow(x), env)
 
       prt_read(x, rows = rows, columns = cols)
 
-    } else if (part_safe || !any(is.na(need_cols))) {
+    } else if (part_safe) {
 
       res <- prt_lapply(x, subset_fst, cols = need_cols[!is.na(need_cols)],
-                        i = subset, j = cols)
+                        env = env, i = subset, j = cols)
       data.table::rbindlist(res)
 
     } else {
 
-      subset_prt(x, cols = need_cols[!is.na(need_cols)], i = subset, j = cols)
+      subset_prt(x, need_cols[!is.na(need_cols)], env, i = subset, j = cols)
     }
   }
 }
 
-eval_rows <- function(quo, n_row, dat = NULL) {
+eval_rows <- function(quo, n_row, env, dat = NULL) {
 
-  rows <- rlang::eval_tidy(quo, dat)
+  rows <- rlang::eval_tidy(quo, dat, env = env)
 
   assert_that(is.logical(rows))
 
   vec_as_row_index(rows, n_row)
 }
 
-subset_prt <- function(x, cols, i = NULL, j = NULL) {
+subset_prt <- function(x, cols, env, i = NULL, j = NULL) {
 
   if (n_part(x) > 1L) {
     message("Evaluating row subsetting over the entire `prt` at once. If ",
@@ -113,16 +115,16 @@ subset_prt <- function(x, cols, i = NULL, j = NULL) {
 
   tmp <- prt_read(x, rows = NULL, columns = cols)
 
-  rows <- eval_rows(i, nrow(x), tmp)
+  rows <- eval_rows(i, nrow(x), env, tmp)
 
   prt_read(x, rows = rows, columns = j)
 }
 
-subset_fst <- function(x, cols, i = NULL, j = NULL) {
+subset_fst <- function(x, cols, env, i = NULL, j = NULL) {
 
   tmp <- fst_read(x, rows = NULL, columns = cols)
 
-  rows <- eval_rows(i, as.integer(nrow(x)), tmp)
+  rows <- eval_rows(i, as.integer(nrow(x)), env, tmp)
 
   fst_read(x, rows = rows, columns = j)
 }

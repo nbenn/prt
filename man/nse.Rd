@@ -8,7 +8,13 @@
 \usage{
 \method{subset}{prt}(x, subset, select, part_safe = FALSE, drop = FALSE, ...)
 
-subset_quo(x, subset = NULL, select = NULL, part_safe = FALSE)
+subset_quo(
+  x,
+  subset = NULL,
+  select = NULL,
+  part_safe = FALSE,
+  env = parent.frame()
+)
 }
 \arguments{
 \item{x}{object to be subsetted.}
@@ -19,15 +25,16 @@ subset_quo(x, subset = NULL, select = NULL, part_safe = FALSE)
 \item{select}{expression, indicating columns to select from a
     data frame.}
 
-\item{part_safe}{Logical flax indicating whether the \code{subset} expression
-can be safely be applied to individual partitions. The default is \code{FALSE},
-which means that whenever \code{subset} contains a symbol which does not refer
-to a column, the \code{subset} expression is evaluated over the entire \code{prt}
-object instead of over individual partitions.}
+\item{part_safe}{Logical flag indicating whether the \code{subset} expression
+can be safely be applied to individual partitions.}
 
 \item{drop}{passed on to \code{[} indexing operator.}
 
 \item{...}{further arguments to be passed to or from other methods.}
+
+\item{env}{The environment in which \code{subset} and \code{select} are evaluated in.
+This environment is not applicable for quosures because they have their own
+environments.}
 }
 \description{
 NSE subsetting operations
