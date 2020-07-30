@@ -1,0 +1,182 @@
+---
+title: "Introduction to `prt`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to `prt`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(prt)
+
+if (base::getRversion() < "4.0.0") {
+
+  .S3method <- function(generic, class, method) {
+
+    if(missing(method)) {
+      method <- paste(generic, class, sep = ".")
+    }
+
+    method <- match.fun(method)
+
+    registerS3method(generic, class, method, envir = parent.frame())
+
+    invisible(NULL)
+  }
+}
+```
+
+The `prt` object introduced by this package is intended to represent tabular data stored as one or more [`fst`](https://www.fstpackage.org) files. This is in similar spirit as [`disk.frame`](https://diskframe.com), but is much less ambitious in scope and therefore much simpler in implementation. While the `disk.frame` package attempts to provide a [`dplyr`](https://dplyr.tidyverse.org) compliant API and offers parallel computation via the [`future`](https://cran.r-project.org/package=future) package, the intended use-case for `prt` objects is the situation where only a (small) subset of rows of the (large) tabular dataset are of interest for analysis at once. This subset can be specified using the base generic function `subset()` and the selected data is read into memory as a `data.table` object. Subsequent data operations and analysis is then preformed on this `data.table` representation. For this reason, partition-level parallelism is not in-scope for `prt` as `fst` already provides an efficient shared memory parallel implementation for decompression. Furthermore the much more complex multi-function non-standard evaluation API provided by `dplyr` was forgone in favor of the very simple one-function approach presented by the base R S3 generic function `subset()`.
+
+For the purpose of illustration of some `prt` features and particularities, we instantiate a dataset as `data.table` object and create a temporary directory which will contain the file-based data back ends.
+
+```{r setup}
+tmp <- tempfile()
+dir.create((tmp))
+
+dat <- data.table::setDT(nycflights13::flights)
+print(dat)
+```
+
+Creating a `prt` object consisting of 2 partitions can for example be done as
+
+```{r naive-split}
+(flights <- as_prt(dat, n_chunks = 2L, dir = tempfile(tmpdir = tmp)))
+```
+
+This simply splits rows of `dat` into 2 equally sized groups, preserving the original row ordering and writes each group to its own `fst` file. Depending on the types of queries that are most frequently run against the data, this naive partitioning might not be optimal. While `fst` does provide random row access, row selection is only possible via index ranges. Consequently, for each partition all rows that fall into the range between the minimum and the maximum required index will be read into memory and superfluous rows are discarded. If for example the data were to be most frequently accessed by airline, the resulting data loads would be more efficient if the data was already sorted by carrier codes.
+
+```{r user-split}
+dat <- data.table::setorderv(dat, "carrier")
+grp <- cumsum(table(dat$carrier)) / nrow(dat) < 0.5
+dat <- split(dat, grp[dat$carrier])
+
+as_prt(dat, dir = tempfile(tmpdir = tmp))
+```
+
+The behavior of subsetting operations on `prt` objects is modeled after that of [`tibble`](https://tibble.tidyverse.org) objects. Columns can be extracted using `[[`, `$` (with partial matching being disallowed), or by selecting a single column with `[` and passing `TRUE` as `drop` argument.
+
+```{r subset-col}
+str(flights[[1L]])
+identical(flights[["year"]], flights$year)
+identical(flights[["year"]], flights[, "year", drop = TRUE])
+str(flights$yea)
+```
+
+If the object resulting from the subsetting operation is two-dimensional, it is returned as `data.table` object. Apart form this distinction, again the intent is to replicate `tibble` behavior. One way in which `tibble` and `data.frame` do not behave in the same way is in default coercion to lower dimensions. The default value for the `drop` argument of `[.data.frame` is `FALSE` if only one row is returned but changes to `TRUE` where the result is a single column, while it is always `FALSE` for `tibble`s. A difference in behavior between `data.table` and `tibble` (any by extension `prt`) is a missing `j` argument: in the `tibble` (and in the `data.frame`) implementation, the `i` argument is then interpreted as column specification, whereas for `data.frame`s, `i` remains a row selection.
+
+```{r subset-row}
+datasets::mtcars[, "mpg"]
+flights[, "dep_time"]
+
+jan_dt <- flights[flights$month == 1L, ]
+
+jan_dt[1L]
+flights[1L]
+```
+
+Deviation of `prt` subsetting behavior from that of `tibble` objects is most likely unintentional and bug reports are much appreciated as github [issues](https://github.com/nbenn/prt/issues/new).
+
+The main feature of `prt` is the ability to load only a subset of a much larger tabular dataset and a useful function for selecting rows and columns of a table in a concise manner is the base R S3 generic function `subset()`. As such, a `prt` specific method is provided by this package. Using this functionality, above query for selecting all flights in January can be written as follows
+
+```{r subset-nse}
+identical(jan_dt, subset(flights, month == 1L))
+```
+
+A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as `subset` and `select` arguments are first resolved in the context of the data, followed by the environment the expression was created in (the [quosure](https://rlang.r-lib.org/reference/nse-defuse.html) environment). Expressions are evaluated using `rlang::eval_tidy()`, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the `.data` and `.env` pronouns or by [forcing parts of the expression](https://rlang.r-lib.org/reference/nse-force.html).
+
+```{r nse-issue0}
+month <- 1L
+subset(flights, month == month, 1L:7L)
+
+identical(jan_dt, subset(flights, month == !!month))
+identical(jan_dt, subset(flights, .env$month == .data$month))
+```
+
+While in the above example it is fairly clear what is happening and it should come as no surprise that the symbol `month` cannot simultaneously refer to a value in the calling environment and the name of a column in the data mask, a more subtle issue is considered in the following example. The environment which takes precedence for evaluating the `select` argument is a named list of column indices. This makes it possible for example to specify a range of columns as (and makes the behavior of `subset()` being applied to a `prt` object consistent with that of a `data.frame`).
+
+```{r nse-issue1, error = TRUE}
+subset(flights, select = year:day)
+```
+
+Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can be explained. Again, the `.data` and `.env` pronouns can be used to resolve potential issues.
+
+```{r nse-issue2, error = TRUE}
+sched_dep_time <- "dep_time"
+subset(flights, select = sched_dep_time)
+
+actual_dep_time <- "dep_time"
+subset(flights, select = actual_dep_time)
+
+subset(flights, select = .env$sched_dep_time)
+subset(flights, select = .env$actual_dep_time)
+
+subset(flights, select = .data$sched_dep_time)
+subset(flights, select = .data$actual_dep_time)
+```
+
+By default, `subset` expressions are evaluated on partitions separately and this behavior can be modified using the `part_saft` argument, as in some scenarios this might be undesirable. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data.
+
+```{r part_safe}
+is_true <- function(x) !is.na(x) & x
+expr <- quote(is_true(arr_delay > mean(arr_delay, na.rm = TRUE)))
+nrow(subset_quo(flights, expr))
+nrow(subset_quo(flights, expr, part_safe = FALSE))
+```
+
+As an aside, in addition to `subset()`, which creates quosures from the expressions passed as `subset` and `select`, (using `rlang::enquo()`) the function `subset_quo()` which operates on already quoted expressions is exported as well. Thanks to the double curly brace forwarding operator introduced in rlang 0.4.0, this escape-hatch mechanism however is of lesser importance.
+
+```{r forward}
+col_safe_subset <- function(x, expr, cols) {
+  stopifnot(is_prt(x), is.character(cols))
+  subset(x, {{ expr }}, .env$cols)
+}
+
+air_time <- c("dep_time", "arr_time")
+col_safe_subset(flights, month == 1L, air_time)
+```
+
+In addition to subsetting, concise and informative printing is another area which effort ha been put into. Inspired by (and liberally borrowing code from) `tibble`, the `print()` method of `fst` objects adds the `data.table` approach of showing both the first and last `n` rows of the table in question. This functionality can be used by other classes used to represent tabular data, as the function `trunc_dt()` driving this is exported. All that is required are implementations of the base S3 generic functions `dim()`, `head()`, `tail()` and of course `print()`.
+
+```{r tbl}
+new_tbl <- function(...) structure(list(...), class = "my_tbl")
+
+dim.my_tbl <- function(x) {
+  rows <- unique(lengths(x))
+  stopifnot(length(rows) == 1L)
+  c(rows, length(x))
+}
+head.my_tbl <- function(x, n = 6L, ...) {
+  as.data.frame(lapply(x, `[`, seq_len(n)))
+}
+tail.my_tbl <- function(x, n = 6L, ...) {
+  as.data.frame(lapply(x, `[`, seq(nrow(x) - n + 1L, nrow(x))))
+}
+print.my_tbl <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
+  out <- format(trunc_dt(x, n = n, width = width, n_extra = n_extra))
+  cat(paste0(out, "\n"), sep = "")
+  invisible(x)
+}
+```
+
+```{r register-s3, include = FALSE}
+Map(.S3method, c("dim", "head", "tail", "print"), "my_tbl",
+    list(dim.my_tbl, head.my_tbl, tail.my_tbl, print.my_tbl))
+```
+
+```{r print}
+new_tbl(a = letters, b = 1:26)
+```
+
+Similarly, the function `glimpse_dt()` which can be used to implement a class-specific function for the `tibble` S3 generic `tibble::glimpse()`. In order to customize the text description of the object a class-specific function for the `tibble` S3 generic `tibble::tbl_sum()` can be provided.
+
+```{r teardown}
+unlink(tmp, recursive = TRUE)
+```
