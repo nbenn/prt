@@ -44,6 +44,9 @@
   </a>
 </li>
 <li>
+  <a href="articles/prt.html">Get started</a>
+</li>
+<li>
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
@@ -115,7 +118,7 @@
 <span class="co">#&gt; [1] "1.fst" "2.fst"</span>
 </pre></div>
 <p>Subsetting and printing is closely modeled after <code>tibble</code> and behavior that deviates from that of <code>tibble</code> will most likely be considered a bug (please <a href="https://github.com/nbenn/prt/issues/new">report</a>). Some design choices that do set a <code>prt</code> object apart from a <code>tibble</code> include the use of <code>data.table</code>s for any result of a subsetting operation and the complete disregard for <code>row.names</code>.</p>
-<p>In addition to standard subsetting operations involving the functions <code>\x60[\x60()</code>, <code>\x60[[\x60()</code> and <code>\x60$\x60()</code>, the base generic function <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> is implemented for the <code>prt</code> class, enabling subsetting operations using non-standard evaluation. Combined with random access to tables stored as <code>fst</code> files, this can make data access more efficient in cases where only a subset of the data is of interest.</p>
+<p>In addition to standard subsetting operations involving the functions <code>`[`()</code>, <code>`[[`()</code> and <code>`$`()</code>, the base generic function <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> is implemented for the <code>prt</code> class, enabling subsetting operations using non-standard evaluation. Combined with random access to tables stored as <code>fst</code> files, this can make data access more efficient in cases where only a subset of the data is of interest.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="kw">jan</span> <span class="op">&lt;-</span> <span class="kw">flights</span>[<span class="kw">flights</span><span class="op">$</span><span class="kw">month</span> <span class="op">==</span> <span class="fl">1</span>, ]
 <span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">jan</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="fl">1</span>))
@@ -185,10 +188,10 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle"></a></li>
+<li><a href="https://codecov.io/gh/nbenn/prt"><img src="https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/nbenn/prt/actions?query=workflow%3Abuild"><img src="https://github.com/nbenn/prt/workflows/build/badge.svg" alt="R build status"></a></li>
 <li><a href="https://github.com/nbenn/prt/actions?query=workflow%3Apkgdown"><img src="https://github.com/nbenn/prt/workflows/pkgdown/badge.svg" alt="pkgdown build status"></a></li>
 <li><a href="https://github.com/nbenn/prt/actions?query=workflow%3Acoverage"><img src="https://github.com/nbenn/prt/workflows/coverage/badge.svg" alt="covr status"></a></li>
-<li><a href="https://codecov.io/gh/nbenn/prt"><img src="https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 </div>

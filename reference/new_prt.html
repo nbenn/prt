@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/prt.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -114,7 +117,7 @@
 
     <pre class="usage"><span class='fu'>new_prt</span>(<span class='kw'>files</span>)
 
-<span class='fu'>as_prt</span>(<span class='kw'>tbl</span>, n_chunks = <span class='fl'>1L</span>, dir = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
+<span class='fu'>as_prt</span>(<span class='kw'>x</span>, n_chunks = <span class='kw'>NULL</span>, dir = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
 
 <span class='fu'>is_prt</span>(<span class='kw'>x</span>)
 
@@ -160,22 +163,17 @@
       <td><p>Character vector of file name(s).</p></td>
     </tr>
     <tr>
-      <th>tbl</th>
-      <td><p>An object inheriting from <code><a href='https://rdrr.io/r/base/data.frame.html'>base::data.frame()</a></code>. Requires both a
-<code><a href='https://rdrr.io/r/base/nrow.html'>base::nrow()</a></code> and <code><a href='https://rdrr.io/r/base/split.html'>base::split()</a></code> method.</p></td>
+      <th>x</th>
+      <td><p>A <code>prt</code> object.</p></td>
     </tr>
     <tr>
       <th>n_chunks</th>
-      <td><p>Count variable specifying the number of chunks <code>tbl</code> is
+      <td><p>Count variable specifying the number of chunks <code>x</code> is
 split into.</p></td>
     </tr>
     <tr>
       <th>dir</th>
       <td><p>Directory where the chunked <code><a href='http://www.fstpackage.org/reference/fst.html'>fst::fst()</a></code> objects reside in.</p></td>
-    </tr>
-    <tr>
-      <th>x</th>
-      <td><p>A <code>prt</code> object.</p></td>
     </tr>
     <tr>
       <th>...</th>

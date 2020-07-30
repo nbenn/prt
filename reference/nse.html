@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/prt.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -115,7 +118,13 @@
     <pre class="usage"><span class='co'># S3 method for prt</span>
 <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>x</span>, <span class='kw'>subset</span>, <span class='kw'>select</span>, part_safe = <span class='fl'>FALSE</span>, drop = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)
 
-<span class='fu'>subset_quo</span>(<span class='kw'>x</span>, subset = <span class='kw'>NULL</span>, select = <span class='kw'>NULL</span>, part_safe = <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>subset_quo</span>(
+  <span class='kw'>x</span>,
+  subset = <span class='kw'>NULL</span>,
+  select = <span class='kw'>NULL</span>,
+  part_safe = <span class='fl'>FALSE</span>,
+  env = <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,11 +145,8 @@
     </tr>
     <tr>
       <th>part_safe</th>
-      <td><p>Logical flax indicating whether the <code>subset</code> expression
-can be safely be applied to individual partitions. The default is <code>FALSE</code>,
-which means that whenever <code>subset</code> contains a symbol which does not refer
-to a column, the <code>subset</code> expression is evaluated over the entire <code>prt</code>
-object instead of over individual partitions.</p></td>
+      <td><p>Logical flag indicating whether the <code>subset</code> expression
+can be safely be applied to individual partitions.</p></td>
     </tr>
     <tr>
       <th>drop</th>
@@ -149,6 +155,12 @@ object instead of over individual partitions.</p></td>
     <tr>
       <th>...</th>
       <td><p>further arguments to be passed to or from other methods.</p></td>
+    </tr>
+    <tr>
+      <th>env</th>
+      <td><p>The environment in which <code>subset</code> and <code>select</code> are evaluated in.
+This environment is not applicable for quosures because they have their own
+environments.</p></td>
     </tr>
     </table>
 
