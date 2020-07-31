@@ -64,7 +64,7 @@ Default: 100.
 
 Both \code{tibble} and \code{prt} rely on \code{pillar} for formatting columns and
 therefore, the following options set by \code{pillar} are applicable to \code{prt}
-printing as well:
+printing as well.
 }
 \section{Package options}{
 

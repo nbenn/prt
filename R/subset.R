@@ -1,6 +1,16 @@
 
 #' Subsetting operations
 #'
+#' Both single element subsetting via `[[` and `$`, as well as multi-element
+#' subsetting via `[` are available for `prt` objects. Subsetting semantics
+#' are modeled after those of the `tibble` class with the main difference
+#' being that there `tibble` returns `tibble` objects, `prt` returns
+#' `data.table`s. Differences to base R include that partial column name
+#' matching for `$` is not allowed and coercion to lower dimensions for
+#' `[` is always disabled by default. As `prt` objects are immutable, all
+#' subset-replace functions (`[[<-`, `$<-` and `[<-`) yield an error when
+#' passed a `prt` object.
+#'
 #' @name subsetting
 #'
 #' @param x A `prt` object.
@@ -10,7 +20,20 @@
 #' supported.
 #' @param ... Generic compatibility: any further arguments are ignored.
 #'
+#' @examples
+#' dat <- as_prt(mtcars)
+#'
+#' identical(dat$mpg, dat[["mpg"]])
+#'
+#' dat$mp
+#' mtcars$mp
+#'
+#' identical(dim(dat["mpg"]), dim(mtcars["mpg"]))
+#' identical(dim(dat[, "mpg"]), dim(mtcars[, "mpg"]))
+#' identical(dim(dat[1L, ]), dim(mtcars[1L, ]))
+#'
 #' @export
+#'
 `[[.prt` <- function(x, i, j, ..., exact = TRUE) {
 
   if (!isTRUE(exact)) {

@@ -35,6 +35,25 @@
 #'
 #' @param files Character vector of file name(s).
 #'
+#' @examples
+#' cars <- as_prt(mtcars, n_chunks = 2L)
+#'
+#' is_prt(cars)
+#' n_part(cars)
+#' part_nrow(cars)
+#'
+#' nrow(cars)
+#' ncol(cars)
+#'
+#' colnames(cars)
+#' names(cars)
+#'
+#' head(cars)
+#' tail(cars, n = 2)
+#'
+#' str(as.list(cars))
+#' str(as.data.frame(cars))
+#'
 #' @export
 #'
 new_prt <- function(files) {

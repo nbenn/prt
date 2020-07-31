@@ -6,12 +6,12 @@
 \alias{is_prt}
 \alias{n_part}
 \alias{part_nrow}
+\alias{head.prt}
+\alias{tail.prt}
 \alias{as.data.table.prt}
 \alias{as.list.prt}
 \alias{as.data.frame.prt}
 \alias{as.matrix.prt}
-\alias{head.prt}
-\alias{tail.prt}
 \title{Methods for creating and inspecting prt objects}
 \usage{
 new_prt(files)
@@ -24,6 +24,10 @@ n_part(x)
 
 part_nrow(x)
 
+\method{head}{prt}(x, n = 6L, ...)
+
+\method{tail}{prt}(x, n = 6L, ...)
+
 \method{as.data.table}{prt}(x, ...)
 
 \method{as.list}{prt}(x, ...)
@@ -31,10 +35,6 @@ part_nrow(x)
 \method{as.data.frame}{prt}(x, row.names = NULL, optional = FALSE, ...)
 
 \method{as.matrix}{prt}(x, ...)
-
-\method{head}{prt}(x, n = 6L, ...)
-
-\method{tail}{prt}(x, n = 6L, ...)
 }
 \arguments{
 \item{files}{Character vector of file name(s).}
@@ -46,13 +46,13 @@ split into.}
 
 \item{dir}{Directory where the chunked \code{\link[fst:fst]{fst::fst()}} objects reside in.}
 
+\item{n}{Count variable indicating the number of rows to return.}
+
 \item{...}{Generic consistency: additional arguments are ignored and a
 warning is issued.}
 
 \item{row.names, optional}{Generic consistency: passing anything other than
 the default value issues a warning.}
-
-\item{n}{Count variable indicating the number of rows to return.}
 }
 \description{
 The constructor \code{new_prt()} creates a \code{prt} object from one or several
@@ -71,8 +71,40 @@ exported, the number of partitions can be queried by calling \code{n_part()} and
 the number of rows per partition is available as \code{part_nrow()}.
 
 The base \code{R} S3 generic functions \code{\link[=dim]{dim()}}, \code{\link[=length]{length()}}, \code{\link[=dimnames]{dimnames()}} and
-\code{\link[=names]{names()}} have \code{prt}-specific implementations, where \code{\link[=dim]{dim()}} returns the
+\code{\link[=names]{names()}},have \code{prt}-specific implementations, where \code{\link[=dim]{dim()}} returns the
 overall table dimensions, \code{\link[=length]{length()}} is synonymous for \code{\link[=ncol]{ncol()}},
 \code{\link[=dimnames]{dimnames()}} returns a length 2 list containing \code{NULL} column names as
-character vector and \code{\link[=names]{names()}} is synonymous for \code{\link[=colnames]{colnames()}}.
+character vector and \code{\link[=names]{names()}} is synonymous for \code{\link[=colnames]{colnames()}}. Both setting
+and getting row names on \code{prt} objects is not supported and more generally,
+calling replacement functions such as \verb{names<-()} or \verb{dimnames<-()} leads
+to an error, as \code{prt} objects are immutable. The base \code{R} S3 generic
+functions \code{\link[=head]{head()}} and \code{\link[=tail]{tail()}} are available as well and are used
+internally to provide an extensible mechanism for printing (see
+\code{\link[=trunc_dt]{trunc_dt()}}).
+
+Coercion to other base \code{R} objects is possible via \code{\link[=as.list]{as.list()}},
+\code{\link[=as.data.frame]{as.data.frame()}} and \code{\link[=as.matrix]{as.matrix()}} and for coercion to \code{data.table}, its
+generic function \code{\link[data.table:as.data.table]{data.table::as.data.table()}} is available to \code{prt}
+objects. All coercion involves reading the full data into memory at once
+which might be problematic in cases of large data sets.
+}
+\examples{
+cars <- as_prt(mtcars, n_chunks = 2L)
+
+is_prt(cars)
+n_part(cars)
+part_nrow(cars)
+
+nrow(cars)
+ncol(cars)
+
+colnames(cars)
+names(cars)
+
+head(cars)
+tail(cars, n = 2)
+
+str(as.list(cars))
+str(as.data.frame(cars))
+
 }

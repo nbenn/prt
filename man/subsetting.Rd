@@ -32,5 +32,26 @@ supported.}
 Default \code{FALSE}, ignored when accessing a column via \code{tbl[j]}.}
 }
 \description{
-Subsetting operations
+Both single element subsetting via \code{[[} and \code{$}, as well as multi-element
+subsetting via \code{[} are available for \code{prt} objects. Subsetting semantics
+are modeled after those of the \code{tibble} class with the main difference
+being that there \code{tibble} returns \code{tibble} objects, \code{prt} returns
+\code{data.table}s. Differences to base R include that partial column name
+matching for \code{$} is not allowed and coercion to lower dimensions for
+\code{[} is always disabled by default. As \code{prt} objects are immutable, all
+subset-replace functions (\verb{[[<-}, \verb{$<-} and \verb{[<-}) yield an error when
+passed a \code{prt} object.
+}
+\examples{
+dat <- as_prt(mtcars)
+
+identical(dat$mpg, dat[["mpg"]])
+
+dat$mp
+mtcars$mp
+
+identical(dim(dat["mpg"]), dim(mtcars["mpg"]))
+identical(dim(dat[, "mpg"]), dim(mtcars[, "mpg"]))
+identical(dim(dat[1L, ]), dim(mtcars[1L, ]))
+
 }
