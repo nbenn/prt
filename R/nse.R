@@ -12,8 +12,13 @@
 subset.prt <- function(x, subset, select, part_safe = FALSE, drop = FALSE,
                        ...) {
 
-  if (!isFALSE(drop)) warning("Ignoring `drop` argument.")
-  if (...length() > 0L) warning("Ignoring `...` arguments.")
+  if (!isFALSE(drop)) {
+    warn_arg("drop")
+  }
+
+  if (...length() > 0L) {
+    warn_arg("...")
+  }
 
   if (missing(subset)) {
 
@@ -76,8 +81,11 @@ subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE,
     if (all(is.na(need_cols))) {
 
       if (part_safe) {
-        message("`part_safe` has no effect as `subset` has to be ",
-                "evaluated over the entire `prt` at once.")
+        inform(
+          paste("`part_safe` has no effect as `subset` has to be",
+                "evaluated over the entire `prt` at once."),
+          "msg_ignore_part_safe"
+        )
       }
 
       rows <- eval_rows(subset, nrow(x), env)
@@ -101,6 +109,11 @@ eval_rows <- function(quo, n_row, env, dat = NULL) {
 
   rows <- rlang::eval_tidy(quo, dat, env = env)
 
+  if (!is.logical(rows)) {
+    abort(paste0("Expecting a length ", n_row, " logical vector to define a ",
+                 "row subsetting."), "err_lgl_subset")
+  }
+
   assert_that(is.logical(rows))
 
   vec_as_row_index(rows, n_row)
@@ -109,8 +122,11 @@ eval_rows <- function(quo, n_row, env, dat = NULL) {
 subset_prt <- function(x, cols, env, i = NULL, j = NULL) {
 
   if (n_part(x) > 1L) {
-    message("Evaluating row subsetting over the entire `prt` at once. If ",
-            "applicable consider the `part_safe` argument.")
+    inform(
+      paste("Evaluating row subsetting over the entire `prt` at once. If",
+            "applicable consider the `part_safe` argument."),
+      "msg_full_eval", .frequency = "regularly", .frequency_id = "full_eval"
+    )
   }
 
   tmp <- prt_read(x, rows = NULL, columns = cols)

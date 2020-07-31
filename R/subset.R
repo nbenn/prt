@@ -14,13 +14,13 @@
 `[[.prt` <- function(x, i, j, ..., exact = TRUE) {
 
   if (!isTRUE(exact)) {
-    warning("`exact` ignored.")
+    warn_arg("exact")
   }
 
   n_dots <- ...length()
 
   if (n_dots > 0) {
-    warning("Extra arguments ignored.")
+    warn_arg("...")
   }
 
   n_real_args <- nargs() - !missing(exact) - n_dots
@@ -31,8 +31,11 @@
 
   } else if (missing(j)) {
 
-    stop("The column index `j` may not be missing if a row index `i` is ",
-         "supplied.")
+    abort(
+      paste("The column index `j` may not be missing if a row index `i` is",
+            "supplied."),
+      "err_need_j_arg"
+    )
 
   } else {
 
@@ -51,7 +54,8 @@
   j <- match(name, colnames(x))
 
   if (is.na(j)) {
-    warning("Unknown or uninitialised column: `", name, "`.")
+    warn(paste0("Unknown or uninitialised column: `", name, "`."),
+         "warn_miss_col")
     NULL
   } else {
     prt_subset2(x, j, i = NULL)
@@ -71,7 +75,9 @@
 
   if (n_real_args <= 2L) {
 
-    if (!missing(drop)) warning("`drop` ignored")
+    if (!missing(drop)) {
+      warn_arg("drop")
+    }
 
     if (missing(i)) i <- NULL
     else i <- vec_as_col_index(i, colnames(x))
@@ -102,8 +108,11 @@ prt_subset2 <- function(x, j, i = NULL) {
 
     assert_that(ncol(j) == 2L, is.numeric(j), is.null(i))
 
-    warning("Single element subsetting with a matrix is not recommended ",
-            "as the current implementation is inefficient.")
+    warn(
+      paste("Single element subsetting with a matrix is not recommended",
+            "as the current implementation is inefficient."),
+      "warn_mat_subset"
+    )
 
     rng_i <- range(j[, 1L])
     rng_j <- range(j[, 2L])
@@ -130,19 +139,36 @@ prt_subset2 <- function(x, j, i = NULL) {
   assert_that(length(j) == 1L)
 
   if (is.na(j)) {
-    warning("Single element subsetting with `NA` yields `NULL`")
+    warn("Single element subsetting with `NA` yields `NULL`", "warn_na_subset")
     return(NULL)
   }
 
   if (is.logical(j)) {
-    if (isTRUE(j)) j <- 1L
-    else stop("Single element subsetting with logical values only supports ",
-              "`TRUE`.")
+
+    if (isTRUE(j)) {
+
+      j <- 1L
+
+    } else {
+
+      abort(
+        paste("Single element subsetting with logical values only supports",
+              "`TRUE`."),
+        "err_flag_subset"
+      )
+    }
+
   } else if (is.numeric(j)) {
+
     j <- vctrs::vec_as_location(j, nrow(x))
+
   } else if (is.character(j)) {
+
     j <- match(j, colnames(x))
-    if (is.na(j)) return(NULL)
+
+    if (is.na(j)) {
+      return(NULL)
+    }
   }
 
   if (!is.null(i)) {
@@ -151,16 +177,23 @@ prt_subset2 <- function(x, j, i = NULL) {
   }
 
   res <- prt_read(x, rows = i, columns = j)
+
   res[[1L]]
 }
 
 vec_as_col_index <- function(j, cols) {
 
-  stopifnot(!is.null(j))
+  assert_that(!is.null(j))
 
   if (anyNA(j)) {
+
     pos <- paste(which(is.na(j)), collapse = ", ")
-    stop("Can't use NA as column index with `[` at position(s) ", pos, ".")
+
+    abort(
+      paste0("Can't use NA as column index with `[` at position(s) ",
+             pos, "."),
+      "err_na_subset"
+    )
   }
 
   vctrs::vec_as_location(j, length(cols), cols)
@@ -168,11 +201,11 @@ vec_as_col_index <- function(j, cols) {
 
 vec_as_row_index <- function(i, n_row) {
 
-  stopifnot(!is.null(i))
+  assert_that(!is.null(i))
 
   if (is.character(i)) {
 
-    stop("Rownames are not supported by `prt` objects.")
+    abort("Rownames are not supported by `prt` objects.", "err_rownames")
 
   } else if (is.numeric(i)) {
 
@@ -181,9 +214,13 @@ vec_as_row_index <- function(i, n_row) {
   } else if (is.logical(i)) {
 
     if (length(i) != 1L && length(i) != n_row) {
-      warning("Length of logical index must be 1",
-              if (n_row != 1) paste0(" or ", n_row),
-              ", not ", length(i))
+
+      warn(
+        paste0("Length of logical index must be 1",
+               if (n_row != 1) paste0(" or ", n_row), ", not ", length(i)),
+        "warn_ind_rep"
+      )
+
       return(seq_len(n_row)[i])
     }
   }
@@ -198,8 +235,12 @@ fix_oob <- function(i, n) {
     oob <- which(i > n)
 
     if (length(oob) > 0L) {
-      warning("Row indexes must be between 0 and the number of rows (", n,
-              "). Use `NA` as row index to obtain a row full of `NA` values.")
+      warn(
+        paste0("Row indexes must be between 0 and the number of rows (", n,
+               "). Use `NA` as row index to obtain a row full of `NA` ",
+               "values."),
+        "warn_oob_ind"
+      )
     }
 
     i[oob] <- NA_integer_
@@ -209,13 +250,19 @@ fix_oob <- function(i, n) {
     oob <- (i < -n)
 
     if (length(which(oob)) > 0L) {
-      warning("Negative row indexes must be between 0 and the number of rows ",
-              "negated (", -n, "). Use `NA` as row index to obtain a row ",
-              "full of `NA` values.")
+      warn(
+        paste0("Negative row indexes must be between 0 and the number of ",
+               "rows negated (", -n, "). Use `NA` as row index to obtain a ",
+               "row full of `NA` values."),
+        "warn_oob_neg"
+      )
     }
 
     i <- i[!oob]
-    if (length(i) == 0L) i <- seq_len(n)
+
+    if (length(i) == 0L) {
+      i <- seq_len(n)
+    }
   }
 
   i

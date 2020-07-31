@@ -10,7 +10,7 @@ dat <- create_prt(dat = demo_data_frame(dataset = "mtcars"), dir = tmp,
 
 test_that("[[ subsetting ignores exact argument", {
   expect_warning(dat[["disp"]], NA)
-  expect_warning(dat[["disp", exact = FALSE]], "ignored")
+  expect_warning(dat[["disp", exact = FALSE]], class = "warn_ignore_exact")
   expect_identical(getElement(dat, "disp"), ref[["disp"]])
 })
 
@@ -24,7 +24,8 @@ test_that("can use recursive indexing with [[", {
 })
 
 test_that("[[ subsetting with matrix index", {
-  expect_warning(res <- dat[[matrix(1:6, ncol = 2L)]])
+  expect_warning(res <- dat[[matrix(1:6, ncol = 2L)]],
+                 class = "warn_mat_subset")
   expect_identical(res, as.data.frame(ref)[matrix(1:6, ncol = 2L)])
   expect_error(dat[[matrix(1:6, ncol = 3L)]])
 })
@@ -33,7 +34,7 @@ test_that("[[ returns NULL if name doesn't exist", {
   expect_null(dat[["y"]])
   expect_null(dat[[1, "y"]])
 
-  expect_warning(res <- dat[[NA]])
+  expect_warning(res <- dat[[NA]], class = "warn_na_subset")
   expect_null(res)
 })
 
@@ -41,33 +42,25 @@ test_that("can use two-dimensional indexing with [[", {
   expect_equal(dat[[1, 2]], ref[[1, 2]])
   expect_equal(dat[[2, 3]], ref[[2, 3]])
 
-  expect_warning(res <- dat[[2, NA]])
+  expect_warning(res <- dat[[2, NA]], class = "warn_na_subset")
   expect_null(res)
 
-  expect_warning(res <- dat[[NA, NA]])
+  expect_warning(res <- dat[[NA, NA]], class = "warn_na_subset")
   expect_null(res)
 
   expect_error(dat[[NA, 1]])
 })
 
 test_that("$ throws warning if name doesn't exist", {
-  expect_warning(
-    expect_null(dat$y),
-    "Unknown or uninitialised column: `y`",
-    fixed = TRUE
-  )
+  expect_warning(expect_null(dat$y), class = "warn_miss_col")
 })
 
 test_that("$ doesn't do partial matching", {
   expect_warning(
-    expect_null(dat$d),
-    "Unknown or uninitialised column: `d`",
-    fixed = TRUE
+    expect_null(dat$d), class = "warn_miss_col"
   )
   expect_warning(
-    expect_null(dat$dis),
-    "Unknown or uninitialised column: `dis`",
-    fixed = TRUE
+    expect_null(dat$dis), class = "warn_miss_col"
   )
   expect_error(dat$disp, NA)
 })
@@ -129,10 +122,12 @@ test_that("[ row subsetting", {
 
   expect_identical(dat[c(9:10, NA, NA), ], ref[c(9:10, NA, NA), ])
 
-  expect_warning(res <- dat[seq.int(nrow(dat) - 2L, nrow(dat) + 2L), ])
+  expect_warning(res <- dat[seq.int(nrow(dat) - 2L, nrow(dat) + 2L), ],
+                 class = "warn_oob_ind")
   expect_identical(res, ref[seq.int(nrow(dat) - 2L, nrow(dat) + 2L), ])
 
-  expect_warning(res <- dat[-seq.int(nrow(dat) - 2L, nrow(dat) + 2L), ])
+  expect_warning(res <- dat[-seq.int(nrow(dat) - 2L, nrow(dat) + 2L), ],
+                 class = "warn_oob_neg")
   expect_identical(res, ref[seq.int(1L, nrow(dat) - 3L), ])
 
   expect_error(dat[as.character(2:4), ])
@@ -144,11 +139,7 @@ test_that("[ supports logical subsetting", {
   expect_identical(dat[TRUE, ], ref)
   expect_identical(dat[FALSE, ], ref[0L, ])
 
-  expect_warning(
-    dat[c(TRUE, FALSE), ],
-    paste0("Length of logical index must be 1 or ", nrow(ref), ", not 2"),
-    fixed = TRUE
-  )
+  expect_warning(dat[c(TRUE, FALSE), ], class = "warn_ind_rep")
 })
 
 test_that("[ is no-op if args missing", {

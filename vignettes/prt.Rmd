@@ -15,22 +15,6 @@ knitr::opts_chunk$set(
 )
 
 library(prt)
-
-if (base::getRversion() < "4.0.0") {
-
-  .S3method <- function(generic, class, method) {
-
-    if(missing(method)) {
-      method <- paste(generic, class, sep = ".")
-    }
-
-    method <- match.fun(method)
-
-    registerS3method(generic, class, method, envir = parent.frame())
-
-    invisible(NULL)
-  }
-}
 ```
 
 The `prt` object introduced by this package is intended to represent tabular data stored as one or more [`fst`](https://www.fstpackage.org) files. This is in similar spirit as [`disk.frame`](https://diskframe.com), but is much less ambitious in scope and therefore much simpler in implementation. While the `disk.frame` package attempts to provide a [`dplyr`](https://dplyr.tidyverse.org) compliant API and offers parallel computation via the [`future`](https://cran.r-project.org/package=future) package, the intended use-case for `prt` objects is the situation where only a (small) subset of rows of the (large) tabular dataset are of interest for analysis at once. This subset can be specified using the base generic function `subset()` and the selected data is read into memory as a `data.table` object. Subsequent data operations and analysis is then preformed on this `data.table` representation. For this reason, partition-level parallelism is not in-scope for `prt` as `fst` already provides an efficient shared memory parallel implementation for decompression. Furthermore the much more complex multi-function non-standard evaluation API provided by `dplyr` was forgone in favor of the very simple one-function approach presented by the base R S3 generic function `subset()`.
@@ -48,7 +32,8 @@ print(dat)
 Creating a `prt` object consisting of 2 partitions can for example be done as
 
 ```{r naive-split}
-(flights <- as_prt(dat, n_chunks = 2L, dir = tempfile(tmpdir = tmp)))
+flights <- as_prt(dat, n_chunks = 2L, dir = tempfile(tmpdir = tmp))
+print(flights)
 ```
 
 This simply splits rows of `dat` into 2 equally sized groups, preserving the original row ordering and writes each group to its own `fst` file. Depending on the types of queries that are most frequently run against the data, this naive partitioning might not be optimal. While `fst` does provide random row access, row selection is only possible via index ranges. Consequently, for each partition all rows that fall into the range between the minimum and the maximum required index will be read into memory and superfluous rows are discarded. If for example the data were to be most frequently accessed by airline, the resulting data loads would be more efficient if the data was already sorted by carrier codes.
@@ -106,29 +91,29 @@ While in the above example it is fairly clear what is happening and it should co
 subset(flights, select = year:day)
 ```
 
-Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can be explained. Again, the `.data` and `.env` pronouns can be used to resolve potential issues.
+Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can easily be explained. Again, the `.data` and `.env` pronouns can be used to resolve potential issues.
 
 ```{r nse-issue2, error = TRUE}
 sched_dep_time <- "dep_time"
-subset(flights, select = sched_dep_time)
+colnames(subset(flights, select = sched_dep_time))
 
 actual_dep_time <- "dep_time"
-subset(flights, select = actual_dep_time)
+colnames(subset(flights, select = actual_dep_time))
 
-subset(flights, select = .env$sched_dep_time)
-subset(flights, select = .env$actual_dep_time)
+colnames(subset(flights, select = .env$sched_dep_time))
+colnames(subset(flights, select = .env$actual_dep_time))
 
-subset(flights, select = .data$sched_dep_time)
-subset(flights, select = .data$actual_dep_time)
+colnames(subset(flights, select = .data$sched_dep_time))
+colnames(subset(flights, select = .data$actual_dep_time))
 ```
 
-By default, `subset` expressions are evaluated on partitions separately and this behavior can be modified using the `part_saft` argument, as in some scenarios this might be undesirable. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data.
+By default, `subset` expressions have to be evaluated on the entire dataset at once in order to be compatible with the base `subset()` bahvior for `data.fframes`. Often times this is inefficient and this behavior can be modified using the `part_saft` argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.
 
 ```{r part_safe}
 is_true <- function(x) !is.na(x) & x
 expr <- quote(is_true(arr_delay > mean(arr_delay, na.rm = TRUE)))
-nrow(subset_quo(flights, expr))
 nrow(subset_quo(flights, expr, part_safe = FALSE))
+nrow(subset_quo(flights, expr, part_safe = TRUE))
 ```
 
 As an aside, in addition to `subset()`, which creates quosures from the expressions passed as `subset` and `select`, (using `rlang::enquo()`) the function `subset_quo()` which operates on already quoted expressions is exported as well. Thanks to the double curly brace forwarding operator introduced in rlang 0.4.0, this escape-hatch mechanism however is of lesser importance.
@@ -167,6 +152,21 @@ print.my_tbl <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
 ```
 
 ```{r register-s3, include = FALSE}
+if (base::getRversion() < "4.0.0") {
+
+  .S3method <- function(generic, class, method) {
+
+    if(missing(method)) {
+      method <- paste(generic, class, sep = ".")
+    }
+
+    method <- match.fun(method)
+
+    registerS3method(generic, class, method, envir = parent.frame())
+
+    invisible(NULL)
+  }
+}
 Map(.S3method, c("dim", "head", "tail", "print"), "my_tbl",
     list(dim.my_tbl, head.my_tbl, tail.my_tbl, print.my_tbl))
 ```

@@ -135,16 +135,14 @@ shrink_dt <- function(df, rows) {
 
   n <- nrow(df)
 
-  needs_dots <- (rows > n)
-
-  if (needs_dots) {
+  if (rows > n) {
     rows_missing <- rows - n
   } else {
     rows_missing <- 0L
   }
 
   list(
-    mcf = pillar::colonnade(df, has_row_id = FALSE, needs_dots = needs_dots),
+    mcf = pillar::colonnade(df, has_row_id = FALSE),
     rows_missing = rows_missing
   )
 }

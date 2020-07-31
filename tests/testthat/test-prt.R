@@ -84,17 +84,17 @@ test_that("prt creation/conversion", {
   expect_error(as_prt(lst_2, dir = tempfile(tmpdir = tmp), n_chunks = 1L))
 
   expect_warning(as.data.table(prt_1, foo = "bar"),
-                 "Ignoring further `...` arguments.")
+                 class = "warn_ignore_...")
   expect_warning(as.list(prt_1, foo = "bar"),
-                 "Ignoring further `...` arguments.")
+                 class = "warn_ignore_...")
   expect_warning(as.data.frame(prt_1, foo = "bar"),
-                 "Ignoring further `...` arguments.")
+                 class = "warn_ignore_...")
   expect_warning(as.data.frame(prt_1, row.names = rownames(mtcars)),
-                 "Ignoring `row.names` argument.")
+                 class = "warn_ignore_row.names")
   expect_warning(as.data.frame(prt_1, optional = TRUE),
-                 "Ignoring `optional` argument.")
+                 class = "warn_ignore_optional")
   expect_warning(as.matrix(prt_1, foo = "bar"),
-                 "Ignoring further `...` arguments.")
+                 class = "warn_ignore_...")
 })
 
 test_that("file_fst head/tail", {

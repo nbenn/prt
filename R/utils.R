@@ -181,7 +181,8 @@ get_opt <- function(x) {
     tibble.print_min = 5L,
     tibble.width = NULL,
     tibble.max_extra_cols = 100L,
-    stop("Cannot determine default option for ", x_tibble, ".")
+    abort(paste0("Cannot determine default option for ", x_tibble, "."),
+          "err_tibble_opt")
   )
 }
 
@@ -311,4 +312,12 @@ add_in_between <- function(x, n, what) {
 ellipsis <- function(fancy = l10n_info()$`UTF-8`) {
   if (fancy) cli::symbol$ellipsis
   else "..."
+}
+
+warn_arg <- function(arg) {
+
+  assert_that(is.string(arg))
+
+  warn(paste0("Ignoring `", arg, "` argument."),
+       paste0("warn_ignore_", tolower(arg)))
 }

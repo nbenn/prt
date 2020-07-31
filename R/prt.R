@@ -145,7 +145,9 @@ names.prt <- function(x) colnames(x)
 #'
 as.data.table.prt <- function(x, ...) {
 
-  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) {
+    warn_arg("...")
+  }
 
   prt_read(x, rows = NULL, columns = NULL)
 }
@@ -158,7 +160,9 @@ as.data.table.prt <- function(x, ...) {
 #'
 as.list.prt <- function(x, ...) {
 
-  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) {
+    warn_arg("...")
+  }
 
   c(as.data.table(x))
 }
@@ -174,9 +178,17 @@ as.list.prt <- function(x, ...) {
 #'
 as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
 
-  if (!is.null(row.names)) warning("Ignoring `row.names` argument.")
-  if (!isFALSE(optional)) warning("Ignoring `optional` argument.")
-  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+  if (!is.null(row.names)) {
+    warn_arg("row.names")
+  }
+
+  if (!isFALSE(optional)) {
+    warn_arg("optional")
+  }
+
+  if (...length() > 0L) {
+    warn_arg("...")
+  }
 
   res <- data.table::setDF(as.data.table(x))
   res
@@ -190,7 +202,9 @@ as.data.frame.prt <- function(x, row.names = NULL, optional = FALSE, ...) {
 #'
 as.matrix.prt <- function(x, ...) {
 
-  if (...length() > 0L) warning("Ignoring further `...` arguments.")
+  if (...length() > 0L) {
+    warn_arg("...")
+  }
 
   as.matrix(as.data.table(x))
 }

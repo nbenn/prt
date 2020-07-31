@@ -30,7 +30,8 @@ glimpse_dt <- function(x, width = NULL) {
   width <- print_width(width, allow_inf = FALSE)
 
   if (!is.finite(width)) {
-    stop("`glimpse()` requires a finite value for the `width` argument.")
+    abort("`glimpse()` requires a finite value for the `width` argument.",
+          "err_glimp_inf_width")
   }
 
   cat_line("Rows: ", big_mark(nrow(x)))
@@ -161,7 +162,7 @@ str_dt <- function(x, ...) {
 
   if (length(dots)) {
     if (any("give.length" == names(dots))) {
-      warning("Ignoring `give.length` argument.")
+      warn_arg("give.length")
       dots$give.length <- NULL
     }
     if (any("no.list" == names(dots))) {
