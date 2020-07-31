@@ -4,12 +4,8 @@
 \alias{new_prt}
 \alias{as_prt}
 \alias{is_prt}
-\alias{dim.prt}
-\alias{length.prt}
 \alias{n_part}
 \alias{part_nrow}
-\alias{dimnames.prt}
-\alias{names.prt}
 \alias{as.data.table.prt}
 \alias{as.list.prt}
 \alias{as.data.frame.prt}
@@ -24,17 +20,9 @@ as_prt(x, n_chunks = NULL, dir = tempfile())
 
 is_prt(x)
 
-\method{dim}{prt}(x)
-
-\method{length}{prt}(x)
-
 n_part(x)
 
 part_nrow(x)
-
-\method{dimnames}{prt}(x)
-
-\method{names}{prt}(x)
 
 \method{as.data.table}{prt}(x, ...)
 
@@ -67,5 +55,24 @@ the default value issues a warning.}
 \item{n}{Count variable indicating the number of rows to return.}
 }
 \description{
-Methods for creating and inspecting prt objects
+The constructor \code{new_prt()} creates a \code{prt} object from one or several
+\code{fst} files, making sure that each table consist of identically named,
+ordered and typed columns. In order to create a \code{prt} object from an
+in-memory table, \code{as_prt()} coerces objects inheriting from \code{data.frame}
+to \code{prt} by first splitting rows into \code{n_chunks}, writing \code{fst} files to the
+directory \code{dir} and calling \code{new_prt()} on the resulting \code{fst} files. If
+this default splitting of rows (which might impact efficiency of subsequent
+queries on the data) is not optimal, a list of objects inheriting from
+\code{data.frame} is a valid \code{x} argument as well.
+}
+\details{
+To check whether an object inherits from \code{prt}, the function \code{is_prt()} is
+exported, the number of partitions can be queried by calling \code{n_part()} and
+the number of rows per partition is available as \code{part_nrow()}.
+
+The base \code{R} S3 generic functions \code{\link[=dim]{dim()}}, \code{\link[=length]{length()}}, \code{\link[=dimnames]{dimnames()}} and
+\code{\link[=names]{names()}} have \code{prt}-specific implementations, where \code{\link[=dim]{dim()}} returns the
+overall table dimensions, \code{\link[=length]{length()}} is synonymous for \code{\link[=ncol]{ncol()}},
+\code{\link[=dimnames]{dimnames()}} returns a length 2 list containing \code{NULL} column names as
+character vector and \code{\link[=names]{names()}} is synonymous for \code{\link[=colnames]{colnames()}}.
 }

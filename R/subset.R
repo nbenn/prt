@@ -43,6 +43,9 @@
   }
 }
 
+#' @export
+`[[<-.prt` <- abort_immutable
+
 #' @rdname subsetting
 #'
 #' @inheritParams base::`[.data.frame`
@@ -61,6 +64,9 @@
     prt_subset2(x, j, i = NULL)
   }
 }
+
+#' @export
+`$<-.prt` <- abort_immutable
 
 #' @rdname subsetting
 #'
@@ -101,6 +107,9 @@
 
   res
 }
+
+#' @export
+`[<-.prt` <- abort_immutable
 
 prt_subset2 <- function(x, j, i = NULL) {
 

@@ -1,6 +1,38 @@
 
 #' Methods for creating and inspecting prt objects
 #'
+#' The constructor `new_prt()` creates a `prt` object from one or several
+#' `fst` files, making sure that each table consist of identically named,
+#' ordered and typed columns. In order to create a `prt` object from an
+#' in-memory table, `as_prt()` coerces objects inheriting from `data.frame`
+#' to `prt` by first splitting rows into `n_chunks`, writing `fst` files to the
+#' directory `dir` and calling `new_prt()` on the resulting `fst` files. If
+#' this default splitting of rows (which might impact efficiency of subsequent
+#' queries on the data) is not optimal, a list of objects inheriting from
+#' `data.frame` is a valid `x` argument as well.
+#'
+#' To check whether an object inherits from `prt`, the function `is_prt()` is
+#' exported, the number of partitions can be queried by calling `n_part()` and
+#' the number of rows per partition is available as `part_nrow()`.
+#'
+#' The base `R` S3 generic functions [dim()], [length()], [dimnames()] and
+#' [names()],have `prt`-specific implementations, where [dim()] returns the
+#' overall table dimensions, [length()] is synonymous for [ncol()],
+#' [dimnames()] returns a length 2 list containing `NULL` column names as
+#' character vector and [names()] is synonymous for [colnames()]. Both setting
+#' and getting row names on `prt` objects is not supported and more generally,
+#' calling replacement functions such as `names<-()` or `dimnames<-()` leads
+#' to an error, as `prt` objects are immutable. The base `R` S3 generic
+#' functions [head()] and [tail()] are available as well and are used
+#' internally to provide an extensible mechanism for printing (see
+#' [trunc_dt()]).
+#'
+#' Coercion to other base `R` objects is possible via [as.list()],
+#' [as.data.frame()] and [as.matrix()] and for coercion to `data.table`, its
+#' generic function [data.table::as.data.table()] is available to `prt`
+#' objects. All coercion involves reading the full data into memory at once
+#' which might be problematic in cases of large data sets.
+#'
 #' @param files Character vector of file name(s).
 #'
 #' @export
@@ -16,11 +48,11 @@ new_prt <- function(files) {
 
 make_prt <- function(x) {
 
-  assert_that(is.list(x), all(vapply(x, inherits, logical(1L), "fst_table")))
+  all_ident <- function(x) all(vapply(x, identical, logical(1L), x[[1L]]))
 
-  cols <- lapply(x, colnames)
-
-  assert_that(all(vapply(cols, identical, logical(1L), cols[[1L]])))
+  assert_that(is.list(x), all(vapply(x, inherits, logical(1L), "fst_table")),
+              all_ident(lapply(x, colnames)),
+              all_ident(lapply(x, vapply, typeof, character(1L))))
 
   structure(x, class = "prt")
 }
@@ -95,20 +127,6 @@ is_prt <- function(x) inherits(x, "prt")
 #'
 #' @export
 #'
-dim.prt <- function(x) {
-  as.integer(c(sum(part_nrow(x)), ncol(.subset2(x, 1L))))
-}
-
-#' @rdname new_prt
-#'
-#' @export
-#'
-length.prt <- function(x) ncol(x)
-
-#' @rdname new_prt
-#'
-#' @export
-#'
 n_part <- function(x) {
   length(unclass(x))
 }
@@ -119,19 +137,73 @@ n_part <- function(x) {
 #'
 part_nrow <- function(x) prt_vapply(x, nrow, numeric(1L))
 
-#' @rdname new_prt
-#'
 #' @export
-#'
+dim.prt <- function(x) {
+  as.integer(c(sum(part_nrow(x)), ncol(.subset2(x, 1L))))
+}
+
+#' @export
+length.prt <- function(x) ncol(x)
+
+#' @export
 dimnames.prt <- function(x) {
   list(NULL, colnames(.subset2(x, 1L)))
 }
 
+abort_immutable <- function(..., value) {
+  abort("`prt` objects are immutable", "err_immutable")
+}
+
+#' @export
+`dimnames<-.prt` <- abort_immutable
+
+#' @export
+names.prt <- function(x) colnames(x)
+
+#' @export
+`names<-.prt` <- abort_immutable
+
+#' @param n Count variable indicating the number of rows to return.
+#'
 #' @rdname new_prt
+#'
+#' @importFrom utils head
 #'
 #' @export
 #'
-names.prt <- function(x) colnames(x)
+head.prt <- function(x, n = 6L, ...) {
+
+  assert_that(length(n) == 1L)
+
+  if (n < 0L) n <- max(nrow(x) + n, 0L)
+  else n <- min(n, nrow(x))
+
+  if (n == nrow(x)) rows <- NULL
+  else rows <- seq_len(n)
+
+  prt_read(x, rows = rows, columns = NULL)
+}
+
+#' @rdname new_prt
+#'
+#' @importFrom utils tail
+#'
+#' @export
+#'
+tail.prt <- function(x, n = 6L, ...) {
+
+  assert_that(length(n) == 1L)
+
+  nrx <- nrow(x)
+
+  if (n < 0L) n <- max(nrx + n, 0L)
+  else n <- min(n, nrx)
+
+  if (n == nrx) rows <- NULL
+  else rows <- seq.int(to = nrx, length.out = n)
+
+  prt_read(x, rows = rows, columns = NULL)
+}
 
 #' @param ... Generic consistency: additional arguments are ignored and a
 #' warning is issued.
@@ -207,46 +279,4 @@ as.matrix.prt <- function(x, ...) {
   }
 
   as.matrix(as.data.table(x))
-}
-
-#' @param n Count variable indicating the number of rows to return.
-#'
-#' @rdname new_prt
-#'
-#' @importFrom utils head
-#'
-#' @export
-#'
-head.prt <- function(x, n = 6L, ...) {
-
-  assert_that(length(n) == 1L)
-
-  if (n < 0L) n <- max(nrow(x) + n, 0L)
-  else n <- min(n, nrow(x))
-
-  if (n == nrow(x)) rows <- NULL
-  else rows <- seq_len(n)
-
-  prt_read(x, rows = rows, columns = NULL)
-}
-
-#' @rdname new_prt
-#'
-#' @importFrom utils tail
-#'
-#' @export
-#'
-tail.prt <- function(x, n = 6L, ...) {
-
-  assert_that(length(n) == 1L)
-
-  nrx <- nrow(x)
-
-  if (n < 0L) n <- max(nrx + n, 0L)
-  else n <- min(n, nrx)
-
-  if (n == nrx) rows <- NULL
-  else rows <- seq.int(to = nrx, length.out = n)
-
-  prt_read(x, rows = rows, columns = NULL)
 }

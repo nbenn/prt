@@ -31,7 +31,7 @@
 #'
 #' Both `tibble` and `prt` rely on `pillar` for formatting columns and
 #' therefore, the following options set by `pillar` are applicable to `prt`
-#' printing as well:
+#' printing as well.
 #'
 #' @inheritSection pillar::`pillar-package` Package options
 #'
@@ -60,8 +60,7 @@ print.prt <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
 #' @export
 #'
 format.prt <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
-  mat <- trunc_dt(x, n = n, width = width, n_extra = n_extra)
-  format(mat)
+  format(trunc_dt(x, n = n, width = width, n_extra = n_extra))
 }
 
 #' @export
