@@ -40,7 +40,13 @@
 
 
 <meta property="og:title" content="Printing prt — print.prt" />
-<meta property="og:description" content="Printing prt" />
+<meta property="og:description" content="Printing of prt objects combines the concise yet informative design
+of only showing as many columns as the terminal width allows for, introduced
+by tibble, with the data.table approach of showing both the first and
+last few rows of a table. Implementation wise, the interface is designed to
+mimic that of tibble printing as closely as possibly, offering the same
+function arguments and using the same option settings (and default values)
+as introduced by tibble." />
 
 
 
@@ -112,14 +118,22 @@
     </div>
 
     <div class="ref-description">
-    <p>Printing prt</p>
+    <p>Printing of <code>prt</code> objects combines the concise yet informative design
+of only showing as many columns as the terminal width allows for, introduced
+by <code>tibble</code>, with the <code>data.table</code> approach of showing both the first and
+last few rows of a table. Implementation wise, the interface is designed to
+mimic that of <code>tibble</code> printing as closely as possibly, offering the same
+function arguments and using the same option settings (and default values)
+as introduced by <code>tibble</code>.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for prt</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)
+
+<span class='fu'>trunc_dt</span>(<span class='kw'>x</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,7 +168,120 @@ will print information about at most <code>tibble.max_extra_cols</code> extra co
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>While the function <code><a href='https://tibble.tidyverse.org/reference/formatting.html'>tibble::trunc_mat()</a></code> does most of the heavy lifting
+for formatting <code>tibble</code> printing output, <code>prt</code> exports the function
+<code>trunc_dt()</code>, which drives analogous functionality while adding the
+top/bottom <code>n</code> row concept. This function can be used for creating <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code>
+methods for other classes which represent tabular data, given that this
+class implements <code><a href='https://rdrr.io/r/base/dim.html'>dim()</a></code>, <code><a href='https://rdrr.io/r/utils/head.html'>head()</a></code> and <code><a href='https://rdrr.io/r/utils/head.html'>tail()</a></code> (and optionally
+<code><a href='https://tibble.tidyverse.org/reference/tbl_sum.html'>tibble::tbl_sum()</a></code>) methods. For an example of this, see
+<a href='../doc/prt.html'><code><a href='../articles/prt.html'>vignette("prt", package = "prt")</a></code></a>.</p>
+<p>The following session options are set by <code>tibble</code> and are respected by
+<code>prt</code>, as well as any other package that were to call <code>trunc_dt()</code>:</p><ul>
+<li><p><code>tibble.print_max</code>: Row number threshold: Maximum number of rows printed.
+Set to <code>Inf</code> to always print all rows.  Default: 20.</p></li>
+<li><p><code>tibble.print_min</code>: Number of rows printed if row number threshold is
+exceeded. Default: 10.</p></li>
+<li><p><code>tibble.width</code>: Output width. Default: <code>NULL</code> (use <code>width</code> option).</p></li>
+<li><p><code>tibble.max_extra_cols</code>: Number of extra columns printed in reduced form.
+Default: 100.</p></li>
+</ul>
+
+<p>Both <code>tibble</code> and <code>prt</code> rely on <code>pillar</code> for formatting columns and
+therefore, the following options set by <code>pillar</code> are applicable to <code>prt</code>
+printing as well:</p>
+    <h2 class="hasAnchor" id="package-options"><a class="anchor" href="#package-options"></a>Package options</h2>
+
+    
+
+
+<ul>
+<li><p><code>pillar.bold</code>: Use bold font, e.g. for column headers? This currently
+defaults to <code>FALSE</code>, because many terminal fonts have poor support for
+bold fonts.</p></li>
+<li><p><code>pillar.subtle</code>: Use subtle style, e.g. for row numbers and data types?
+Default: <code>TRUE</code>.</p></li>
+<li><p><code>pillar.subtle_num</code>: Use subtle style for insignificant digits? Default:
+<code>FALSE</code>, is also affected by the <code>pillar.subtle</code> option.</p></li>
+<li><p><code>pillar.neg</code>: Highlight negative numbers? Default: <code>TRUE</code>.</p></li>
+<li><p><code>pillar.sigfig</code>: The number of significant digits that will be printed and
+highlighted, default: <code>3</code>. Set the <code>pillar.subtle</code> option to <code>FALSE</code> to
+turn off highlighting of significant digits.</p></li>
+<li><p><code>pillar.min_title_chars</code>: The minimum number of characters for the column
+title, default: <code>15</code>.  Column titles may be truncated up to that width to
+save horizontal space. Set to <code>Inf</code> to turn off truncation of column
+titles.</p></li>
+</ul>
+
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>cars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span>(<span class='kw'>mtcars</span>)
+
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A prt:        32 × 11</span><span>
+#&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
+#&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>   21       6 160     110  3.9   2.62  16.5     0     1     4     4
+#&gt; </span><span style='color: #555555;'>2</span><span>   21       6 160     110  3.9   2.88  17.0     0     1     4     4
+#&gt; </span><span style='color: #555555;'>3</span><span>   22.8     4 108      93  3.85  2.32  18.6     1     1     4     1
+#&gt; </span><span style='color: #555555;'>4</span><span>   21.4     6 258     110  3.08  3.22  19.4     1     0     3     1
+#&gt; </span><span style='color: #555555;'>5</span><span>   18.7     8 360     175  3.15  3.44  17.0     0     0     3     2
+#&gt; </span><span style='color: #555555;'>…</span><span>
+#&gt; </span><span style='color: #555555;'>28</span><span>  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2
+#&gt; </span><span style='color: #555555;'>29</span><span>  15.8     8 351     264  4.22  3.17  14.5     0     1     5     4
+#&gt; </span><span style='color: #555555;'>30</span><span>  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6
+#&gt; </span><span style='color: #555555;'>31</span><span>  15       8 301     335  3.54  3.57  14.6     0     1     5     8
+#&gt; </span><span style='color: #555555;'>32</span><span>  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2
+#&gt; </span><span style='color: #555555;'># … with 22 more rows</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>, n = <span class='fl'>2</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A prt:        32 × 11</span><span>
+#&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
+#&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>   21       6   160   110  3.9   2.62  16.5     0     1     4     4
+#&gt; </span><span style='color: #555555;'>2</span><span>   21       6   160   110  3.9   2.88  17.0     0     1     4     4
+#&gt; </span><span style='color: #555555;'>…</span><span>
+#&gt; </span><span style='color: #555555;'>31</span><span>  15       8   301   335  3.54  3.57  14.6     0     1     5     8
+#&gt; </span><span style='color: #555555;'>32</span><span>  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2
+#&gt; </span><span style='color: #555555;'># … with 28 more rows</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>, width = <span class='fl'>30</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A prt:        32 × 11</span><span>
+#&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
+#&gt;      mpg   cyl  disp    hp
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>   21       6 160     110
+#&gt; </span><span style='color: #555555;'>2</span><span>   21       6 160     110
+#&gt; </span><span style='color: #555555;'>3</span><span>   22.8     4 108      93
+#&gt; </span><span style='color: #555555;'>4</span><span>   21.4     6 258     110
+#&gt; </span><span style='color: #555555;'>5</span><span>   18.7     8 360     175
+#&gt; </span><span style='color: #555555;'>…</span><span>
+#&gt; </span><span style='color: #555555;'>28</span><span>  30.4     4  95.1   113
+#&gt; </span><span style='color: #555555;'>29</span><span>  15.8     8 351     264
+#&gt; </span><span style='color: #555555;'>30</span><span>  19.7     6 145     175
+#&gt; </span><span style='color: #555555;'>31</span><span>  15       8 301     335
+#&gt; </span><span style='color: #555555;'>32</span><span>  21.4     4 121     109
+#&gt; </span><span style='color: #555555;'># … with 22 more rows, and 7
+#&gt; #   more variables:
+#&gt; #   drat </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, wt </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   qsec </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, vs </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   am </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, gear </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   carb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>, width = <span class='fl'>30</span>, n_extra = <span class='fl'>2</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A prt:        32 × 11</span><span>
+#&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
+#&gt;      mpg   cyl  disp    hp
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>   21       6 160     110
+#&gt; </span><span style='color: #555555;'>2</span><span>   21       6 160     110
+#&gt; </span><span style='color: #555555;'>3</span><span>   22.8     4 108      93
+#&gt; </span><span style='color: #555555;'>4</span><span>   21.4     6 258     110
+#&gt; </span><span style='color: #555555;'>5</span><span>   18.7     8 360     175
+#&gt; </span><span style='color: #555555;'>…</span><span>
+#&gt; </span><span style='color: #555555;'>28</span><span>  30.4     4  95.1   113
+#&gt; </span><span style='color: #555555;'>29</span><span>  15.8     8 351     264
+#&gt; </span><span style='color: #555555;'>30</span><span>  19.7     6 145     175
+#&gt; </span><span style='color: #555555;'>31</span><span>  15       8 301     335
+#&gt; </span><span style='color: #555555;'>32</span><span>  21.4     4 121     109
+#&gt; </span><span style='color: #555555;'># … with 22 more rows, and 7
+#&gt; #   more variables:
+#&gt; #   drat </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, wt </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, …</span><span></div><div class='input'></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

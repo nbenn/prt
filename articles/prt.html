@@ -121,14 +121,8 @@
 </pre></div>
 <p>Creating a <code>prt</code> object consisting of 2 partitions can for example be done as</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-(<span class="kw">flights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_prt.html">as_prt</a></span>(<span class="kw">dat</span>, n_chunks = <span class="fl">2L</span>, dir = <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(tmpdir = <span class="kw">tmp</span>)))
-<span class="co">#&gt; Warning: `...` is not empty.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; We detected these problematic arguments:</span>
-<span class="co">#&gt; * `needs_dots`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; These dots only exist to allow future extensions and should be empty.</span>
-<span class="co">#&gt; Did you misspecify an argument?</span>
+<span class="kw">flights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_prt.html">as_prt</a></span>(<span class="kw">dat</span>, n_chunks = <span class="fl">2L</span>, dir = <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(tmpdir = <span class="kw">tmp</span>))
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">flights</span>)
 <span class="co">#&gt; # A prt:        336,776 × 19</span>
 <span class="co">#&gt; # Partitioning: [168,388, 168,388] rows</span>
 <span class="co">#&gt;          year month   day dep_time sched_dep_time dep_delay arr_time</span>
@@ -155,14 +149,8 @@
 <span class="kw">grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span>(<span class="kw">dat</span><span class="op">$</span><span class="kw">carrier</span>)) <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">dat</span>) <span class="op">&lt;</span> <span class="fl">0.5</span>
 <span class="kw">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span>(<span class="kw">dat</span>, <span class="kw">grp</span>[<span class="kw">dat</span><span class="op">$</span><span class="kw">carrier</span>])
 
-<span class="fu"><a href="../reference/new_prt.html">as_prt</a></span>(<span class="kw">dat</span>, dir = <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(tmpdir = <span class="kw">tmp</span>))
-<span class="co">#&gt; Warning: `...` is not empty.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; We detected these problematic arguments:</span>
-<span class="co">#&gt; * `needs_dots`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; These dots only exist to allow future extensions and should be empty.</span>
-<span class="co">#&gt; Did you misspecify an argument?</span>
+<span class="kw">by_carrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_prt.html">as_prt</a></span>(<span class="kw">dat</span>, dir = <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>(tmpdir = <span class="kw">tmp</span>))
+<span class="kw">by_carrier</span>
 <span class="co">#&gt; # A prt:        336,776 × 19</span>
 <span class="co">#&gt; # Partitioning: [182,128, 154,648] rows</span>
 <span class="co">#&gt;          year month   day dep_time sched_dep_time dep_delay arr_time</span>
@@ -192,7 +180,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">flights</span>[[<span class="st">"year"</span>]], <span class="kw">flights</span>[, <span class="st">"year"</span>, drop = <span class="fl">TRUE</span>])
 <span class="co">#&gt; [1] TRUE</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="kw">flights</span><span class="op">$</span><span class="kw">yea</span>)
-<span class="co">#&gt; Warning in `$.prt`(flights, yea): Unknown or uninitialised column: `yea`.</span>
+<span class="co">#&gt; Warning: Unknown or uninitialised column: `yea`.</span>
 <span class="co">#&gt;  NULL</span>
 </pre></div>
 <p>If the object resulting from the subsetting operation is two-dimensional, it is returned as <code>data.table</code> object. Apart form this distinction, again the intent is to replicate <code>tibble</code> behavior. One way in which <code>tibble</code> and <code>data.frame</code> do not behave in the same way is in default coercion to lower dimensions. The default value for the <code>drop</code> argument of <code>[.data.frame</code> is <code>FALSE</code> if only one row is returned but changes to <code>TRUE</code> where the result is a single column, while it is always <code>FALSE</code> for <code>tibble</code>s. A difference in behavior between <code>data.table</code> and <code>tibble</code> (any by extension <code>prt</code>) is a missing <code>j</code> argument: in the <code>tibble</code> (and in the <code>data.frame</code>) implementation, the <code>i</code> argument is then interpreted as column specification, whereas for <code>data.frame</code>s, <code>i</code> remains a row selection.</p>
@@ -243,13 +231,27 @@
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">jan_dt</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="fl">1L</span>))
 <span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; This message is displayed once every 8 hours.</span>
 <span class="co">#&gt; [1] TRUE</span>
 </pre></div>
-<p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>
+<p>To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the <code>carrier</code> column, selecting only American Airlines flights.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="kw">bench</span>::<span class="fu"><a href="https://rdrr.io/pkg/bench/man/mark.html">mark</a></span>(
+  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>),
+  <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">by_carrier</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>)
+)
+<span class="co">#&gt; # A tibble: 2 x 6</span>
+<span class="co">#&gt;   expression                              min  median `itr/sec` mem_alloc</span>
+<span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
+<span class="co">#&gt; 1 subset(flights, carrier == "AA")    110.2ms 110.2ms      9.07    56.6MB</span>
+<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  36.9ms  40.7ms     23.0     17.8MB</span>
+<span class="co">#&gt; # … with 1 more variable: `gc/sec` &lt;dbl&gt;</span>
+</pre></div>
+<p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit">
 <span class="kw">month</span> <span class="op">&lt;-</span> <span class="fl">1L</span>
 <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="kw">month</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">7L</span>)
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
 <span class="co">#&gt;         year month day dep_time sched_dep_time dep_delay arr_time</span>
 <span class="co">#&gt;      1: 2013     1   1      517            515         2      830</span>
 <span class="co">#&gt;      2: 2013     1   1      533            529         4      850</span>
@@ -264,14 +266,12 @@
 <span class="co">#&gt; 336776: 2013     9  30       NA            840        NA       NA</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">jan_dt</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="op">!</span><span class="op">!</span><span class="kw">month</span>))
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
 <span class="co">#&gt; [1] TRUE</span>
 <span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">jan_dt</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">.env</span><span class="op">$</span><span class="kw">month</span> <span class="op">==</span> <span class="kw">.data</span><span class="op">$</span><span class="kw">month</span>))
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
 <span class="co">#&gt; [1] TRUE</span>
 </pre></div>
 <p>While in the above example it is fairly clear what is happening and it should come as no surprise that the symbol <code>month</code> cannot simultaneously refer to a value in the calling environment and the name of a column in the data mask, a more subtle issue is considered in the following example. The environment which takes precedence for evaluating the <code>select</code> argument is a named list of column indices. This makes it possible for example to specify a range of columns as (and makes the behavior of <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> being applied to a <code>prt</code> object consistent with that of a <code>data.frame</code>).</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
+<div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">year</span><span class="op">:</span><span class="kw">day</span>)
 <span class="co">#&gt;         year month day</span>
 <span class="co">#&gt;      1: 2013     1   1</span>
@@ -286,94 +286,37 @@
 <span class="co">#&gt; 336775: 2013     9  30</span>
 <span class="co">#&gt; 336776: 2013     9  30</span>
 </pre></div>
-<p>Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can be explained. Again, the <code>.data</code> and <code>.env</code> pronouns can be used to resolve potential issues.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
+<p>Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can easily be explained. Again, the <code>.data</code> and <code>.env</code> pronouns can be used to resolve potential issues.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="kw">sched_dep_time</span> <span class="op">&lt;-</span> <span class="st">"dep_time"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">sched_dep_time</span>)
-<span class="co">#&gt;         sched_dep_time</span>
-<span class="co">#&gt;      1:            515</span>
-<span class="co">#&gt;      2:            529</span>
-<span class="co">#&gt;      3:            540</span>
-<span class="co">#&gt;      4:            545</span>
-<span class="co">#&gt;      5:            600</span>
-<span class="co">#&gt;     ---               </span>
-<span class="co">#&gt; 336772:           1455</span>
-<span class="co">#&gt; 336773:           2200</span>
-<span class="co">#&gt; 336774:           1210</span>
-<span class="co">#&gt; 336775:           1159</span>
-<span class="co">#&gt; 336776:            840</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">sched_dep_time</span>))
+<span class="co">#&gt; [1] "sched_dep_time"</span>
 
 <span class="kw">actual_dep_time</span> <span class="op">&lt;-</span> <span class="st">"dep_time"</span>
-<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">actual_dep_time</span>)
-<span class="co">#&gt;         dep_time</span>
-<span class="co">#&gt;      1:      517</span>
-<span class="co">#&gt;      2:      533</span>
-<span class="co">#&gt;      3:      542</span>
-<span class="co">#&gt;      4:      544</span>
-<span class="co">#&gt;      5:      554</span>
-<span class="co">#&gt;     ---         </span>
-<span class="co">#&gt; 336772:       NA</span>
-<span class="co">#&gt; 336773:       NA</span>
-<span class="co">#&gt; 336774:       NA</span>
-<span class="co">#&gt; 336775:       NA</span>
-<span class="co">#&gt; 336776:       NA</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">actual_dep_time</span>))
+<span class="co">#&gt; [1] "dep_time"</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.env</span><span class="op">$</span><span class="kw">sched_dep_time</span>)
-<span class="co">#&gt;         dep_time</span>
-<span class="co">#&gt;      1:      517</span>
-<span class="co">#&gt;      2:      533</span>
-<span class="co">#&gt;      3:      542</span>
-<span class="co">#&gt;      4:      544</span>
-<span class="co">#&gt;      5:      554</span>
-<span class="co">#&gt;     ---         </span>
-<span class="co">#&gt; 336772:       NA</span>
-<span class="co">#&gt; 336773:       NA</span>
-<span class="co">#&gt; 336774:       NA</span>
-<span class="co">#&gt; 336775:       NA</span>
-<span class="co">#&gt; 336776:       NA</span>
-<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.env</span><span class="op">$</span><span class="kw">actual_dep_time</span>)
-<span class="co">#&gt;         dep_time</span>
-<span class="co">#&gt;      1:      517</span>
-<span class="co">#&gt;      2:      533</span>
-<span class="co">#&gt;      3:      542</span>
-<span class="co">#&gt;      4:      544</span>
-<span class="co">#&gt;      5:      554</span>
-<span class="co">#&gt;     ---         </span>
-<span class="co">#&gt; 336772:       NA</span>
-<span class="co">#&gt; 336773:       NA</span>
-<span class="co">#&gt; 336774:       NA</span>
-<span class="co">#&gt; 336775:       NA</span>
-<span class="co">#&gt; 336776:       NA</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.env</span><span class="op">$</span><span class="kw">sched_dep_time</span>))
+<span class="co">#&gt; [1] "dep_time"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.env</span><span class="op">$</span><span class="kw">actual_dep_time</span>))
+<span class="co">#&gt; [1] "dep_time"</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.data</span><span class="op">$</span><span class="kw">sched_dep_time</span>)
-<span class="co">#&gt;         sched_dep_time</span>
-<span class="co">#&gt;      1:            515</span>
-<span class="co">#&gt;      2:            529</span>
-<span class="co">#&gt;      3:            540</span>
-<span class="co">#&gt;      4:            545</span>
-<span class="co">#&gt;      5:            600</span>
-<span class="co">#&gt;     ---               </span>
-<span class="co">#&gt; 336772:           1455</span>
-<span class="co">#&gt; 336773:           2200</span>
-<span class="co">#&gt; 336774:           1210</span>
-<span class="co">#&gt; 336775:           1159</span>
-<span class="co">#&gt; 336776:            840</span>
-<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.data</span><span class="op">$</span><span class="kw">actual_dep_time</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.data</span><span class="op">$</span><span class="kw">sched_dep_time</span>))
+<span class="co">#&gt; [1] "sched_dep_time"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.data</span><span class="op">$</span><span class="kw">actual_dep_time</span>))
 <span class="co">#&gt; Error: Column `actual_dep_time` not found in `.data`</span>
 </pre></div>
-<p>By default, <code>subset</code> expressions are evaluated on partitions separately and this behavior can be modified using the <code>part_saft</code> argument, as in some scenarios this might be undesirable. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
+<p>By default, <code>subset</code> expressions have to be evaluated on the entire dataset at once in order to be compatible with the base <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> bahvior for <code>data.fframes</code>. Often times this is inefficient and this behavior can be modified using the <code>part_saft</code> argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="kw">is_true</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>) <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="kw">x</span>) <span class="op">&amp;</span> <span class="kw">x</span>
 <span class="kw">expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span>(<span class="fu">is_true</span>(<span class="kw">arr_delay</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="kw">arr_delay</span>, na.rm = <span class="fl">TRUE</span>)))
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="fu"><a href="../reference/nse.html">subset_quo</a></span>(<span class="kw">flights</span>, <span class="kw">expr</span>))
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
-<span class="co">#&gt; [1] 105827</span>
 <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="fu"><a href="../reference/nse.html">subset_quo</a></span>(<span class="kw">flights</span>, <span class="kw">expr</span>, part_safe = <span class="fl">FALSE</span>))
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
 <span class="co">#&gt; [1] 105827</span>
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="fu"><a href="../reference/nse.html">subset_quo</a></span>(<span class="kw">flights</span>, <span class="kw">expr</span>, part_safe = <span class="fl">TRUE</span>))
+<span class="co">#&gt; [1] 104752</span>
 </pre></div>
 <p>As an aside, in addition to <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code>, which creates quosures from the expressions passed as <code>subset</code> and <code>select</code>, (using <code><a href="https://rlang.r-lib.org/reference/nse-defuse.html">rlang::enquo()</a></code>) the function <code><a href="../reference/nse.html">subset_quo()</a></code> which operates on already quoted expressions is exported as well. Thanks to the double curly brace forwarding operator introduced in rlang 0.4.0, this escape-hatch mechanism however is of lesser importance.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
+<div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="kw">col_safe_subset</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>, <span class="kw">expr</span>, <span class="kw">cols</span>) {
   <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span>(<span class="fu"><a href="../reference/new_prt.html">is_prt</a></span>(<span class="kw">x</span>), <span class="fu"><a href="https://rdrr.io/r/base/character.html">is.character</a></span>(<span class="kw">cols</span>))
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">x</span>, {{ <span class="kw">expr</span> }}, <span class="kw">.env</span><span class="op">$</span><span class="kw">cols</span>)
@@ -381,7 +324,6 @@
 
 <span class="kw">air_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"dep_time"</span>, <span class="st">"arr_time"</span>)
 <span class="fu">col_safe_subset</span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="fl">1L</span>, <span class="kw">air_time</span>)
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
 <span class="co">#&gt;        dep_time arr_time</span>
 <span class="co">#&gt;     1:      517      830</span>
 <span class="co">#&gt;     2:      533      850</span>
@@ -395,8 +337,8 @@
 <span class="co">#&gt; 27003:       NA       NA</span>
 <span class="co">#&gt; 27004:       NA       NA</span>
 </pre></div>
-<p>In addition to subsetting, concise and informative printing is another area which effort ha been put into. Inspired by (and liberally borrowing code from) <code>tibble</code>, the <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> method of <code>fst</code> objects adds the <code>data.table</code> approach of showing both the first and last <code>n</code> rows of the table in question. This functionality can be used by other classes used to represent tabular data, as the function <code><a href="../reference/trunc_dt.html">trunc_dt()</a></code> driving this is exported. All that is required are implementations of the base S3 generic functions <code><a href="https://rdrr.io/r/base/dim.html">dim()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html">head()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html">tail()</a></code> and of course <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
+<p>In addition to subsetting, concise and informative printing is another area which effort ha been put into. Inspired by (and liberally borrowing code from) <code>tibble</code>, the <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> method of <code>fst</code> objects adds the <code>data.table</code> approach of showing both the first and last <code>n</code> rows of the table in question. This functionality can be used by other classes used to represent tabular data, as the function <code><a href="../reference/print.prt.html">trunc_dt()</a></code> driving this is exported. All that is required are implementations of the base S3 generic functions <code><a href="https://rdrr.io/r/base/dim.html">dim()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html">head()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html">tail()</a></code> and of course <code><a href="https://rdrr.io/r/base/print.html">print()</a></code>.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="kw">new_tbl</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">...</span>) <span class="fu"><a href="https://rdrr.io/r/base/structure.html">structure</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">...</span>), class = <span class="st">"my_tbl"</span>)
 
 <span class="kw">dim.my_tbl</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>) {
@@ -411,20 +353,13 @@
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="kw">x</span>, <span class="kw">`[`</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">x</span>) <span class="op">-</span> <span class="kw">n</span> <span class="op">+</span> <span class="fl">1L</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">x</span>))))
 }
 <span class="kw">print.my_tbl</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>, <span class="kw">...</span>, <span class="kw">n</span> = <span class="kw">NULL</span>, <span class="kw">width</span> = <span class="kw">NULL</span>, <span class="kw">n_extra</span> = <span class="kw">NULL</span>) {
-  <span class="kw">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="fu"><a href="../reference/trunc_dt.html">trunc_dt</a></span>(<span class="kw">x</span>, n = <span class="kw">n</span>, width = <span class="kw">width</span>, n_extra = <span class="kw">n_extra</span>))
+  <span class="kw">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="fu"><a href="../reference/print.prt.html">trunc_dt</a></span>(<span class="kw">x</span>, n = <span class="kw">n</span>, width = <span class="kw">width</span>, n_extra = <span class="kw">n_extra</span>))
   <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="kw">out</span>, <span class="st">"\n"</span>), sep = <span class="st">""</span>)
   <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span>(<span class="kw">x</span>)
 }
 </pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit">
+<div class="sourceCode" id="cb14"><pre class="downlit">
 <span class="fu">new_tbl</span>(a = <span class="kw">letters</span>, b = <span class="fl">1</span><span class="op">:</span><span class="fl">26</span>)
-<span class="co">#&gt; Warning: `...` is not empty.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; We detected these problematic arguments:</span>
-<span class="co">#&gt; * `needs_dots`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; These dots only exist to allow future extensions and should be empty.</span>
-<span class="co">#&gt; Did you misspecify an argument?</span>
 <span class="co">#&gt; # Description: my_tbl</span>
 <span class="co">#&gt;    a         b</span>
 <span class="co">#&gt;    &lt;chr&gt; &lt;int&gt;</span>
@@ -441,8 +376,8 @@
 <span class="co">#&gt; 26 z        26</span>
 <span class="co">#&gt; # … with 16 more rows</span>
 </pre></div>
-<p>Similarly, the function <code><a href="../reference/trunc_dt.html">glimpse_dt()</a></code> which can be used to implement a class-specific function for the <code>tibble</code> S3 generic <code><a href="https://tibble.tidyverse.org/reference/glimpse.html">tibble::glimpse()</a></code>. In order to customize the text description of the object a class-specific function for the <code>tibble</code> S3 generic <code><a href="https://tibble.tidyverse.org/reference/tbl_sum.html">tibble::tbl_sum()</a></code> can be provided.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
+<p>Similarly, the function <code><a href="../reference/glimpse.prt.html">glimpse_dt()</a></code> which can be used to implement a class-specific function for the <code>tibble</code> S3 generic <code><a href="https://tibble.tidyverse.org/reference/glimpse.html">tibble::glimpse()</a></code>. In order to customize the text description of the object a class-specific function for the <code>tibble</code> S3 generic <code><a href="https://tibble.tidyverse.org/reference/tbl_sum.html">tibble::tbl_sum()</a></code> can be provided.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span>(<span class="kw">tmp</span>, recursive = <span class="fl">TRUE</span>)
 </pre></div>
   </div>
