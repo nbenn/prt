@@ -1,6 +1,42 @@
 
 #' Get a glimpse of your data
 #'
+#' The `tibble` S3 generic function [tibble::glimpse()] is implemented for
+#' `prt` objects as well. Inspired by the output of [str()] when applied to
+#' `data.frames`, this function is intended to display the structure of the
+#' data in terms of columns, irrespective of how the data is organized in terms
+#' of `R` objects. Similarly to [trunc_dt()], the function providing the bulk
+#' of functionality, `glimpse_dt()`, is exported such that implementing a
+#' class specific [tibble::glimpse()] function for other classes that
+#' representing tabular data is straightforward.
+#'
+#' Alsongside a `prt`-specific [tibble::glimpse()] method, a [str()] method is
+#' provided as well for `prt` objects. However, breaking with base `R`
+#' expectations, it is not the structure of the object in terms of `R` objects
+#' that is shown, but in the same spirit as [tibble::glimpse()] it is the
+#' structure of the data that is printed. How this data is represents with
+#' respect to `R` objects is abstracted away as to show output as would be
+#' expected if the data were represented by a `data.frame`.
+#'
+#' In similar spirit as [trunc_dt()] and `glimpse_dt()`, a `str_dt()` function
+#' is exported which provides the core functionality driving the `prt`
+#' implementation of [str()]. This function requires availability of a
+#' [head()] function for any object that is passed and output can be
+#' customized by implementing an optional `str_sum()` function.
+#'
+#' @examples
+#' cars <- as_prt(mtcars)
+#'
+#' tibble::glimpse(cars)
+#' tibble::glimpse(cars, width = 30)
+#'
+#' str(cars)
+#' str(cars, vec.len = 1)
+#'
+#' str(unclass(cars))
+#'
+#' str_sum(cars)
+#'
 #' @inheritParams tibble::glimpse
 #'
 #' @rdname glimpse
@@ -15,13 +51,7 @@ glimpse.prt <- function(x, width = NULL, ...) {
   invisible(x)
 }
 
-#' Printing utilities
-#'
-#' @inheritParams glimpse.prt
-#'
-#' @keywords internal
-#'
-#' @rdname internal
+#' @rdname glimpse
 #'
 #' @export
 #'
@@ -40,7 +70,7 @@ glimpse_dt <- function(x, width = NULL) {
   df <- as.data.frame(head(x, rows))
   cat_line("Columns: ", big_mark(ncol(df)))
 
-  summary <- tibble::tbl_sum(x)
+  summary <- tbl_sum(x)
   brief_summary <- summary[-1]
 
   if (length(brief_summary) > 0L) {
@@ -100,10 +130,7 @@ format_row.factor <- function(x) {
 #'
 str_sum <- function(x) UseMethod("str_sum")
 
-#' @rdname glimpse
-#'
 #' @export
-#'
 str_sum.prt <- function(x) {
 
   ncol <- ncol(x)
@@ -116,10 +143,7 @@ str_sum.prt <- function(x) {
   )
 }
 
-#' @rdname glimpse
-#'
 #' @export
-#'
 str_sum.data.frame <- function(x) {
 
   ncol <- ncol(x)
@@ -142,9 +166,7 @@ str.prt <- function(object, ...) {
   invisible(str_dt(object, ...))
 }
 
-#' @keywords internal
-#'
-#' @rdname internal
+#' @rdname glimpse
 #'
 #' @export
 #'

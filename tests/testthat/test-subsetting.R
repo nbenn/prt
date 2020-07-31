@@ -150,6 +150,6 @@ test_that("[ supports drop argument", {
   expect_identical(dat[1, 2, drop = TRUE], dat[[2]][1])
   expect_identical(dat[1, , drop = TRUE], dat[1, , ])
 
-  expect_warning(res <- dat[1, drop = TRUE])
+  expect_warning(res <- dat[1, drop = TRUE], class = "warn_ignore_drop")
   expect_identical(res, dat[1])
 })

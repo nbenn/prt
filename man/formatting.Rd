@@ -3,11 +3,14 @@
 \name{print.prt}
 \alias{print.prt}
 \alias{format.prt}
+\alias{trunc_dt}
 \title{Printing prt}
 \usage{
 \method{print}{prt}(x, ..., n = NULL, width = NULL, n_extra = NULL)
 
 \method{format}{prt}(x, ..., n = NULL, width = NULL, n_extra = NULL)
+
+trunc_dt(x, n = NULL, width = NULL, n_extra = NULL)
 }
 \arguments{
 \item{x}{Object to format or print.}
@@ -29,5 +32,69 @@ if the width is too small for the entire tibble. If \code{NULL}, the default,
 will print information about at most \code{tibble.max_extra_cols} extra columns.}
 }
 \description{
-Printing prt
+Printing of \code{prt} objects combines the concise yet informative design
+of only showing as many columns as the terminal width allows for, introduced
+by \code{tibble}, with the \code{data.table} approach of showing both the first and
+last few rows of a table. Implementation wise, the interface is designed to
+mimic that of \code{tibble} printing as closely as possibly, offering the same
+function arguments and using the same option settings (and default values)
+as introduced by \code{tibble}.
+}
+\details{
+While the function \code{\link[tibble:trunc_mat]{tibble::trunc_mat()}} does most of the heavy lifting
+for formatting \code{tibble} printing output, \code{prt} exports the function
+\code{trunc_dt()}, which drives analogous functionality while adding the
+top/bottom \code{n} row concept. This function can be used for creating \code{\link[=print]{print()}}
+methods for other classes which represent tabular data, given that this
+class implements \code{\link[=dim]{dim()}}, \code{\link[=head]{head()}} and \code{\link[=tail]{tail()}} (and optionally
+\code{\link[tibble:tbl_sum]{tibble::tbl_sum()}}) methods. For an example of this, see
+\href{../doc/prt.html}{\code{vignette("prt", package = "prt")}}.
+
+The following session options are set by \code{tibble} and are respected by
+\code{prt}, as well as any other package that were to call \code{trunc_dt()}:
+\itemize{
+\item \code{tibble.print_max}: Row number threshold: Maximum number of rows printed.
+Set to \code{Inf} to always print all rows.  Default: 20.
+\item \code{tibble.print_min}: Number of rows printed if row number threshold is
+exceeded. Default: 10.
+\item \code{tibble.width}: Output width. Default: \code{NULL} (use \code{width} option).
+\item \code{tibble.max_extra_cols}: Number of extra columns printed in reduced form.
+Default: 100.
+}
+
+Both \code{tibble} and \code{prt} rely on \code{pillar} for formatting columns and
+therefore, the following options set by \code{pillar} are applicable to \code{prt}
+printing as well:
+}
+\section{Package options}{
+
+
+\itemize{
+\item \code{pillar.bold}: Use bold font, e.g. for column headers? This currently
+defaults to \code{FALSE}, because many terminal fonts have poor support for
+bold fonts.
+\item \code{pillar.subtle}: Use subtle style, e.g. for row numbers and data types?
+Default: \code{TRUE}.
+\item \code{pillar.subtle_num}: Use subtle style for insignificant digits? Default:
+\code{FALSE}, is also affected by the \code{pillar.subtle} option.
+\item \code{pillar.neg}: Highlight negative numbers? Default: \code{TRUE}.
+\item \code{pillar.sigfig}: The number of significant digits that will be printed and
+highlighted, default: \code{3}. Set the \code{pillar.subtle} option to \code{FALSE} to
+turn off highlighting of significant digits.
+\item \code{pillar.min_title_chars}: The minimum number of characters for the column
+title, default: \code{15}.  Column titles may be truncated up to that width to
+save horizontal space. Set to \code{Inf} to turn off truncation of column
+titles.
+}
+
+}
+
+\examples{
+cars <- as_prt(mtcars)
+
+print(cars)
+print(cars, n = 2)
+print(cars, width = 30)
+print(cars, width = 30, n_extra = 2)
+
 }

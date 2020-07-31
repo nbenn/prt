@@ -1,7 +1,50 @@
 
 #' Printing prt
 #'
+#' Printing of `prt` objects combines the concise yet informative design
+#' of only showing as many columns as the terminal width allows for, introduced
+#' by `tibble`, with the `data.table` approach of showing both the first and
+#' last few rows of a table. Implementation wise, the interface is designed to
+#' mimic that of `tibble` printing as closely as possibly, offering the same
+#' function arguments and using the same option settings (and default values)
+#' as introduced by `tibble`.
+#'
+#' While the function [tibble::trunc_mat()] does most of the heavy lifting
+#' for formatting `tibble` printing output, `prt` exports the function
+#' `trunc_dt()`, which drives analogous functionality while adding the
+#' top/bottom `n` row concept. This function can be used for creating [print()]
+#' methods for other classes which represent tabular data, given that this
+#' class implements [dim()], [head()] and [tail()] (and optionally
+#' [tibble::tbl_sum()]) methods. For an example of this, see
+#' [`vignette("prt", package = "prt")`](../doc/prt.html).
+#'
+#' The following session options are set by `tibble` and are respected by
+#' `prt`, as well as any other package that were to call `trunc_dt()`:
+#'
+#' * `tibble.print_max`: Row number threshold: Maximum number of rows printed.
+#'   Set to `Inf` to always print all rows.  Default: 20.
+#' * `tibble.print_min`: Number of rows printed if row number threshold is
+#'   exceeded. Default: 10.
+#' * `tibble.width`: Output width. Default: `NULL` (use `width` option).
+#' * `tibble.max_extra_cols`: Number of extra columns printed in reduced form.
+#'   Default: 100.
+#'
+#' Both `tibble` and `prt` rely on `pillar` for formatting columns and
+#' therefore, the following options set by `pillar` are applicable to `prt`
+#' printing as well:
+#'
+#' @inheritSection pillar::`pillar-package` Package options
+#'
+#' @examples
+#' cars <- as_prt(mtcars)
+#'
+#' print(cars)
+#' print(cars, n = 2)
+#' print(cars, width = 30)
+#' print(cars, width = 30, n_extra = 2)
+#'
 #' @inheritParams tibble::print.tbl
+#' @importFrom tibble tbl_sum
 #'
 #' @rdname formatting
 #'
@@ -12,8 +55,6 @@ print.prt <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
   invisible(x)
 }
 
-#' @inheritParams tibble::format.tbl
-#'
 #' @rdname formatting
 #'
 #' @export
@@ -29,11 +70,7 @@ print.trunc_dt <- function(x, ...) {
   invisible(x)
 }
 
-#' @inheritParams print.prt
-#'
-#' @keywords internal
-#'
-#' @rdname internal
+#' @rdname formatting
 #'
 #' @export
 #'
@@ -69,7 +106,7 @@ trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
 
   trunc_info <- list(
     width = width, rows_total = rows, rows_min = nrow(df),
-    n_extra = n_extra, summary = tibble::tbl_sum(x), row_id = rowid
+    n_extra = n_extra, summary = tbl_sum(x), row_id = rowid
   )
 
   structure(
@@ -104,9 +141,7 @@ format.trunc_dt <- function(x, width = NULL, ...) {
   )
 }
 
-#' knit_print method for trunc dt
-#'
-#' @keywords internal
+#' @importFrom knitr knit_print
 #'
 #' @export
 #'

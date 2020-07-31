@@ -196,24 +196,11 @@ big_mark <- function(x, ...) {
   formatC(x, big.mark = mark, format = "d", ...)
 }
 
-#' @inheritParams tibble::tbl_sum
-#'
-#' @rdname glimpse
-#'
-#' @importFrom tibble tbl_sum
-#'
 #' @export
-#'
 tbl_sum.prt <- function(x) {
   c("A prt" = dim_desc(x), "Partitioning" = part_desc(x))
 }
 
-#' @keywords internal
-#'
-#' @rdname internal
-#'
-#' @export
-#'
 dim_desc <- function(x) {
   paste0(vapply(dim(x), big_mark, character(1L)),
          collapse = spaces_around(times()))

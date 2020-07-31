@@ -20,7 +20,8 @@ Imports:
     crayon,
     fansi,
     backports,
-    rlang
+    rlang,
+    knitr
 Suggests:
     testthat,
     xml2,
@@ -28,8 +29,8 @@ Suggests:
     withr,
     nycflights13,
     datasets,
-    knitr,
-    rmarkdown
+    rmarkdown,
+    bench
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

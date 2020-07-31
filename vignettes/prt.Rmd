@@ -43,7 +43,8 @@ dat <- data.table::setorderv(dat, "carrier")
 grp <- cumsum(table(dat$carrier)) / nrow(dat) < 0.5
 dat <- split(dat, grp[dat$carrier])
 
-as_prt(dat, dir = tempfile(tmpdir = tmp))
+by_carrier <- as_prt(dat, dir = tempfile(tmpdir = tmp))
+by_carrier
 ```
 
 The behavior of subsetting operations on `prt` objects is modeled after that of [`tibble`](https://tibble.tidyverse.org) objects. Columns can be extracted using `[[`, `$` (with partial matching being disallowed), or by selecting a single column with `[` and passing `TRUE` as `drop` argument.
@@ -73,6 +74,15 @@ The main feature of `prt` is the ability to load only a subset of a much larger 
 
 ```{r subset-nse}
 identical(jan_dt, subset(flights, month == 1L))
+```
+
+To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the `carrier` column, selecting only American Airlines flights.
+
+```{r row-order}
+bench::mark(
+  subset(flights, carrier == "AA"),
+  subset(by_carrier, carrier == "AA")
+)
 ```
 
 A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as `subset` and `select` arguments are first resolved in the context of the data, followed by the environment the expression was created in (the [quosure](https://rlang.r-lib.org/reference/nse-defuse.html) environment). Expressions are evaluated using `rlang::eval_tidy()`, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the `.data` and `.env` pronouns or by [forcing parts of the expression](https://rlang.r-lib.org/reference/nse-force.html).
