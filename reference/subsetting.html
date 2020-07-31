@@ -40,7 +40,15 @@
 
 
 <meta property="og:title" content="Subsetting operations — subsetting" />
-<meta property="og:description" content="Subsetting operations" />
+<meta property="og:description" content="Both single element subsetting via [[ and $, as well as multi-element
+subsetting via [ are available for prt objects. Subsetting semantics
+are modeled after those of the tibble class with the main difference
+being that there tibble returns tibble objects, prt returns
+data.tables. Differences to base R include that partial column name
+matching for $ is not allowed and coercion to lower dimensions for
+[ is always disabled by default. As prt objects are immutable, all
+subset-replace functions ([[&amp;lt;-, $&amp;lt;- and [&amp;lt;-) yield an error when
+passed a prt object." />
 
 
 
@@ -112,7 +120,15 @@
     </div>
 
     <div class="ref-description">
-    <p>Subsetting operations</p>
+    <p>Both single element subsetting via <code><a href='https://rdrr.io/r/base/Extract.html'>[[</a></code> and <code><a href='https://rdrr.io/r/base/Extract.html'>$</a></code>, as well as multi-element
+subsetting via <code><a href='https://rdrr.io/r/base/Extract.html'>[</a></code> are available for <code>prt</code> objects. Subsetting semantics
+are modeled after those of the <code>tibble</code> class with the main difference
+being that there <code>tibble</code> returns <code>tibble</code> objects, <code>prt</code> returns
+<code>data.table</code>s. Differences to base R include that partial column name
+matching for <code><a href='https://rdrr.io/r/base/Extract.html'>$</a></code> is not allowed and coercion to lower dimensions for
+<code><a href='https://rdrr.io/r/base/Extract.html'>[</a></code> is always disabled by default. As <code>prt</code> objects are immutable, all
+subset-replace functions (<code>[[&lt;-</code>, <code>$&lt;-</code> and <code>[&lt;-</code>) yield an error when
+passed a <code>prt</code> object.</p>
     </div>
 
     <pre class="usage"># S3 method for prt
@@ -158,6 +174,14 @@ Default <code>FALSE</code>, ignored when accessing a column via <code>tbl[j]</co
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span>(<span class='kw'>mtcars</span>)
+
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='kw'>dat</span><span class='op'>$</span><span class='kw'>mpg</span>, <span class='kw'>dat</span>[[<span class='st'>"mpg"</span>]])</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='kw'>dat</span><span class='op'>$</span><span class='kw'>mp</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Unknown or uninitialised column: `mp`.</span></div><div class='output co'>#&gt; NULL</div><div class='input'><span class='kw'>mtcars</span><span class='op'>$</span><span class='kw'>mp</span></div><div class='output co'>#&gt;  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4
+#&gt; [16] 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3 19.2 27.3 26.0 30.4 15.8 19.7
+#&gt; [31] 15.0 21.4</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>dat</span>[<span class='st'>"mpg"</span>]), <span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>mtcars</span>[<span class='st'>"mpg"</span>]))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>dat</span>[, <span class='st'>"mpg"</span>]), <span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>mtcars</span>[, <span class='st'>"mpg"</span>]))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>dat</span>[<span class='fl'>1L</span>, ]), <span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>mtcars</span>[<span class='fl'>1L</span>, ]))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

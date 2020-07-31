@@ -241,11 +241,12 @@
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>),
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">by_carrier</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>)
 )
+<span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span>
 <span class="co">#&gt; # A tibble: 2 x 6</span>
 <span class="co">#&gt;   expression                              min  median `itr/sec` mem_alloc</span>
 <span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
-<span class="co">#&gt; 1 subset(flights, carrier == "AA")    110.2ms 110.2ms      9.07    56.6MB</span>
-<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  36.9ms  40.7ms     23.0     17.8MB</span>
+<span class="co">#&gt; 1 subset(flights, carrier == "AA")      115ms 131.9ms      7.26    56.6MB</span>
+<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  36.2ms  40.2ms     23.4     17.8MB</span>
 <span class="co">#&gt; # … with 1 more variable: `gc/sec` &lt;dbl&gt;</span>
 </pre></div>
 <p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>

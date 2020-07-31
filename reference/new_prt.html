@@ -40,7 +40,15 @@
 
 
 <meta property="og:title" content="Methods for creating and inspecting prt objects — new_prt" />
-<meta property="og:description" content="Methods for creating and inspecting prt objects" />
+<meta property="og:description" content="The constructor new_prt() creates a prt object from one or several
+fst files, making sure that each table consist of identically named,
+ordered and typed columns. In order to create a prt object from an
+in-memory table, as_prt() coerces objects inheriting from data.frame
+to prt by first splitting rows into n_chunks, writing fst files to the
+directory dir and calling new_prt() on the resulting fst files. If
+this default splitting of rows (which might impact efficiency of subsequent
+queries on the data) is not optimal, a list of objects inheriting from
+data.frame is a valid x argument as well." />
 
 
 
@@ -112,7 +120,15 @@
     </div>
 
     <div class="ref-description">
-    <p>Methods for creating and inspecting prt objects</p>
+    <p>The constructor <code>new_prt()</code> creates a <code>prt</code> object from one or several
+<code>fst</code> files, making sure that each table consist of identically named,
+ordered and typed columns. In order to create a <code>prt</code> object from an
+in-memory table, <code>as_prt()</code> coerces objects inheriting from <code>data.frame</code>
+to <code>prt</code> by first splitting rows into <code>n_chunks</code>, writing <code>fst</code> files to the
+directory <code>dir</code> and calling <code>new_prt()</code> on the resulting <code>fst</code> files. If
+this default splitting of rows (which might impact efficiency of subsequent
+queries on the data) is not optimal, a list of objects inheriting from
+<code>data.frame</code> is a valid <code>x</code> argument as well.</p>
     </div>
 
     <pre class="usage"><span class='fu'>new_prt</span>(<span class='kw'>files</span>)
@@ -121,21 +137,15 @@
 
 <span class='fu'>is_prt</span>(<span class='kw'>x</span>)
 
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span>(<span class='kw'>x</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='kw'>x</span>)
-
 <span class='fu'>n_part</span>(<span class='kw'>x</span>)
 
 <span class='fu'>part_nrow</span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/dimnames.html'>dimnames</a></span>(<span class='kw'>x</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
 <span class='fu'>as.data.table</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
@@ -147,13 +157,7 @@
 <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>x</span>, row.names = <span class='kw'>NULL</span>, optional = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,6 +180,10 @@ split into.</p></td>
       <td><p>Directory where the chunked <code><a href='http://www.fstpackage.org/reference/fst.html'>fst::fst()</a></code> objects reside in.</p></td>
     </tr>
     <tr>
+      <th>n</th>
+      <td><p>Count variable indicating the number of rows to return.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Generic consistency: additional arguments are ignored and a
 warning is issued.</p></td>
@@ -185,13 +193,70 @@ warning is issued.</p></td>
       <td><p>Generic consistency: passing anything other than
 the default value issues a warning.</p></td>
     </tr>
-    <tr>
-      <th>n</th>
-      <td><p>Count variable indicating the number of rows to return.</p></td>
-    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>To check whether an object inherits from <code>prt</code>, the function <code>is_prt()</code> is
+exported, the number of partitions can be queried by calling <code>n_part()</code> and
+the number of rows per partition is available as <code>part_nrow()</code>.</p>
+<p>The base <code>R</code> S3 generic functions <code><a href='https://rdrr.io/r/base/dim.html'>dim()</a></code>, <code><a href='https://rdrr.io/r/base/length.html'>length()</a></code>, <code><a href='https://rdrr.io/r/base/dimnames.html'>dimnames()</a></code> and
+<code><a href='https://rdrr.io/r/base/names.html'>names()</a></code>,have <code>prt</code>-specific implementations, where <code><a href='https://rdrr.io/r/base/dim.html'>dim()</a></code> returns the
+overall table dimensions, <code><a href='https://rdrr.io/r/base/length.html'>length()</a></code> is synonymous for <code><a href='https://rdrr.io/r/base/nrow.html'>ncol()</a></code>,
+<code><a href='https://rdrr.io/r/base/dimnames.html'>dimnames()</a></code> returns a length 2 list containing <code>NULL</code> column names as
+character vector and <code><a href='https://rdrr.io/r/base/names.html'>names()</a></code> is synonymous for <code><a href='https://rdrr.io/r/base/colnames.html'>colnames()</a></code>. Both setting
+and getting row names on <code>prt</code> objects is not supported and more generally,
+calling replacement functions such as <code>names&lt;-()</code> or <code>dimnames&lt;-()</code> leads
+to an error, as <code>prt</code> objects are immutable. The base <code>R</code> S3 generic
+functions <code><a href='https://rdrr.io/r/utils/head.html'>head()</a></code> and <code><a href='https://rdrr.io/r/utils/head.html'>tail()</a></code> are available as well and are used
+internally to provide an extensible mechanism for printing (see
+<code><a href='print.prt.html'>trunc_dt()</a></code>).</p>
+<p>Coercion to other base <code>R</code> objects is possible via <code><a href='https://rdrr.io/r/base/list.html'>as.list()</a></code>,
+<code><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame()</a></code> and <code><a href='https://rdrr.io/r/base/matrix.html'>as.matrix()</a></code> and for coercion to <code>data.table</code>, its
+generic function <code><a href='https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html'>data.table::as.data.table()</a></code> is available to <code>prt</code>
+objects. All coercion involves reading the full data into memory at once
+which might be problematic in cases of large data sets.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>cars</span> <span class='op'>&lt;-</span> <span class='fu'>as_prt</span>(<span class='kw'>mtcars</span>, n_chunks = <span class='fl'>2L</span>)
+
+<span class='fu'>is_prt</span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>n_part</span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='fu'>part_nrow</span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt; [1] 16 16</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt; [1] 32</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt;  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
+#&gt; [11] "carb"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt;  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
+#&gt; [11] "carb"</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>cars</span>)</div><div class='output co'>#&gt;     mpg cyl disp  hp drat    wt  qsec vs am gear carb
+#&gt; 1: 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+#&gt; 2: 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+#&gt; 3: 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+#&gt; 4: 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+#&gt; 5: 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+#&gt; 6: 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>cars</span>, n = <span class='fl'>2</span>)</div><div class='output co'>#&gt;     mpg cyl disp  hp drat   wt qsec vs am gear carb
+#&gt; 1: 15.0   8  301 335 3.54 3.57 14.6  0  1    5    8
+#&gt; 2: 21.4   4  121 109 4.11 2.78 18.6  1  1    4    2</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span>(<span class='kw'>cars</span>))</div><div class='output co'>#&gt; List of 11
+#&gt;  $ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+#&gt;  $ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
+#&gt;  $ disp: num [1:32] 160 160 108 258 360 ...
+#&gt;  $ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
+#&gt;  $ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+#&gt;  $ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
+#&gt;  $ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
+#&gt;  $ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
+#&gt;  $ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
+#&gt;  $ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
+#&gt;  $ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>cars</span>))</div><div class='output co'>#&gt; 'data.frame':	32 obs. of  11 variables:
+#&gt;  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+#&gt;  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
+#&gt;  $ disp: num  160 160 108 258 360 ...
+#&gt;  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+#&gt;  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+#&gt;  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+#&gt;  $ qsec: num  16.5 17 18.6 19.4 17 ...
+#&gt;  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
+#&gt;  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+#&gt;  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
+#&gt;  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...</div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
