@@ -4,7 +4,7 @@
 \alias{nse}
 \alias{subset.prt}
 \alias{subset_quo}
-\title{NSE subsetting operations}
+\title{NSE subsetting}
 \usage{
 \method{subset}{prt}(x, subset, select, part_safe = FALSE, drop = FALSE, ...)
 
@@ -37,5 +37,61 @@ This environment is not applicable for quosures because they have their own
 environments.}
 }
 \description{
-NSE subsetting operations
+A cornerstone feature of \code{prt} is the ability to load a (small) subset of
+rows (or columns) from a much larger tabular dataset. In order to specify
+such a subset, an implementation of the base R S3 generic function
+\code{subset()} is provided, driving the non-standard evaluation (NSE) of an
+expression within the context of the data (with similar semantics as the
+base R implementation for \code{data.frame}s).
+}
+\details{
+The functions powering NSE are \code{rlang::enquo()} which quote the \code{subset} and
+\code{select} arguments and \code{rlang::eval_tidy()} which evaluates the
+expressions. This allows for some
+\href{https://rlang.r-lib.org}{\code{rlang}}-specific features to be used, such as the
+\code{.data}/\code{.env} pronouns, or the double-curly brace forwarding operator. For
+some example code, please refer to
+\href{../doc/prt.html}{\code{vignette("prt", package = "prt")}}.
+
+While the function \code{subset()} quotes the arguments passed as \code{subset} and
+\code{select}, the function \code{subset_quo()} can be used to operate on already
+quoted expressions. A final noteworthy departure from the base R interface
+is the \code{part_safe} argument: this logical flag indicates whether it is safe
+to evaluate the expression on partitions individually or whether
+dependencies between partitions prevent this from yielding correct results.
+As it is not straightforward to determine if dependencies might exists from
+the expression alone, the default is \code{FALSE}, which in many cases will
+result in a less efficient resolution of the row-selection and it is up to
+the user to enable this optimization.
+}
+\examples{
+dat <- as_prt(mtcars, n_chunks = 2L)
+
+subset(dat, cyl == 6)
+subset(dat, cyl == 6 & hp > 110)
+
+colnames(subset(dat, select = mpg:hp))
+colnames(subset(dat, select = -c(vs, am)))
+
+sub_6 <- subset(dat, cyl == 6)
+
+thresh <- 6
+identical(subset(dat, cyl == thresh), sub_6)
+identical(subset(dat, cyl == .env$thresh), sub_6)
+
+cyl <- 6
+identical(subset(dat, cyl == cyl), data.table::as.data.table(dat))
+identical(subset(dat, .data$cyl == .env$cyl), sub_6)
+
+expr <- quote(cyl == 6)
+\dontrun{
+  subset(dat, expr)
+}
+identical(subset_quo(dat, expr), sub_6)
+
+identical(
+  subset(dat, qsec > mean(qsec), part_safe = TRUE),
+  subset(dat, qsec > mean(qsec), part_safe = FALSE)
+)
+
 }

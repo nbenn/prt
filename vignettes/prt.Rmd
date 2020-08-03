@@ -76,7 +76,7 @@ The main feature of `prt` is the ability to load only a subset of a much larger 
 identical(jan_dt, subset(flights, month == 1L))
 ```
 
-To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the `carrier` column, selecting only American Airlines flights.
+To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the `carrier` column, selecting only American Airlines flights. In one `prt` object, rows are ordered by carrier whereas in the other they are not, which will cause rows that are interleaved with those corresponding to `AA` flights to be read and discarded.
 
 ```{r row-order}
 bench::mark(

@@ -1,5 +1,61 @@
 
-#' NSE subsetting operations
+#' NSE subsetting
+#'
+#' A cornerstone feature of `prt` is the ability to load a (small) subset of
+#' rows (or columns) from a much larger tabular dataset. In order to specify
+#' such a subset, an implementation of the base R S3 generic function
+#' `subset()` is provided, driving the non-standard evaluation (NSE) of an
+#' expression within the context of the data (with similar semantics as the
+#' base R implementation for `data.frame`s).
+#'
+#' The functions powering NSE are `rlang::enquo()` which quote the `subset` and
+#' `select` arguments and `rlang::eval_tidy()` which evaluates the
+#' expressions. This allows for some
+#' [`rlang`](https://rlang.r-lib.org)-specific features to be used, such as the
+#' `.data`/`.env` pronouns, or the double-curly brace forwarding operator. For
+#' some example code, please refer to
+#' [`vignette("prt", package = "prt")`](../doc/prt.html).
+#'
+#' While the function `subset()` quotes the arguments passed as `subset` and
+#' `select`, the function `subset_quo()` can be used to operate on already
+#' quoted expressions. A final noteworthy departure from the base R interface
+#' is the `part_safe` argument: this logical flag indicates whether it is safe
+#' to evaluate the expression on partitions individually or whether
+#' dependencies between partitions prevent this from yielding correct results.
+#' As it is not straightforward to determine if dependencies might exists from
+#' the expression alone, the default is `FALSE`, which in many cases will
+#' result in a less efficient resolution of the row-selection and it is up to
+#' the user to enable this optimization.
+#'
+#' @examples
+#' dat <- as_prt(mtcars, n_chunks = 2L)
+#'
+#' subset(dat, cyl == 6)
+#' subset(dat, cyl == 6 & hp > 110)
+#'
+#' colnames(subset(dat, select = mpg:hp))
+#' colnames(subset(dat, select = -c(vs, am)))
+#'
+#' sub_6 <- subset(dat, cyl == 6)
+#'
+#' thresh <- 6
+#' identical(subset(dat, cyl == thresh), sub_6)
+#' identical(subset(dat, cyl == .env$thresh), sub_6)
+#'
+#' cyl <- 6
+#' identical(subset(dat, cyl == cyl), data.table::as.data.table(dat))
+#' identical(subset(dat, .data$cyl == .env$cyl), sub_6)
+#'
+#' expr <- quote(cyl == 6)
+#' \dontrun{
+#'   subset(dat, expr)
+#' }
+#' identical(subset_quo(dat, expr), sub_6)
+#'
+#' identical(
+#'   subset(dat, qsec > mean(qsec), part_safe = TRUE),
+#'   subset(dat, qsec > mean(qsec), part_safe = FALSE)
+#' )
 #'
 #' @inheritParams base::subset
 #'
@@ -100,6 +156,15 @@ subset_quo <- function(x, subset = NULL, select = NULL, part_safe = FALSE,
 
     } else {
 
+      if (n_part(x) > 1L && missing(part_safe)) {
+        inform(
+          paste("Evaluating row subsetting over the entire `prt` at once. If",
+                "applicable consider the `part_safe` argument."),
+          "msg_full_eval",
+          .frequency = "regularly", .frequency_id = "full_eval"
+        )
+      }
+
       subset_prt(x, need_cols[!is.na(need_cols)], env, i = subset, j = cols)
     }
   }
@@ -120,14 +185,6 @@ eval_rows <- function(quo, n_row, env, dat = NULL) {
 }
 
 subset_prt <- function(x, cols, env, i = NULL, j = NULL) {
-
-  if (n_part(x) > 1L) {
-    inform(
-      paste("Evaluating row subsetting over the entire `prt` at once. If",
-            "applicable consider the `part_safe` argument."),
-      "msg_full_eval", .frequency = "regularly", .frequency_id = "full_eval"
-    )
-  }
 
   tmp <- prt_read(x, rows = NULL, columns = cols)
 
