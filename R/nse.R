@@ -44,6 +44,7 @@
 #'
 #' cyl <- 6
 #' identical(subset(dat, cyl == cyl), data.table::as.data.table(dat))
+#' identical(subset(dat, cyl == !!cyl), sub_6)
 #' identical(subset(dat, .data$cyl == .env$cyl), sub_6)
 #'
 #' expr <- quote(cyl == 6)
