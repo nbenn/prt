@@ -1,5 +1,5 @@
 Package: prt
-Title: Tabular Data Backed by Paritioned fst Files
+Title: Tabular Data Backed by Paritioned FST Files
 Version: 0.1.0
 Authors@R: c(person(given = "Nicolas",
                     family = "Bennett",
@@ -9,7 +9,7 @@ Authors@R: c(person(given = "Nicolas",
                     family = "Plecko",
                     role = "ctb",
                     email = "drago.plecko@stat.math.ethz.ch"))
-Description: Intended for larger-than-memory tabular data, prt objects provide an interface to read row and/or column subsets into memory as data.tables objects. Data queries, constructed as R expressions, are evaluated using the NSE framework provided by rlang and file-backing is powered by the fast and efficient fst package.
+Description: Intended for larger-than-memory tabular data, prt objects provide an interface to read row and/or column subsets into memory as data.table objects. Data queries, constructed as R expressions, are evaluated using the NSE framework provided by rlang and file-backing is powered by the fast and efficient fst package.
 URL: https://nbenn.github.io/prt
 BugReports: https://github.com/nbenn/prt/issues
 License: GPL-3
