@@ -40,7 +40,7 @@ class specific \code{\link[tibble:glimpse]{tibble::glimpse()}} function for othe
 representing tabular data is straightforward.
 }
 \details{
-Alsongside a \code{prt}-specific \code{\link[tibble:glimpse]{tibble::glimpse()}} method, a \code{\link[=str]{str()}} method is
+Alongside a \code{prt}-specific \code{\link[tibble:glimpse]{tibble::glimpse()}} method, a \code{\link[=str]{str()}} method is
 provided as well for \code{prt} objects. However, breaking with base \code{R}
 expectations, it is not the structure of the object in terms of \code{R} objects
 that is shown, but in the same spirit as \code{\link[tibble:glimpse]{tibble::glimpse()}} it is the

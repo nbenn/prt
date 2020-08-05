@@ -10,7 +10,7 @@
 #' class specific [tibble::glimpse()] function for other classes that
 #' representing tabular data is straightforward.
 #'
-#' Alsongside a `prt`-specific [tibble::glimpse()] method, a [str()] method is
+#' Alongside a `prt`-specific [tibble::glimpse()] method, a [str()] method is
 #' provided as well for `prt` objects. However, breaking with base `R`
 #' expectations, it is not the structure of the object in terms of `R` objects
 #' that is shown, but in the same spirit as [tibble::glimpse()] it is the

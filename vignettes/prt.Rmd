@@ -117,7 +117,7 @@ colnames(subset(flights, select = .data$sched_dep_time))
 colnames(subset(flights, select = .data$actual_dep_time))
 ```
 
-By default, `subset` expressions have to be evaluated on the entire dataset at once in order to be compatible with the base `subset()` bahvior for `data.fframes`. Often times this is inefficient and this behavior can be modified using the `part_saft` argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.
+By default, `subset` expressions have to be evaluated on the entire dataset at once in order to be consistent with base R `subset()` for `data.frames`. Often times this is inefficient and this behavior can be modified using the `part_saft` argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.
 
 ```{r part_safe}
 is_true <- function(x) !is.na(x) & x
