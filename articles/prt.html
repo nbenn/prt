@@ -245,12 +245,12 @@
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>),
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">by_carrier</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>)
 )
+<span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span>
 <span class="co">#&gt; # A tibble: 2 x 6</span>
-<span class="co">#&gt;   expression                              min  median `itr/sec` mem_alloc</span>
-<span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
-<span class="co">#&gt; 1 subset(flights, carrier == "AA")    121.8ms 121.8ms      8.21    56.5MB</span>
-<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  37.4ms  39.4ms     24.7     17.8MB</span>
-<span class="co">#&gt; # … with 1 more variable: `gc/sec` &lt;dbl&gt;</span>
+<span class="co">#&gt;   expression                             min median `itr/sec` mem_alloc `gc/sec`</span>
+<span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 subset(flights, carrier == "AA")     521ms  521ms      1.92    56.5MB     5.75</span>
+<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  133ms  135ms      6.32    17.8MB     3.16</span>
 </pre></div>
 <p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
@@ -310,7 +310,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, select = <span class="kw">.data</span><span class="op">$</span><span class="kw">actual_dep_time</span>))
 <span class="co">#&gt; Error: Column `actual_dep_time` not found in `.data`</span>
 </pre></div>
-<p>By default, <code>subset</code> expressions have to be evaluated on the entire dataset at once in order to be compatible with the base <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> bahvior for <code>data.fframes</code>. Often times this is inefficient and this behavior can be modified using the <code>part_saft</code> argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.</p>
+<p>By default, <code>subset</code> expressions have to be evaluated on the entire dataset at once in order to be consistent with base R <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> for <code>data.frames</code>. Often times this is inefficient and this behavior can be modified using the <code>part_saft</code> argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
 <span class="kw">is_true</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>) <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="kw">x</span>) <span class="op">&amp;</span> <span class="kw">x</span>
 <span class="kw">expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span>(<span class="fu">is_true</span>(<span class="kw">arr_delay</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="kw">arr_delay</span>, na.rm = <span class="fl">TRUE</span>)))
