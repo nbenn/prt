@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>NSE subsetting operations — nse • prt</title>
+<title>NSE subsetting — nse • prt</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="NSE subsetting operations — nse" />
-<meta property="og:description" content="NSE subsetting operations" />
+<meta property="og:title" content="NSE subsetting — nse" />
+<meta property="og:description" content="A cornerstone feature of prt is the ability to load a (small) subset of
+rows (or columns) from a much larger tabular dataset. In order to specify
+such a subset, an implementation of the base R S3 generic function
+subset() is provided, driving the non-standard evaluation (NSE) of an
+expression within the context of the data (with similar semantics as the
+base R implementation for data.frames)." />
 
 
 
@@ -72,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -92,7 +97,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/nbenn/prt/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -106,13 +116,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>NSE subsetting operations</h1>
-    
+    <h1>NSE subsetting</h1>
+    <small class="dont-index">Source: <a href='https://github.com/nbenn/prt/blob/master/R/nse.R'><code>R/nse.R</code></a></small>
     <div class="hidden name"><code>nse.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>NSE subsetting operations</p>
+    <p>A cornerstone feature of <code>prt</code> is the ability to load a (small) subset of
+rows (or columns) from a much larger tabular dataset. In order to specify
+such a subset, an implementation of the base R S3 generic function
+<code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code> is provided, driving the non-standard evaluation (NSE) of an
+expression within the context of the data (with similar semantics as the
+base R implementation for <code>data.frame</code>s).</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for prt</span>
@@ -164,7 +179,58 @@ environments.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>The functions powering NSE are <code><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>rlang::enquo()</a></code> which quote the <code>subset</code> and
+<code>select</code> arguments and <code><a href='https://rlang.r-lib.org/reference/eval_tidy.html'>rlang::eval_tidy()</a></code> which evaluates the
+expressions. This allows for some
+<a href='https://rlang.r-lib.org'><code>rlang</code></a>-specific features to be used, such as the
+<code>.data</code>/<code>.env</code> pronouns, or the double-curly brace forwarding operator. For
+some example code, please refer to
+<a href='../doc/prt.html'><code><a href='../articles/prt.html'>vignette("prt", package = "prt")</a></code></a>.</p>
+<p>While the function <code><a href='https://rdrr.io/r/base/subset.html'>subset()</a></code> quotes the arguments passed as <code>subset</code> and
+<code>select</code>, the function <code>subset_quo()</code> can be used to operate on already
+quoted expressions. A final noteworthy departure from the base R interface
+is the <code>part_safe</code> argument: this logical flag indicates whether it is safe
+to evaluate the expression on partitions individually or whether
+dependencies between partitions prevent this from yielding correct results.
+As it is not straightforward to determine if dependencies might exists from
+the expression alone, the default is <code>FALSE</code>, which in many cases will
+result in a less efficient resolution of the row-selection and it is up to
+the user to enable this optimization.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>dat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span>(<span class='kw'>mtcars</span>, n_chunks = <span class='fl'>2L</span>)
+
+<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='fl'>6</span>)</div><div class='output co'>#&gt;     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#&gt; 1: 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#&gt; 2: 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#&gt; 3: 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+#&gt; 4: 18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+#&gt; 5: 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+#&gt; 6: 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+#&gt; 7: 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='fl'>6</span> <span class='op'>&amp;</span> <span class='kw'>hp</span> <span class='op'>&gt;</span> <span class='fl'>110</span>)</div><div class='output co'>#&gt;     mpg cyl  disp  hp drat   wt qsec vs am gear carb
+#&gt; 1: 19.2   6 167.6 123 3.92 3.44 18.3  1  0    4    4
+#&gt; 2: 17.8   6 167.6 123 3.92 3.44 18.9  1  0    4    4
+#&gt; 3: 19.7   6 145.0 175 3.62 2.77 15.5  0  1    5    6</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, select = <span class='kw'>mpg</span><span class='op'>:</span><span class='kw'>hp</span>))</div><div class='output co'>#&gt; [1] "mpg"  "cyl"  "disp" "hp"  </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, select = <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>vs</span>, <span class='kw'>am</span>)))</div><div class='output co'>#&gt; [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "gear" "carb"</div><div class='input'>
+<span class='kw'>sub_6</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='fl'>6</span>)
+
+<span class='kw'>thresh</span> <span class='op'>&lt;-</span> <span class='fl'>6</span>
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='kw'>thresh</span>), <span class='kw'>sub_6</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='kw'>.env</span><span class='op'>$</span><span class='kw'>thresh</span>), <span class='kw'>sub_6</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='kw'>cyl</span> <span class='op'>&lt;-</span> <span class='fl'>6</span>
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='kw'>cyl</span>), <span class='kw'>data.table</span>::<span class='fu'><a href='https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html'>as.data.table</a></span>(<span class='kw'>dat</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>cyl</span> <span class='op'>==</span> <span class='op'>!</span><span class='op'>!</span><span class='kw'>cyl</span>), <span class='kw'>sub_6</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>.data</span><span class='op'>$</span><span class='kw'>cyl</span> <span class='op'>==</span> <span class='kw'>.env</span><span class='op'>$</span><span class='kw'>cyl</span>), <span class='kw'>sub_6</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='kw'>expr</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span>(<span class='kw'>cyl</span> <span class='op'>==</span> <span class='fl'>6</span>)
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+  <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>expr</span>)
+}
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'>subset_quo</span>(<span class='kw'>dat</span>, <span class='kw'>expr</span>), <span class='kw'>sub_6</span>)</div><div class='output co'>#&gt; <span class='message'>Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'><span style='color: #555555;'>This message is displayed once every 8 hours.</span><span></span></div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>qsec</span> <span class='op'>&gt;</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw'>qsec</span>), part_safe = <span class='fl'>TRUE</span>),
+  <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='kw'>dat</span>, <span class='kw'>qsec</span> <span class='op'>&gt;</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw'>qsec</span>), part_safe = <span class='fl'>FALSE</span>)
+)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

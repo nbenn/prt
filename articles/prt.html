@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -50,7 +50,14 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/nbenn/prt/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -67,7 +74,7 @@
 </h1>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/nbenn/prt/blob/master/vignettes/prt.Rmd"><code>vignettes/prt.Rmd</code></a></small>
       <div class="hidden name"><code>prt.Rmd</code></div>
 
     </div>
@@ -230,23 +237,19 @@
 <p>The main feature of <code>prt</code> is the ability to load only a subset of a much larger tabular dataset and a useful function for selecting rows and columns of a table in a concise manner is the base R S3 generic function <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code>. As such, a <code>prt</code> specific method is provided by this package. Using this functionality, above query for selecting all flights in January can be written as follows</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">jan_dt</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="fl">1L</span>))
-<span class="co">#&gt; Evaluating row subsetting over the entire `prt` at once. If applicable consider the `part_safe` argument.</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; This message is displayed once every 8 hours.</span>
 <span class="co">#&gt; [1] TRUE</span>
 </pre></div>
-<p>To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the <code>carrier</code> column, selecting only American Airlines flights.</p>
+<p>To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the <code>carrier</code> column, selecting only American Airlines flights. In one <code>prt</code> object, rows are ordered by carrier whereas in the other they are not, which will cause rows that are interleaved with those corresponding to <code>AA</code> flights to be read and discarded.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
 <span class="kw">bench</span>::<span class="fu"><a href="https://rdrr.io/pkg/bench/man/mark.html">mark</a></span>(
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>),
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">by_carrier</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>)
 )
-<span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span>
 <span class="co">#&gt; # A tibble: 2 x 6</span>
 <span class="co">#&gt;   expression                              min  median `itr/sec` mem_alloc</span>
 <span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
-<span class="co">#&gt; 1 subset(flights, carrier == "AA")      115ms 131.9ms      7.26    56.6MB</span>
-<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  36.2ms  40.2ms     23.4     17.8MB</span>
+<span class="co">#&gt; 1 subset(flights, carrier == "AA")    121.8ms 121.8ms      8.21    56.5MB</span>
+<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  37.4ms  39.4ms     24.7     17.8MB</span>
 <span class="co">#&gt; # … with 1 more variable: `gc/sec` &lt;dbl&gt;</span>
 </pre></div>
 <p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>
