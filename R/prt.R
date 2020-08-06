@@ -69,9 +69,14 @@ make_prt <- function(x) {
 
   all_ident <- function(x) all(vapply(x, identical, logical(1L), x[[1L]]))
 
-  assert_that(is.list(x), all(vapply(x, inherits, logical(1L), "fst_table")),
-              all_ident(lapply(x, colnames)),
-              all_ident(lapply(x, vapply, typeof, character(1L))))
+  assert_that(is.list(x), all(vapply(x, inherits, logical(1L), "fst_table")))
+
+  meta <- lapply(x, .subset2, "meta")
+
+  assert_that(all(vapply(meta, inherits, logical(1L), "fstmetadata")),
+              all_ident(lapply(meta, `[[`, "columnNames")),
+              all_ident(lapply(meta, `[[`, "columnBaseTypes")),
+              all_ident(lapply(meta, `[[`, "columnTypes")))
 
   structure(x, class = "prt")
 }
