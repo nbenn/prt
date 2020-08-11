@@ -48,6 +48,7 @@
 #' identical(subset(dat, .data$cyl == .env$cyl), sub_6)
 #'
 #' expr <- quote(cyl == 6)
+#' # passing a quoted expression to subset() will yield an error
 #' \dontrun{
 #'   subset(dat, expr)
 #' }
