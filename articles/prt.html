@@ -248,8 +248,8 @@
 <span class="co">#&gt; # A tibble: 2 x 6</span>
 <span class="co">#&gt;   expression                              min  median `itr/sec` mem_alloc</span>
 <span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
-<span class="co">#&gt; 1 subset(flights, carrier == "AA")    105.9ms 105.9ms      9.45    56.5MB</span>
-<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  31.9ms  33.6ms     29.8     17.8MB</span>
+<span class="co">#&gt; 1 subset(flights, carrier == "AA")    113.5ms 113.5ms      8.81    56.5MB</span>
+<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  36.6ms  37.2ms     26.0     17.8MB</span>
 <span class="co">#&gt; # … with 1 more variable: `gc/sec` &lt;dbl&gt;</span>
 </pre></div>
 <p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>
