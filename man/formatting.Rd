@@ -41,7 +41,7 @@ function arguments and using the same option settings (and default values)
 as introduced by \code{tibble}.
 }
 \details{
-While the function \code{\link[tibble:trunc_mat]{tibble::trunc_mat()}} does most of the heavy lifting
+While the function \code{\link[tibble:formatting]{tibble::trunc_mat()}} does most of the heavy lifting
 for formatting \code{tibble} printing output, \code{prt} exports the function
 \code{trunc_dt()}, which drives analogous functionality while adding the
 top/bottom \code{n} row concept. This function can be used for creating \code{\link[=print]{print()}}

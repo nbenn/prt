@@ -96,6 +96,7 @@ test_that("trunc_dt output matches known output", {
 test_that("trunc_mat for POSIXct columns", {
 
   skip_on_os("windows")
+  skip_on_non_utf8_locale()
 
   df <- tibble::tibble(x = as.POSIXct("2016-01-01 12:34:56 GMT") + 1:12)
 
@@ -108,6 +109,7 @@ test_that("trunc_mat for POSIXct columns", {
 test_that("trunc_mat for wide-character columns", {
 
   skip_on_os("windows")
+  skip_on_non_utf8_locale()
 
   x <- c("\u6210\u4ea4\u65e5\u671f", "\u5408\u540c\u5f55\u5165\u65e5\u671f")
   df <- setNames(tibble::tibble(1:3, 4:6), x)
