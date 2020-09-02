@@ -3,3 +3,4 @@
 ^\.github$
 ^docs$
 ^\.covrignore$
+^cran-comments\.md$
