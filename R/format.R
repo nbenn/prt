@@ -95,6 +95,8 @@ trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
     rowid <- c(seq_len(n), seq.int(nrow(x) - n + 1L, nrow(x)))
   }
 
+  df <- as.data.frame(df)
+
   rowid <- big_mark(rowid)
 
   shrunk <- shrink_dt(df, rows)
