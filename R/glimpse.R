@@ -168,37 +168,38 @@ str.prt <- function(object, ...) {
 
 #' @rdname glimpse
 #'
+#' @importFrom utils capture.output
+#'
 #' @export
 #'
 str_dt <- function(x, ...) {
 
-  cat(str_sum(x))
-
   dots <- list(...)
 
-  if (length(dots) && any("vec.len" == names(dots))) {
+  if ("vec.len" %in% names(dots)) {
     len <- dots[["vec.len"]]
   } else {
     len <- utils::strOptions()$vec.len
   }
 
-  if (length(dots)) {
-    if (any("give.length" == names(dots))) {
-      warn_arg("give.length")
-      dots$give.length <- NULL
-    }
-    if (any("no.list" == names(dots))) {
-      dots$no.list <- NULL
-    }
-  }
-
   dat <- head(x, len * 3L + 1L)
 
-  args <- c(
-    list(c(dat)),
-    dots,
-    list(no.list = TRUE, give.length = FALSE)
-  )
+  if (!"give.length" %in% names(dots)) {
+    dots[["give.length"]] <- FALSE
+  }
 
-  do.call("str", args)
+  dots[["no.list"]] <- TRUE
+
+  cat(str_sum(x))
+
+  if (isTRUE(dots[["give.length"]]) && nrow(dat) > 0L) {
+    res <- capture.output(do.call("str", c(list(c(dat)), dots)))
+    res <- sub(paste0("\\[1:", nrow(dat), "\\]"),
+               paste0(  "[1:", nrow(x),     "]"), res)
+    cat_line(res)
+  } else {
+    do.call("str", c(list(c(dat)), dots))
+  }
+
+  invisible()
 }

@@ -96,7 +96,8 @@ test_that("glimpse(width = Inf) raises legible error", {
 
 test_that("str output matches known output", {
 
-  expect_null(str(prt_cars))
+  expect_output(res <- str(prt_cars))
+  expect_null(res)
 
   expect_output_file_opts(
     str(prt_cars),
@@ -118,7 +119,10 @@ test_that("str output matches known output", {
     "str/mtcars.txt"
   )
 
-  expect_warning(str(prt_cars, give.length = TRUE))
+  expect_output_file_opts(
+    str(prt_cars, give.length = TRUE),
+    "str/mtcars-len.txt"
+  )
 })
 
 test_that("truncation of str output", {
