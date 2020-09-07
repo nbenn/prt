@@ -249,10 +249,10 @@
   <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">by_carrier</span>, <span class="kw">carrier</span> <span class="op">==</span> <span class="st">"AA"</span>)
 )
 <span class="co">#&gt; # A tibble: 2 x 6</span>
-<span class="co">#&gt;   expression                              min  median `itr/sec` mem_alloc</span>
-<span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:t&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
-<span class="co">#&gt; 1 subset(flights, carrier == "AA")    120.2ms 120.2ms      8.32    56.5MB</span>
-<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  35.3ms  36.5ms     24.7     17.8MB</span>
+<span class="co">#&gt;   expression                              min median `itr/sec` mem_alloc</span>
+<span class="co">#&gt;   &lt;bch:expr&gt;                          &lt;bch:t&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span>
+<span class="co">#&gt; 1 subset(flights, carrier == "AA")    110.7ms  111ms      9.04    56.5MB</span>
+<span class="co">#&gt; 2 subset(by_carrier, carrier == "AA")  33.5ms   38ms     26.3     17.8MB</span>
 <span class="co">#&gt; # … with 1 more variable: `gc/sec` &lt;dbl&gt;</span>
 </pre></div>
 <p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/nse-defuse.html">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/nse-force.html">forcing parts of the expression</a>.</p>
@@ -402,7 +402,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
 </div>
 
       </footer>
