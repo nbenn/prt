@@ -31,18 +31,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/prt.html">Get started</a>
 </li>
@@ -83,25 +77,23 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the development version of <a href="https://nbenn.github.io/prt/">prt</a> from GitHub by running</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/source.html">source</a></span>(<span class="st">"https://install-github.me/nbenn/prt"</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">"https://install-github.me/nbenn/prt"</span><span class="op">)</span></pre></div>
 <p>Alternatively, if you have the <code>remotes</code> package available, the latest release is available by calling <code>install_github()</code> as</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="co"># install.packages("remotes")</span>
-<span class="kw">remotes</span>::<span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"nbenn/prt@*release"</span>)
-</pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"nbenn/prt@*release"</span><span class="op">)</span></pre></div>
 </div>
 <div id="short-demo" class="section level2">
 <h2 class="hasAnchor">
 <a href="#short-demo" class="anchor"></a>Short demo</h2>
 <p>Creating a <code>prt</code> object can be done either by calling <code><a href="reference/new_prt.html">new_prt()</a></code> on a list of previously created <code>fst</code> files or by coercing a <code>data.frame</code> object to <code>prt</code> using <code><a href="reference/new_prt.html">as_prt()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span>()
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span>(<span class="kw">tmp</span>)
+<span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span>
 
-<span class="kw">flights</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_prt.html">as_prt</a></span>(<span class="kw">nycflights13</span>::<span class="kw"><a href="https://rdrr.io/pkg/nycflights13/man/flights.html">flights</a></span>, n_chunks = <span class="fl">2L</span>, dir = <span class="kw">tmp</span>)
+<span class="va">flights</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_prt.html">as_prt</a></span><span class="op">(</span><span class="fu">nycflights13</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/nycflights13/man/flights.html">flights</a></span>, n_chunks <span class="op">=</span> <span class="fl">2L</span>, dir <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">flights</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">flights</span><span class="op">)</span>
 <span class="co">#&gt; # A prt:        336,776 × 19</span>
 <span class="co">#&gt; # Partitioning: [168,388, 168,388] rows</span>
 <span class="co">#&gt;          year month   day dep_time sched_dep_time dep_delay arr_time</span>
@@ -120,20 +112,18 @@
 <span class="co">#&gt; # … with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,</span>
 <span class="co">#&gt; #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,</span>
 <span class="co">#&gt; #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   time_hour &lt;dttm&gt;</span>
-</pre></div>
+<span class="co">#&gt; #   time_hour &lt;dttm&gt;</span></pre></div>
 <p>In case a <code>prt</code> object is created from a <code>data.frame</code>, the specified number of files is written to the directory of choice (a newly created directory within <code><a href="https://rdrr.io/r/base/tempfile.html">tempdir()</a></code> by default).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span>(<span class="kw">tmp</span>)
-<span class="co">#&gt; [1] "1.fst" "2.fst"</span>
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span>
+<span class="co">#&gt; [1] "1.fst" "2.fst"</span></pre></div>
 <p>Subsetting and printing is closely modeled after <code>tibble</code> and behavior that deviates from that of <code>tibble</code> will most likely be considered a bug (please <a href="https://github.com/nbenn/prt/issues/new">report</a>). Some design choices that do set a <code>prt</code> object apart from a <code>tibble</code> include the use of <code>data.table</code>s for any result of a subsetting operation and the complete disregard for <code>row.names</code>.</p>
 <p>In addition to standard subsetting operations involving the functions <code>`[`()</code>, <code>`[[`()</code> and <code>`$`()</code>, the base generic function <code><a href="https://rdrr.io/r/base/subset.html">subset()</a></code> is implemented for the <code>prt</code> class, enabling subsetting operations using non-standard evaluation. Combined with random access to tables stored as <code>fst</code> files, this can make data access more efficient in cases where only a subset of the data is of interest.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">jan</span> <span class="op">&lt;-</span> <span class="kw">flights</span>[<span class="kw">flights</span><span class="op">$</span><span class="kw">month</span> <span class="op">==</span> <span class="fl">1</span>, ]
-<span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">jan</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">flights</span>, <span class="kw">month</span> <span class="op">==</span> <span class="fl">1</span>))
+<span class="va">jan</span> <span class="op">&lt;-</span> <span class="va">flights</span><span class="op">[</span><span class="va">flights</span><span class="op">$</span><span class="va">month</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="va">jan</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">month</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw">jan</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">jan</span><span class="op">)</span>
 <span class="co">#&gt;        year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span>
 <span class="co">#&gt;     1: 2013     1   1      517            515         2      830            819</span>
 <span class="co">#&gt;     2: 2013     1   1      533            529         4      850            830</span>
@@ -169,12 +159,10 @@
 <span class="co">#&gt; 27001:      0 2013-01-31 12:00:00</span>
 <span class="co">#&gt; 27002:     10 2013-01-31 14:00:00</span>
 <span class="co">#&gt; 27003:     46 2013-01-31 14:00:00</span>
-<span class="co">#&gt; 27004:     25 2013-01-31 06:00:00</span>
-</pre></div>
+<span class="co">#&gt; 27004:     25 2013-01-31 06:00:00</span></pre></div>
 <p>A subsetting operation on a <code>prt</code> object yields a <code>data.table</code>. If the full table is of interest, a <code>prt</code>-specific implementation of the <code>as.data.table()</code> generic is available.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span>(<span class="kw">tmp</span>, recursive = <span class="fl">TRUE</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">tmp</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
 </div>
 </div>
   </div>
@@ -225,7 +213,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

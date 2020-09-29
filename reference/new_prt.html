@@ -80,19 +80,13 @@ data.frame is a valid x argument as well." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/prt.html">Get started</a>
 </li>
 <li>
@@ -139,33 +133,33 @@ queries on the data) is not optimal, a list of objects inheriting from
 <code>data.frame</code> is a valid <code>x</code> argument as well.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>new_prt</span>(<span class='kw'>files</span>)
+    <pre class="usage"><span class='fu'>new_prt</span><span class='op'>(</span><span class='va'>files</span><span class='op'>)</span>
 
-<span class='fu'>as_prt</span>(<span class='kw'>x</span>, n_chunks = <span class='kw'>NULL</span>, dir = <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>())
+<span class='fu'>as_prt</span><span class='op'>(</span><span class='va'>x</span>, n_chunks <span class='op'>=</span> <span class='cn'>NULL</span>, dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>is_prt</span>(<span class='kw'>x</span>)
+<span class='fu'>is_prt</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>n_part</span>(<span class='kw'>x</span>)
+<span class='fu'>n_part</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>part_nrow</span>(<span class='kw'>x</span>)
-
-<span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)
+<span class='fu'>part_nrow</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>x</span>, n = <span class='fl'>6L</span>, <span class='kw'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>6L</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'>as.data.table</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='fl'>6L</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>as.data.table</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>x</span>, row.names = <span class='kw'>NULL</span>, optional = <span class='fl'>FALSE</span>, <span class='kw'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>x</span>, row.names <span class='op'>=</span> <span class='cn'>NULL</span>, optional <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for prt</span>
+<span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -226,32 +220,32 @@ objects. All coercion involves reading the full data into memory at once
 which might be problematic in cases of large data sets.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>cars</span> <span class='op'>&lt;-</span> <span class='fu'>as_prt</span>(<span class='kw'>mtcars</span>, n_chunks = <span class='fl'>2L</span>)
+    <pre class="examples"><div class='input'><span class='va'>cars</span> <span class='op'>&lt;-</span> <span class='fu'>as_prt</span><span class='op'>(</span><span class='va'>mtcars</span>, n_chunks <span class='op'>=</span> <span class='fl'>2L</span><span class='op'>)</span>
 
-<span class='fu'>is_prt</span>(<span class='kw'>cars</span>)
-</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>n_part</span>(<span class='kw'>cars</span>)
-</div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='fu'>part_nrow</span>(<span class='kw'>cars</span>)
+<span class='fu'>is_prt</span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>n_part</span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='fu'>part_nrow</span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 16 16</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span>(<span class='kw'>cars</span>)
-</div><div class='output co'>#&gt; [1] 32</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='kw'>cars</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 32</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 11</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>cars</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
-#&gt; [11] "carb"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>cars</span>)
+#&gt; [11] "carb"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
 #&gt; [11] "carb"</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>cars</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     mpg cyl disp  hp drat    wt  qsec vs am gear carb
 #&gt; 1: 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
 #&gt; 2: 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
 #&gt; 3: 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
 #&gt; 4: 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 #&gt; 5: 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#&gt; 6: 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span>(<span class='kw'>cars</span>, n = <span class='fl'>2</span>)
+#&gt; 6: 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>cars</span>, n <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     mpg cyl disp  hp drat   wt qsec vs am gear carb
 #&gt; 1: 15.0   8  301 335 3.54 3.57 14.6  0  1    5    8
 #&gt; 2: 21.4   4  121 109 4.11 2.78 18.6  1  1    4    2</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span>(<span class='kw'>cars</span>))
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 11
 #&gt;  $ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
 #&gt;  $ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
@@ -263,7 +257,7 @@ which might be problematic in cases of large data sets.</p>
 #&gt;  $ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
 #&gt;  $ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
 #&gt;  $ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
-#&gt;  $ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>cars</span>))
+#&gt;  $ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 'data.frame':	32 obs. of  11 variables:
 #&gt;  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
 #&gt;  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
@@ -292,7 +286,7 @@ which might be problematic in cases of large data sets.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

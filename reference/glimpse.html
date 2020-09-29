@@ -79,19 +79,13 @@ representing tabular data is straightforward." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/prt.html">Get started</a>
 </li>
 <li>
@@ -138,16 +132,16 @@ representing tabular data is straightforward.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for prt</span>
-<span class='fu'>glimpse</span>(<span class='kw'>x</span>, width = <span class='kw'>NULL</span>, <span class='kw'>...</span>)
+<span class='fu'>glimpse</span><span class='op'>(</span><span class='va'>x</span>, width <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>glimpse_dt</span>(<span class='kw'>x</span>, width = <span class='kw'>NULL</span>)
+<span class='fu'>glimpse_dt</span><span class='op'>(</span><span class='va'>x</span>, width <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>str_sum</span>(<span class='kw'>x</span>)
+<span class='fu'>str_sum</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>object</span>, <span class='kw'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
-<span class='fu'>str_dt</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)</pre>
+<span class='fu'>str_dt</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -188,9 +182,9 @@ implementation of <code><a href='https://rdrr.io/r/utils/str.html'>str()</a></co
 customized by implementing an optional <code>str_sum()</code> function.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>cars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span>(<span class='kw'>mtcars</span>)
+    <pre class="examples"><div class='input'><span class='va'>cars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 
-<span class='kw'>tibble</span>::<span class='fu'><a href='https://tibble.tidyverse.org/reference/glimpse.html'>glimpse</a></span>(<span class='kw'>cars</span>)
+<span class='fu'>tibble</span><span class='fu'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/glimpse.html'>glimpse</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Rows: 32
 #&gt; Columns: 11
 #&gt; Partitioning: [32] rows
@@ -204,7 +198,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 #&gt; $ vs   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0…
 #&gt; $ am   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0…
 #&gt; $ gear </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3…
-#&gt; $ carb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2…</div><div class='input'><span class='kw'>tibble</span>::<span class='fu'><a href='https://tibble.tidyverse.org/reference/glimpse.html'>glimpse</a></span>(<span class='kw'>cars</span>, width = <span class='fl'>30</span>)
+#&gt; $ carb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 4, 4, 1, 1, 2, 1, 4, 2, 2, 4, 4, 3, 3, 3, 4, 4, 4, 1, 2, 1, 1, 2…</div><div class='input'><span class='fu'>tibble</span><span class='fu'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/glimpse.html'>glimpse</a></span><span class='op'>(</span><span class='va'>cars</span>, width <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Rows: 32
 #&gt; Columns: 11
 #&gt; Partitioning: [32] rows
@@ -219,7 +213,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 #&gt; $ am   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 1, 1, 1, 0, 0,…
 #&gt; $ gear </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 4, 4, 4, 3, 3,…
 #&gt; $ carb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 4, 4, 1, 1, 2,…</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>cars</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 'prt':	32 obs. of 11 variables in 1 partition:
 #&gt;  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
 #&gt;  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
@@ -231,7 +225,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 #&gt;  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
 #&gt;  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
 #&gt;  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
-#&gt;  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='kw'>cars</span>, vec.len = <span class='fl'>1</span>)
+#&gt;  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>cars</span>, vec.len <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 'prt':	32 obs. of 11 variables in 1 partition:
 #&gt;  $ mpg : num  21 21 ...
 #&gt;  $ cyl : num  6 6 ...
@@ -244,11 +238,11 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 #&gt;  $ am  : num  1 1 ...
 #&gt;  $ gear: num  4 4 ...
 #&gt;  $ carb: num  4 4 ...</div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/class.html'>unclass</a></span>(<span class='kw'>cars</span>))
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>unclass</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 1
 #&gt;  $ :List of 4
 #&gt;   ..$ meta         :List of 7
-#&gt;   .. ..$ path           : chr "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpHoFmyM/file87f5368f61b/1.fst"
+#&gt;   .. ..$ path           : chr "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpTH5SMg/file70f14905d69/1.fst"
 #&gt;   .. ..$ nrOfRows       : num 32
 #&gt;   .. ..$ keys           : NULL
 #&gt;   .. ..$ columnNames    : chr [1:11] "mpg" "cyl" "disp" "hp" ...
@@ -259,7 +253,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 #&gt;   ..$ col_selection: NULL
 #&gt;   ..$ row_selection: NULL
 #&gt;   ..$ old_format   : logi FALSE</div><div class='input'>
-<span class='fu'>str_sum</span>(<span class='kw'>cars</span>)
+<span class='fu'>str_sum</span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "'prt':\t32 obs. of 11 variables in 1 partition:\n"</div><div class='input'>
 </div></span></pre>
   </div>
@@ -277,7 +271,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>

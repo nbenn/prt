@@ -78,19 +78,13 @@ as introduced by tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../articles/prt.html">Get started</a>
 </li>
 <li>
@@ -136,12 +130,12 @@ as introduced by <code>tibble</code>.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, n <span class='op'>=</span> <span class='cn'>NULL</span>, width <span class='op'>=</span> <span class='cn'>NULL</span>, n_extra <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
 <span class='co'># S3 method for prt</span>
-<span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='kw'>x</span>, <span class='kw'>...</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span>, n <span class='op'>=</span> <span class='cn'>NULL</span>, width <span class='op'>=</span> <span class='cn'>NULL</span>, n_extra <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-<span class='fu'>trunc_dt</span>(<span class='kw'>x</span>, n = <span class='kw'>NULL</span>, width = <span class='kw'>NULL</span>, n_extra = <span class='kw'>NULL</span>)</pre>
+<span class='fu'>trunc_dt</span><span class='op'>(</span><span class='va'>x</span>, n <span class='op'>=</span> <span class='cn'>NULL</span>, width <span class='op'>=</span> <span class='cn'>NULL</span>, n_extra <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -230,9 +224,9 @@ turn off truncation of character columns.</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>cars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span>(<span class='kw'>mtcars</span>)
+    <pre class="examples"><div class='input'><span class='va'>cars</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_prt.html'>as_prt</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>cars</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #555555;'># A prt:        32 × 11</span><span>
 #&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
 #&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
@@ -248,7 +242,7 @@ turn off truncation of character columns.</p></li>
 #&gt; </span><span style='color: #555555;'>30</span><span>  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6
 #&gt; </span><span style='color: #555555;'>31</span><span>  15       8 301     335  3.54  3.57  14.6     0     1     5     8
 #&gt; </span><span style='color: #555555;'>32</span><span>  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2
-#&gt; </span><span style='color: #555555;'># … with 22 more rows</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>, n = <span class='fl'>2</span>)
+#&gt; </span><span style='color: #555555;'># … with 22 more rows</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>cars</span>, n <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #555555;'># A prt:        32 × 11</span><span>
 #&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
 #&gt;      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
@@ -258,7 +252,7 @@ turn off truncation of character columns.</p></li>
 #&gt; </span><span style='color: #555555;'>…</span><span>
 #&gt; </span><span style='color: #555555;'>31</span><span>  15       8   301   335  3.54  3.57  14.6     0     1     5     8
 #&gt; </span><span style='color: #555555;'>32</span><span>  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2
-#&gt; </span><span style='color: #555555;'># … with 28 more rows</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>, width = <span class='fl'>30</span>)
+#&gt; </span><span style='color: #555555;'># … with 28 more rows</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>cars</span>, width <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #555555;'># A prt:        32 × 11</span><span>
 #&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
 #&gt;      mpg   cyl  disp    hp
@@ -279,7 +273,7 @@ turn off truncation of character columns.</p></li>
 #&gt; #   drat </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, wt </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   qsec </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, vs </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   am </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, gear </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   carb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>cars</span>, width = <span class='fl'>30</span>, n_extra = <span class='fl'>2</span>)
+#&gt; #   carb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>cars</span>, width <span class='op'>=</span> <span class='fl'>30</span>, n_extra <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #555555;'># A prt:        32 × 11</span><span>
 #&gt; </span><span style='color: #555555;'># Partitioning: [32] rows</span><span>
 #&gt;      mpg   cyl  disp    hp
@@ -314,7 +308,7 @@ turn off truncation of character columns.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
 </div>
 
       </footer>
