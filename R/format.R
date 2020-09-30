@@ -102,7 +102,7 @@ trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
   shrunk <- shrink_dt(df, rows)
 
   if (shrunk$rows_missing > 0L) {
-    rowid <- add_in_between(rowid, n, ellipsis())
+    rowid <- add_in_between(rowid, n, cli::symbol$ellipsis)
   }
 
   trunc_info <- list(
@@ -288,13 +288,13 @@ format_extra_vars <- function(extra_cols) {
   if (is.na(extra_cols[1])) return("")
 
   if (anyNA(extra_cols)) {
-    extra_cols <- c(extra_cols[!is.na(extra_cols)], ellipsis())
+    extra_cols <- c(extra_cols[!is.na(extra_cols)], cli::symbol$ellipsis)
   }
 
   paste0(": ", collapse(extra_cols))
 }
 
 pre_dots <- function(x) {
-  if (length(x) > 0) paste0(ellipsis(), " ", x)
+  if (length(x) > 0) paste0(cli::symbol$ellipsis, " ", x)
   else character()
 }

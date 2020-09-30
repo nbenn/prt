@@ -203,17 +203,12 @@ tbl_sum.prt <- function(x) {
 
 dim_desc <- function(x) {
   paste0(vapply(dim(x), big_mark, character(1L)),
-         collapse = spaces_around(times()))
+         collapse = spaces_around(cli::symbol$times))
 }
 
 part_desc <- function(x) {
   part_rows <- vapply(part_nrow(x), big_mark, character(1L))
   paste0("[", paste(part_rows, collapse = ", "), "] rows")
-}
-
-times <- function(fancy = l10n_info()$`UTF-8`) {
-  if (fancy) cli::symbol$times
-  else "x"
 }
 
 spaces_around <- function(x) {
@@ -294,11 +289,6 @@ strwrap2 <- function(x, width, indent) {
 
 add_in_between <- function(x, n, what) {
   c(x[seq_len(n)], what, x[seq.int(n + 1L, 2L * n)])
-}
-
-ellipsis <- function(fancy = l10n_info()$`UTF-8`) {
-  if (fancy) cli::symbol$ellipsis
-  else "..."
 }
 
 warn_arg <- function(arg) {
