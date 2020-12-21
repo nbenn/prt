@@ -148,16 +148,18 @@ format.trunc_dt <- function(x, width = NULL, ...) {
 #'
 knit_print.trunc_dt <- function(x, options) {
 
+  width <- print_width(x$width)
+
   header <- format_header(x)
   summary <- paste0(names(header), ": ", header)
 
-  squeezed <- squeeze_dt(x, width = x$width)
+  squeezed <- squeeze_dt(x, width = width)
 
-  kable <- knitr::knit_print(squeezed)
+  kable <- knit_print_squeezed(squeezed)
   extra <- format_footer(x, squeezed)
 
   if (length(extra) > 0) {
-    extra <- wrap("(", collapse(extra), ")", width = x$width)
+    extra <- wrap("(", collapse(extra), ")", width = width)
   } else {
     extra <- "\n"
   }
@@ -166,6 +168,21 @@ knit_print.trunc_dt <- function(x, options) {
   knitr::asis_output(crayon::strip_style(res), cacheable = TRUE)
 }
 
+knit_print_squeezed <- function(x) {
+  unlist(lapply(x, knit_print_squeezed_tier))
+}
+
+knit_print_squeezed_tier <- function(x) {
+
+  get_col <- function(xx) {
+    c(xx[["capital_format"]][2L], xx[["shaft_format"]])
+  }
+
+  header <- vapply(lapply(x, `[[`, "capital_format"), `[`, character(1L), 1L)
+  col <- lapply(x, get_col)
+
+  knitr::kable(as.data.frame(col), row.names = NA, col.names = header)
+}
 
 shrink_dt <- function(df, rows) {
 
