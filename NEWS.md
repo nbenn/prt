@@ -1,3 +1,7 @@
+# prt 0.1.3
+
+* Compatibility update for pillar 1.5.0
+
 # prt 0.1.2
 
 * Fix printing bug.

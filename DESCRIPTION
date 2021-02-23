@@ -1,6 +1,6 @@
 Package: prt
 Title: Tabular Data Backed by Partitioned 'fst' Files
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(person(given = "Nicolas",
                     family = "Bennett",
                     role = c("aut", "cre"),
