@@ -114,7 +114,7 @@ colnames(subset(flights, select = .env$sched_dep_time))
 colnames(subset(flights, select = .env$actual_dep_time))
 ```
 
-```{r nse-issue3, error = TRUE, eval = getRversion() > "3.4.0"}
+```{r nse-issue3, error = TRUE, eval = getRversion() > "3.5.0"}
 colnames(subset(flights, select = .data$sched_dep_time))
 colnames(subset(flights, select = .data$actual_dep_time))
 ```

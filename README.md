@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Codecov test
 coverage](https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://codecov.io/gh/nbenn/prt)
 [![R build
@@ -54,12 +54,12 @@ print(flights)
 #> # Partitioning: [168,388, 168,388] rows
 #>          year month   day dep_time sched_dep_time dep_delay arr_time
 #>         <int> <int> <int>    <int>          <int>     <dbl>    <int>
-#> 1        2013     1     1      517            515         2      830
-#> 2        2013     1     1      533            529         4      850
-#> 3        2013     1     1      542            540         2      923
-#> 4        2013     1     1      544            545        -1     1004
-#> 5        2013     1     1      554            600        -6      812
-#> …
+#>       1  2013     1     1      517            515         2      830
+#>       2  2013     1     1      533            529         4      850
+#>       3  2013     1     1      542            540         2      923
+#>       4  2013     1     1      544            545        -1     1004
+#>       5  2013     1     1      554            600        -6      812
+#>       …
 #> 336,772  2013     9    30       NA           1455        NA       NA
 #> 336,773  2013     9    30       NA           2200        NA       NA
 #> 336,774  2013     9    30       NA           1210        NA       NA
