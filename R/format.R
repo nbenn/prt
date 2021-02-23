@@ -44,6 +44,8 @@
 #' print(cars, width = 30, n_extra = 2)
 #'
 #' @inheritParams tibble::print.tbl
+#'
+#' @importFrom utils packageVersion
 #' @importFrom tibble tbl_sum
 #'
 #' @rdname formatting
@@ -142,48 +144,6 @@ format.trunc_dt <- function(x, width = NULL, ...) {
   )
 }
 
-#' @importFrom knitr knit_print
-#'
-#' @export
-#'
-knit_print.trunc_dt <- function(x, options) {
-
-  width <- print_width(x$width)
-
-  header <- format_header(x)
-  summary <- paste0(names(header), ": ", header)
-
-  squeezed <- squeeze_dt(x, width = width)
-
-  kable <- knit_print_squeezed(squeezed)
-  extra <- format_footer(x, squeezed)
-
-  if (length(extra) > 0) {
-    extra <- wrap("(", collapse(extra), ")", width = width)
-  } else {
-    extra <- "\n"
-  }
-
-  res <- paste(c("", "", summary, "", kable, "", extra), collapse = "\n")
-  knitr::asis_output(crayon::strip_style(res), cacheable = TRUE)
-}
-
-knit_print_squeezed <- function(x) {
-  unlist(lapply(x, knit_print_squeezed_tier))
-}
-
-knit_print_squeezed_tier <- function(x) {
-
-  get_col <- function(xx) {
-    c(xx[["capital_format"]][2L], xx[["shaft_format"]])
-  }
-
-  header <- vapply(lapply(x, `[[`, "capital_format"), `[`, character(1L), 1L)
-  col <- lapply(x, get_col)
-
-  knitr::kable(as.data.frame(col), row.names = NA, col.names = header)
-}
-
 shrink_dt <- function(df, rows) {
 
   n <- nrow(df)
@@ -202,6 +162,10 @@ shrink_dt <- function(df, rows) {
 
 add_empty_row <- function(x) {
 
+  if (length(x) == 0L) {
+    return(x)
+  }
+
   add_row <- function(x) {
     if (length(x) == 0L) return(x)
     mid <- (length(x) - 2L) / 2L
@@ -209,16 +173,44 @@ add_empty_row <- function(x) {
     structure(res, class = class(x))
   }
 
-  lapply(x, add_row)
+  add_shaft <- function(x, n) {
+    x[["shaft_format"]] <- add_in_between(x[["shaft_format"]], n, " ")
+    x
+  }
+
+  if (packageVersion("pillar") < "1.5.0") {
+
+    n <- length(x[[1L]][[1L]][["shaft_format"]]) / 2L
+
+    lapply(x, lapply, add_shaft, n)
+
+  } else {
+
+    lapply(x, add_row)
+  }
 }
 
 add_row_id <- function(x, rowid) {
 
-  do_add <- function(x, width, id) {
-    if (length(x) == 0L) return(x)
-    res <- paste(c(rep(strrep(" ", width), 2L),
-                 format(id, justify = "right")), x)
-    structure(res, class = class(x))
+  if (length(x) == 0L) {
+    return(x)
+  }
+
+  if (packageVersion("pillar") < "1.5.0") {
+
+    do_add <- function(x, width, id) {
+      c(list(list(capital_format = rep(strrep(" ", width), 2L),
+                  shaft_format = format(id))), x)
+    }
+
+  } else {
+
+    do_add <- function(x, width, id) {
+      if (length(x) == 0L) return(x)
+      res <- paste(c(rep(strrep(" ", width), 2L),
+                   format(id, justify = "right")), x)
+      structure(res, class = class(x))
+    }
   }
 
   lapply(x, do_add, max(crayon::col_nchar(rowid)), rowid)
