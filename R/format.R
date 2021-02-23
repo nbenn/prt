@@ -202,29 +202,23 @@ shrink_dt <- function(df, rows) {
 
 add_empty_row <- function(x) {
 
-  add_shaft <- function(x, n) {
-    x[["shaft_format"]] <- add_in_between(x[["shaft_format"]], n, " ")
-    x
+  add_row <- function(x) {
+    if (length(x) == 0L) return(x)
+    mid <- (length(x) - 2L) / 2L
+    res <- c(head(x, n = mid + 2L), " ", tail(x, n = mid))
+    structure(res, class = class(x))
   }
 
-  if (length(x) == 0L) {
-    return(x)
-  }
-
-  n <- length(x[[1L]][[1L]][["shaft_format"]]) / 2L
-
-  lapply(x, lapply, add_shaft, n)
+  lapply(x, add_row)
 }
 
 add_row_id <- function(x, rowid) {
 
   do_add <- function(x, width, id) {
-    c(list(list(capital_format = rep(strrep(" ", width), 2L),
-                shaft_format = format(id))), x)
-  }
-
-  if (length(x) == 0L) {
-    return(x)
+    if (length(x) == 0L) return(x)
+    res <- paste(c(rep(strrep(" ", width), 2L),
+                 format(id, justify = "right")), x)
+    structure(res, class = class(x))
   }
 
   lapply(x, do_add, max(crayon::col_nchar(rowid)), rowid)
