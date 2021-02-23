@@ -97,13 +97,13 @@ identical(jan_dt, subset(flights, .env$month == .data$month))
 
 While in the above example it is fairly clear what is happening and it should come as no surprise that the symbol `month` cannot simultaneously refer to a value in the calling environment and the name of a column in the data mask, a more subtle issue is considered in the following example. The environment which takes precedence for evaluating the `select` argument is a named list of column indices. This makes it possible for example to specify a range of columns as (and makes the behavior of `subset()` being applied to a `prt` object consistent with that of a `data.frame`).
 
-```{r nse-issue1, error = TRUE}
+```{r nse-issue1}
 subset(flights, select = year:day)
 ```
 
 Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can easily be explained. Again, the `.data` and `.env` pronouns can be used to resolve potential issues.
 
-```{r nse-issue2, error = TRUE}
+```{r nse-issue2}
 sched_dep_time <- "dep_time"
 colnames(subset(flights, select = sched_dep_time))
 
@@ -112,7 +112,9 @@ colnames(subset(flights, select = actual_dep_time))
 
 colnames(subset(flights, select = .env$sched_dep_time))
 colnames(subset(flights, select = .env$actual_dep_time))
+```
 
+```{r nse-issue3, error = TRUE, eval = getRversion() > "3.4.0"}
 colnames(subset(flights, select = .data$sched_dep_time))
 colnames(subset(flights, select = .data$actual_dep_time))
 ```
