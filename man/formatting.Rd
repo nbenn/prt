@@ -25,7 +25,7 @@ if less than option \code{tibble.print_max}. Otherwise, will print
 means use \code{getOption("tibble.width")} or (if also \code{NULL})
 \code{getOption("width")}; the latter displays only the columns that fit on one
 screen. You can also set \code{options(tibble.width = Inf)} to override this
-default and always print all columns.}
+default and always print all columns, this may be slow for very wide tibbles.}
 
 \item{n_extra}{Number of extra columns to print abbreviated information for,
 if the width is too small for the entire tibble. If \code{NULL}, the default,
@@ -41,13 +41,13 @@ function arguments and using the same option settings (and default values)
 as introduced by \code{tibble}.
 }
 \details{
-While the function \code{\link[tibble:formatting]{tibble::trunc_mat()}} does most of the heavy lifting
+While the function \code{\link[tibble:trunc_mat]{tibble::trunc_mat()}} does most of the heavy lifting
 for formatting \code{tibble} printing output, \code{prt} exports the function
 \code{trunc_dt()}, which drives analogous functionality while adding the
 top/bottom \code{n} row concept. This function can be used for creating \code{\link[=print]{print()}}
 methods for other classes which represent tabular data, given that this
 class implements \code{\link[=dim]{dim()}}, \code{\link[=head]{head()}} and \code{\link[=tail]{tail()}} (and optionally
-\code{\link[tibble:tbl_sum]{tibble::tbl_sum()}}) methods. For an example of this, see
+\code{\link[tibble:reexports]{tibble::tbl_sum()}}) methods. For an example of this, see
 \href{../doc/prt.html}{\code{vignette("prt", package = "prt")}}.
 
 The following session options are set by \code{tibble} and are respected by
@@ -89,6 +89,8 @@ titles.
 display character columns, default: \code{0}.  Character columns may be
 truncated up to that width to save horizontal space. Set to \code{Inf} to
 turn off truncation of character columns.
+\item \code{pillar.max_dec_width}: The maximum allowed width for decimal notation,
+default 13.
 }
 
 }

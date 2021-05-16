@@ -30,20 +30,20 @@ str_dt(x, ...)
     information.}
 }
 \description{
-The \code{tibble} S3 generic function \code{\link[tibble:glimpse]{tibble::glimpse()}} is implemented for
+The \code{tibble} S3 generic function \code{\link[pillar:glimpse]{pillar::glimpse()}} is implemented for
 \code{prt} objects as well. Inspired by the output of \code{\link[=str]{str()}} when applied to
 \code{data.frames}, this function is intended to display the structure of the
 data in terms of columns, irrespective of how the data is organized in terms
 of \code{R} objects. Similarly to \code{\link[=trunc_dt]{trunc_dt()}}, the function providing the bulk
 of functionality, \code{glimpse_dt()}, is exported such that implementing a
-class specific \code{\link[tibble:glimpse]{tibble::glimpse()}} function for other classes that
+class specific \code{\link[pillar:glimpse]{pillar::glimpse()}} function for other classes that
 representing tabular data is straightforward.
 }
 \details{
-Alongside a \code{prt}-specific \code{\link[tibble:glimpse]{tibble::glimpse()}} method, a \code{\link[=str]{str()}} method is
+Alongside a \code{prt}-specific \code{\link[pillar:glimpse]{pillar::glimpse()}} method, a \code{\link[=str]{str()}} method is
 provided as well for \code{prt} objects. However, breaking with base \code{R}
 expectations, it is not the structure of the object in terms of \code{R} objects
-that is shown, but in the same spirit as \code{\link[tibble:glimpse]{tibble::glimpse()}} it is the
+that is shown, but in the same spirit as \code{\link[pillar:glimpse]{pillar::glimpse()}} it is the
 structure of the data that is printed. How this data is represents with
 respect to \code{R} objects is abstracted away as to show output as would be
 expected if the data were represented by a \code{data.frame}.
@@ -57,8 +57,8 @@ customized by implementing an optional \code{str_sum()} function.
 \examples{
 cars <- as_prt(mtcars)
 
-tibble::glimpse(cars)
-tibble::glimpse(cars, width = 30)
+pillar::glimpse(cars)
+pillar::glimpse(cars, width = 30)
 
 str(cars)
 str(cars, vec.len = 1)

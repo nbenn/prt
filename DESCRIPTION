@@ -1,6 +1,6 @@
 Package: prt
 Title: Tabular Data Backed by Partitioned 'fst' Files
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: c(person(given = "Nicolas",
                     family = "Bennett",
                     role = c("aut", "cre"),
@@ -26,7 +26,6 @@ Imports:
     fansi,
     backports,
     rlang,
-    knitr
 Suggests:
     testthat,
     xml2,
@@ -35,9 +34,9 @@ Suggests:
     nycflights13,
     datasets,
     rmarkdown,
+    knitr,
     bench
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

@@ -1,19 +1,19 @@
 
 #' Get a glimpse of your data
 #'
-#' The `tibble` S3 generic function [tibble::glimpse()] is implemented for
+#' The `tibble` S3 generic function [pillar::glimpse()] is implemented for
 #' `prt` objects as well. Inspired by the output of [str()] when applied to
 #' `data.frames`, this function is intended to display the structure of the
 #' data in terms of columns, irrespective of how the data is organized in terms
 #' of `R` objects. Similarly to [trunc_dt()], the function providing the bulk
 #' of functionality, `glimpse_dt()`, is exported such that implementing a
-#' class specific [tibble::glimpse()] function for other classes that
+#' class specific [pillar::glimpse()] function for other classes that
 #' representing tabular data is straightforward.
 #'
-#' Alongside a `prt`-specific [tibble::glimpse()] method, a [str()] method is
+#' Alongside a `prt`-specific [pillar::glimpse()] method, a [str()] method is
 #' provided as well for `prt` objects. However, breaking with base `R`
 #' expectations, it is not the structure of the object in terms of `R` objects
-#' that is shown, but in the same spirit as [tibble::glimpse()] it is the
+#' that is shown, but in the same spirit as [pillar::glimpse()] it is the
 #' structure of the data that is printed. How this data is represents with
 #' respect to `R` objects is abstracted away as to show output as would be
 #' expected if the data were represented by a `data.frame`.
@@ -27,8 +27,8 @@
 #' @examples
 #' cars <- as_prt(mtcars)
 #'
-#' tibble::glimpse(cars)
-#' tibble::glimpse(cars, width = 30)
+#' pillar::glimpse(cars)
+#' pillar::glimpse(cars, width = 30)
 #'
 #' str(cars)
 #' str(cars, vec.len = 1)
@@ -37,7 +37,7 @@
 #'
 #' str_sum(cars)
 #'
-#' @inheritParams tibble::glimpse
+#' @inheritParams pillar::glimpse
 #'
 #' @rdname glimpse
 #'

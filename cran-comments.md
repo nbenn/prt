@@ -10,4 +10,4 @@
 
 0 errors | 0 warnings | 0 notes
 
-* This is a compatibility update for the recently released pillar v1.5.0
+* This is a maintenance release fixing 2 CRAN NOTEs.
