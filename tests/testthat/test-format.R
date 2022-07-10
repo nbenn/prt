@@ -26,71 +26,28 @@ test_that("trunc_dt output matches known output", {
 
   skip_on_non_utf8_locale()
 
-  expect_output_file_opts(
-    print(prt_cars, n = 8L, width = 30L),
-    "format/mtcars-8-30.txt"
-  )
+  local_edition(3)
 
-  expect_output_file_opts(
-    print(prt_iris, n = 5L, width = 30L),
-    "format/iris-5-30.txt"
-  )
-
-  expect_output_file_opts(
-    print(prt_iris, n = -1L, width = 30L),
-    "format/iris-neg-30.txt"
-  )
-
-  expect_output_file_opts(
-    print(prt_iris, n = Inf, width = 30L),
-    "format/iris-inf-30.txt"
-  )
-
-  expect_output_file_opts(
-    print(prt_iris, n = 3L, width = 5L),
-    "format/iris-3-5.txt"
-  )
-
-  expect_output_file_opts(
-    print(prt_iris, n = NULL, width = 70L),
-    "format/iris--70.txt"
-  )
-
-  expect_output_file_opts(
-    print(prt_all, n = NULL, width = 30L),
-    "format/all--30.txt"
-  )
-
-  expect_output_file_opts(
-    print(prt_all, n = NULL, width = 300L),
-    "format/all--300.txt"
-  )
-
-  expect_output_file_opts(
+  expect_snapshot({
+    print(prt_cars, n = 8L, width = 30L)
+    print(prt_iris, n = 5L, width = 30L)
+    print(prt_iris, n = -1L, width = 30L)
+    print(prt_iris, n = Inf, width = 30L)
+    print(prt_iris, n = 3L, width = 5L)
+    print(prt_iris, n = NULL, width = 70L)
+    print(prt_all, n = NULL, width = 30L)
+    print(prt_all, n = NULL, width = 300L)
     print(create_prt(tibble::tibble(a = seq.int(10000)), dir = tmp), n = 5L,
-          width = 30L),
-    "format/long-5-30.txt"
-  )
-
-  expect_output_file_opts(
-    print(trunc_dt(prt_all, n = 1L, n_extra = 2L, width = 30L)),
-    "format/all-1-30-2.txt"
-  )
-
-  expect_output_file_opts(
-    print(trunc_dt(prt_all, n = 1L, n_extra = 0L, width = 30L)),
-    "format/all-1-30-0.txt"
-  )
-
-  expect_output_file_opts(
+          width = 30L)
+    print(trunc_dt(prt_all, n = 1L, n_extra = 2L, width = 30L))
+    print(trunc_dt(prt_all, n = 1L, n_extra = 0L, width = 30L))
     print(
       trunc_dt(
         create_prt(tibble::tibble("mean(x)" = 5, "var(x)" = 3), dir = tmp),
         width = 28
       )
-    ),
-    "format/non-syntactic.txt"
-  )
+    )
+  })
 })
 
 test_that("trunc_mat for POSIXct columns", {
