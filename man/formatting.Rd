@@ -15,21 +15,15 @@ trunc_dt(x, n = NULL, width = NULL, n_extra = NULL)
 \arguments{
 \item{x}{Object to format or print.}
 
-\item{...}{Other arguments passed on to individual methods.}
+\item{...}{Passed on to \code{\link[=tbl_format_setup]{tbl_format_setup()}}.}
 
 \item{n}{Number of rows to show. If \code{NULL}, the default, will print all rows
-if less than option \code{tibble.print_max}. Otherwise, will print
-\code{tibble.print_min} rows.}
+if less than the \code{print_max} \link[pillar:pillar_options]{option}.
+Otherwise, will print as many rows as specified by the
+\code{print_min} \link[pillar:pillar_options]{option}.}
 
 \item{width}{Width of text output to generate. This defaults to \code{NULL}, which
-means use \code{getOption("tibble.width")} or (if also \code{NULL})
-\code{getOption("width")}; the latter displays only the columns that fit on one
-screen. You can also set \code{options(tibble.width = Inf)} to override this
-default and always print all columns, this may be slow for very wide tibbles.}
-
-\item{n_extra}{Number of extra columns to print abbreviated information for,
-if the width is too small for the entire tibble. If \code{NULL}, the default,
-will print information about at most \code{tibble.max_extra_cols} extra columns.}
+means use the \code{width} \link[pillar:pillar_options]{option}.}
 }
 \description{
 Printing of \code{prt} objects combines the concise yet informative design
@@ -66,31 +60,62 @@ Both \code{tibble} and \code{prt} rely on \code{pillar} for formatting columns a
 therefore, the following options set by \code{pillar} are applicable to \code{prt}
 printing as well.
 }
-\section{Package options}{
+\section{Options for the pillar package}{
 
 
 \itemize{
-\item \code{pillar.bold}: Use bold font, e.g. for column headers? This currently
+\item \code{print_max}: Maximum number of rows printed, default: \code{20}.
+Set to \code{Inf} to always print all rows.
+For compatibility reasons, \code{getOption("tibble.print_max")} and
+\code{getOption("dplyr.print_max")} are also consulted,
+this will be soft-deprecated in pillar v2.0.0.
+\item \code{print_min}: Number of rows printed if the table has more than
+\code{print_max} rows, default: \code{10}.
+For compatibility reasons, \code{getOption("tibble.print_min")} and
+\code{getOption("dplyr.print_min")} are also consulted,
+this will be soft-deprecated in pillar v2.0.0.
+\item \code{width}: Output width. Default: \code{NULL}
+(use \code{getOption("width")}).
+This can be larger than \code{getOption("width")}, in this case the output
+of the table's body is distributed over multiple tiers for wide tibbles.
+For compatibility reasons, \code{getOption("tibble.width")} and
+\code{getOption("dplyr.width")} are also consulted,
+this will be soft-deprecated in pillar v2.0.0.
+\item \code{max_footer_lines}: The maximum number of lines in the footer,
+default: \code{7}. Set to \code{Inf} to turn off truncation of footer lines.
+The \code{max_extra_cols} option still limits
+the number of columns printed.
+\item \code{max_extra_cols}: The maximum number of columns printed in the footer,
+default: \code{100}. Set to \code{Inf} to show all columns.
+Set the more predictable \code{max_footer_lines} to control the number
+of footer lines instead.
+\item \code{bold}: Use bold font, e.g. for column headers? This currently
 defaults to \code{FALSE}, because many terminal fonts have poor support for
 bold fonts.
-\item \code{pillar.subtle}: Use subtle style, e.g. for row numbers and data types?
+\item \code{subtle}: Use subtle style, e.g. for row numbers and data types?
 Default: \code{TRUE}.
-\item \code{pillar.subtle_num}: Use subtle style for insignificant digits? Default:
-\code{FALSE}, is also affected by the \code{pillar.subtle} option.
-\item \code{pillar.neg}: Highlight negative numbers? Default: \code{TRUE}.
-\item \code{pillar.sigfig}: The number of significant digits that will be printed and
-highlighted, default: \code{3}. Set the \code{pillar.subtle} option to \code{FALSE} to
+\item \code{subtle_num}: Use subtle style for insignificant digits? Default:
+\code{FALSE}, is also affected by the \code{subtle} option.
+\item \code{neg}: Highlight negative numbers? Default: \code{TRUE}.
+\item \code{sigfig}: The number of significant digits that will be printed and
+highlighted, default: \code{3}. Set the \code{subtle} option to \code{FALSE} to
 turn off highlighting of significant digits.
-\item \code{pillar.min_title_chars}: The minimum number of characters for the column
+\item \code{min_title_chars}: The minimum number of characters for the column
 title, default: \code{15}.  Column titles may be truncated up to that width to
 save horizontal space. Set to \code{Inf} to turn off truncation of column
 titles.
-\item \code{pillar.min_chars}: The minimum number of characters wide to
-display character columns, default: \code{0}.  Character columns may be
+\item \code{min_chars}: The minimum number of characters wide to
+display character columns, default: \code{3}.  Character columns may be
 truncated up to that width to save horizontal space. Set to \code{Inf} to
 turn off truncation of character columns.
-\item \code{pillar.max_dec_width}: The maximum allowed width for decimal notation,
-default 13.
+\item \code{max_dec_width}: The maximum allowed width for decimal notation,
+default: \code{13}.
+\item \code{bidi}: Set to \code{TRUE} for experimental support for bidirectional scripts.
+Default: \code{FALSE}. When this option is set, "left right override"
+and "first strong isolate"
+\href{https://www.w3.org/International/questions/qa-bidi-unicode-controls}{Unicode controls}
+are inserted to ensure that text appears in its intended direction
+and that the column headings correspond to the correct columns.
 }
 
 }

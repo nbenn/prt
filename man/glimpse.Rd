@@ -21,8 +21,9 @@ str_dt(x, ...)
 \arguments{
 \item{x}{An object to glimpse at.}
 
-\item{width}{Width of output: defaults to the setting of the option
-\code{tibble.width} (if finite) or the width of the console.}
+\item{width}{Width of output: defaults to the setting of the
+\code{width} \link[pillar:pillar_options]{option} (if finite)
+or the width of the console.}
 
 \item{...}{Unused, for extensibility.}
 

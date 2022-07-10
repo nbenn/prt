@@ -33,7 +33,7 @@
 #' therefore, the following options set by `pillar` are applicable to `prt`
 #' printing as well.
 #'
-#' @inheritSection pillar::`pillar-package` Package options
+#' @inheritSection pillar::pillar_options Options for the pillar package
 #'
 #' @examples
 #' cars <- as_prt(mtcars)
