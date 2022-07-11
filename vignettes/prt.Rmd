@@ -85,7 +85,7 @@ bench::mark(
 )
 ```
 
-A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as `subset` and `select` arguments are first resolved in the context of the data, followed by the environment the expression was created in (the [quosure](https://rlang.r-lib.org/reference/nse-defuse.html) environment). Expressions are evaluated using `rlang::eval_tidy()`, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the `.data` and `.env` pronouns or by [forcing parts of the expression](https://rlang.r-lib.org/reference/nse-force.html).
+A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as `subset` and `select` arguments are first resolved in the context of the data, followed by the environment the expression was created in (the [quosure](https://rlang.r-lib.org/reference/topic-defuse.html) environment). Expressions are evaluated using `rlang::eval_tidy()`, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the `.data` and `.env` pronouns or by [forcing parts of the expression](https://rlang.r-lib.org/reference/topic-inject.html).
 
 ```{r nse-issue0}
 month <- 1L

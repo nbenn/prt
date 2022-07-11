@@ -13,13 +13,14 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(prt)
 ```
 
 # prt
 
 <!-- badges: start -->
 [![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![Codecov test coverage](https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://codecov.io/gh/nbenn/prt)
+[![Codecov test coverage](https://app.codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://app.codecov.io/gh/nbenn/prt)
 [![R build status](https://github.com/nbenn/prt/workflows/build/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Abuild)
 [![pkgdown build status](https://github.com/nbenn/prt/workflows/pkgdown/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Apkgdown)
 [![covr status](https://github.com/nbenn/prt/workflows/coverage/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Acoverage)

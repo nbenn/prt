@@ -7,7 +7,7 @@
 
 [![Lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Codecov test
-coverage](https://codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://codecov.io/gh/nbenn/prt)
+coverage](https://app.codecov.io/gh/nbenn/prt/branch/master/graph/badge.svg?token=HvOM3yosW3)](https://app.codecov.io/gh/nbenn/prt)
 [![R build
 status](https://github.com/nbenn/prt/workflows/build/badge.svg)](https://github.com/nbenn/prt/actions?query=workflow%3Abuild)
 [![pkgdown build
@@ -48,6 +48,8 @@ tmp <- tempfile()
 dir.create(tmp)
 
 flights <- as_prt(nycflights13::flights, n_chunks = 2L, dir = tmp)
+#> fstcore package v0.9.12
+#> (OpenMP was not detected, using single threaded mode)
 
 print(flights)
 #> # A prt:        336,776 × 19
