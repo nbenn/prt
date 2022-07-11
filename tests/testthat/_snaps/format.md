@@ -325,7 +325,7 @@
       10,000 10000
       # … with 9,990 more rows
     Code
-      print(trunc_dt(prt_all, n = 1L, n_extra = 2L, width = 30L))
+      print(trunc_dt(prt_all, n = 1L, max_extra_cols = 2L, width = 30L))
     Output
       # A prt:        3 × 7
       # Partitioning: [3] rows
@@ -338,7 +338,7 @@
       #   more variables: e <fct>,
       #   f <date>, …
     Code
-      print(trunc_dt(prt_all, n = 1L, n_extra = 0L, width = 30L))
+      print(trunc_dt(prt_all, n = 1L, max_extra_cols = 0L, width = 30L))
     Output
       # A prt:        3 × 7
       # Partitioning: [3] rows

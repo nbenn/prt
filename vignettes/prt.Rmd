@@ -150,15 +150,24 @@ dim.my_tbl <- function(x) {
   stopifnot(length(rows) == 1L)
   c(rows, length(x))
 }
+
 head.my_tbl <- function(x, n = 6L, ...) {
   as.data.frame(lapply(x, `[`, seq_len(n)))
 }
+
 tail.my_tbl <- function(x, n = 6L, ...) {
   as.data.frame(lapply(x, `[`, seq(nrow(x) - n + 1L, nrow(x))))
 }
-print.my_tbl <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
-  out <- format(trunc_dt(x, n = n, width = width, n_extra = n_extra))
+
+print.my_tbl <- function(x, ..., n = NULL, width = NULL,
+                         max_extra_cols = NULL) {
+
+  out <- format(
+    trunc_dt(x, n = n, width = width, max_extra_cols = max_extra_cols)
+  )
+
   cat(paste0(out, "\n"), sep = "")
+
   invisible(x)
 }
 ```
@@ -179,6 +188,7 @@ if (base::getRversion() < "4.0.0") {
     invisible(NULL)
   }
 }
+
 Map(.S3method, c("dim", "head", "tail", "print"), "my_tbl",
     list(dim.my_tbl, head.my_tbl, tail.my_tbl, print.my_tbl))
 ```

@@ -39,8 +39,8 @@ test_that("trunc_dt output matches known output", {
     print(prt_all, n = NULL, width = 300L)
     print(create_prt(tibble::tibble(a = seq.int(10000)), dir = tmp), n = 5L,
           width = 30L)
-    print(trunc_dt(prt_all, n = 1L, n_extra = 2L, width = 30L))
-    print(trunc_dt(prt_all, n = 1L, n_extra = 0L, width = 30L))
+    print(trunc_dt(prt_all, n = 1L, max_extra_cols = 2L, width = 30L))
+    print(trunc_dt(prt_all, n = 1L, max_extra_cols = 0L, width = 30L))
     print(
       trunc_dt(
         create_prt(tibble::tibble("mean(x)" = 5, "var(x)" = 3), dir = tmp),

@@ -41,7 +41,7 @@
 #' print(cars)
 #' print(cars, n = 2)
 #' print(cars, width = 30)
-#' print(cars, width = 30, n_extra = 2)
+#' print(cars, width = 30, max_extra_cols = 2)
 #'
 #' @inheritParams tibble::print.tbl
 #'
@@ -52,8 +52,12 @@
 #'
 #' @export
 #'
-print.prt <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
-  cat_line(format(x, ..., n = n, width = width, n_extra = n_extra))
+print.prt <- function(x, ..., n = NULL, width = NULL, max_extra_cols = NULL) {
+
+  cat_line(
+    format(x, ..., n = n, width = width, max_extra_cols = max_extra_cols)
+  )
+
   invisible(x)
 }
 
@@ -61,8 +65,8 @@ print.prt <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
 #'
 #' @export
 #'
-format.prt <- function(x, ..., n = NULL, width = NULL, n_extra = NULL) {
-  format(trunc_dt(x, n = n, width = width, n_extra = n_extra))
+format.prt <- function(x, ..., n = NULL, width = NULL, max_extra_cols = NULL) {
+  format(trunc_dt(x, n = n, width = width, max_extra_cols = max_extra_cols))
 }
 
 #' @export
@@ -75,7 +79,7 @@ print.trunc_dt <- function(x, ...) {
 #'
 #' @export
 #'
-trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
+trunc_dt <- function(x, n = NULL, width = NULL, max_extra_cols = NULL) {
 
   rows <- nrow(x)
 
@@ -87,7 +91,7 @@ trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
     }
   }
 
-  if (is.null(n_extra)) n_extra <- get_opt("max_extra_cols")
+  if (is.null(max_extra_cols)) max_extra_cols <- get_opt("max_extra_cols")
 
   if (nrow(x) < 2 * n) {
     df <- head(x, nrow(x))
@@ -109,7 +113,7 @@ trunc_dt <- function(x, n = NULL, width = NULL, n_extra = NULL) {
 
   trunc_info <- list(
     width = width, rows_total = rows, rows_min = nrow(df),
-    n_extra = n_extra, summary = tbl_sum(x), row_id = rowid
+    max_extra_cols = max_extra_cols, summary = tbl_sum(x), row_id = rowid
   )
 
   structure(
@@ -247,7 +251,7 @@ format_footer <- function(x, squeezed_colonnade) {
 
   extra_rows <- format_footer_rows(x)
   extra_cols <- format_footer_cols(x,
-    pillar::extra_cols(squeezed_colonnade, n = x$n_extra)
+    pillar::extra_cols(squeezed_colonnade, n = x$max_extra_cols)
   )
 
   extra <- c(extra_rows, extra_cols)

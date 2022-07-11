@@ -6,11 +6,11 @@
 \alias{trunc_dt}
 \title{Printing prt}
 \usage{
-\method{print}{prt}(x, ..., n = NULL, width = NULL, n_extra = NULL)
+\method{print}{prt}(x, ..., n = NULL, width = NULL, max_extra_cols = NULL)
 
-\method{format}{prt}(x, ..., n = NULL, width = NULL, n_extra = NULL)
+\method{format}{prt}(x, ..., n = NULL, width = NULL, max_extra_cols = NULL)
 
-trunc_dt(x, n = NULL, width = NULL, n_extra = NULL)
+trunc_dt(x, n = NULL, width = NULL, max_extra_cols = NULL)
 }
 \arguments{
 \item{x}{Object to format or print.}
@@ -24,6 +24,11 @@ Otherwise, will print as many rows as specified by the
 
 \item{width}{Width of text output to generate. This defaults to \code{NULL}, which
 means use the \code{width} \link[pillar:pillar_options]{option}.}
+
+\item{max_extra_cols}{Number of extra columns to print abbreviated information for,
+if the width is too small for the entire tibble. If \code{NULL},
+the \code{max_extra_cols} \link[pillar:pillar_options]{option} is used.
+The previously defined \code{n_extra} argument is soft-deprecated.}
 }
 \description{
 Printing of \code{prt} objects combines the concise yet informative design
@@ -126,6 +131,6 @@ cars <- as_prt(mtcars)
 print(cars)
 print(cars, n = 2)
 print(cars, width = 30)
-print(cars, width = 30, n_extra = 2)
+print(cars, width = 30, max_extra_cols = 2)
 
 }
