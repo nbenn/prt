@@ -1,6 +1,6 @@
 ## Test environments
 
-* local R installation, macOS 10.15, R 4.0.3
+* local R installation, macOS 12.4, aarch64, R 4.2.1
 * GitHub Actions (ubuntu-16.04): 3.3, 3.4, 3.5, oldrel, release
 * GitHub Actions (windows): 3.6, release
 * Github Actions (macOS): release
@@ -10,4 +10,4 @@
 
 0 errors | 0 warnings | 0 notes
 
-* This is a maintenance release fixing 2 CRAN NOTEs.
+* This is a maintenance release for an upcoming update to pillar.
