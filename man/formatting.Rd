@@ -4,6 +4,7 @@
 \alias{print.prt}
 \alias{format.prt}
 \alias{format_dt}
+\alias{trunc_dt}
 \title{Printing prt}
 \usage{
 \method{print}{prt}(x, ..., n = NULL, width = NULL, max_extra_cols = NULL)
@@ -18,6 +19,8 @@ format_dt(
   max_extra_cols = NULL,
   max_footer_lines = NULL
 )
+
+trunc_dt(...)
 }
 \arguments{
 \item{x}{Object to format or print.}

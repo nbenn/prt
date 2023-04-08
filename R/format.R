@@ -126,6 +126,13 @@ format_dt <- function(x, ..., n = NULL, width = NULL, max_extra_cols = NULL,
   c(header, body, footer)
 }
 
+#' @rdname formatting
+#' @export
+trunc_dt <- function(...) {
+  .Deprecated("format_dt")
+  format_dt(...)
+}
+
 #' @importFrom pillar tbl_format_body
 #' @export
 tbl_format_body.dt_prnt <- function(x, setup, ...) {
