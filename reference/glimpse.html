@@ -3,7 +3,7 @@
 prt objects as well. Inspired by the output of str() when applied to
 data.frames, this function is intended to display the structure of the
 data in terms of columns, irrespective of how the data is organized in terms
-of R objects. Similarly to trunc_dt(), the function providing the bulk
+of R objects. Similarly to format_dt(), the function providing the bulk
 of functionality, glimpse_dt(), is exported such that implementing a
 class specific pillar::glimpse() function for other classes that
 representing tabular data is straightforward."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -24,7 +24,7 @@ representing tabular data is straightforward."><!-- mathjax --><script src="http
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@ representing tabular data is straightforward."><!-- mathjax --><script src="http
 <code>prt</code> objects as well. Inspired by the output of <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> when applied to
 <code>data.frames</code>, this function is intended to display the structure of the
 data in terms of columns, irrespective of how the data is organized in terms
-of <code>R</code> objects. Similarly to <code><a href="formatting.html">trunc_dt()</a></code>, the function providing the bulk
+of <code>R</code> objects. Similarly to <code><a href="formatting.html">format_dt()</a></code>, the function providing the bulk
 of functionality, <code>glimpse_dt()</code>, is exported such that implementing a
 class specific <code><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">pillar::glimpse()</a></code> function for other classes that
 representing tabular data is straightforward.</p>
@@ -113,7 +113,7 @@ that is shown, but in the same spirit as <code><a href="https://pillar.r-lib.org
 structure of the data that is printed. How this data is represents with
 respect to <code>R</code> objects is abstracted away as to show output as would be
 expected if the data were represented by a <code>data.frame</code>.</p>
-<p>In similar spirit as <code><a href="formatting.html">trunc_dt()</a></code> and <code>glimpse_dt()</code>, a <code>str_dt()</code> function
+<p>In similar spirit as <code><a href="formatting.html">format_dt()</a></code> and <code>glimpse_dt()</code>, a <code>str_dt()</code> function
 is exported which provides the core functionality driving the <code>prt</code>
 implementation of <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code>. This function requires availability of a
 <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code> function for any object that is passed and output can be
@@ -186,7 +186,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ :List of 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ meta         :List of 7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ path           : chr "/tmp/RtmpCa1WlV/file2d7267a1b2a0/1.fst"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ path           : chr "/tmp/Rtmp7LHR2Z/file1a6bea201e8/1.fst"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ nrOfRows       : num 32</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ keys           : NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ columnNames    : chr [1:11] "mpg" "cyl" "disp" "hp" ...</span>
@@ -215,7 +215,7 @@ customized by implementing an optional <code>str_sum()</code> function.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

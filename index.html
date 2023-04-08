@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -72,6 +72,7 @@
 <div class="page-header"><h1 id="prt">prt<a class="anchor" aria-label="anchor" href="#prt"></a>
 </h1></div>
 <!-- badges: start -->
+
 <p>Building on <code>data.frame</code> serialization provided by <a href="https://www.fstpackage.org" class="external-link"><code>fst</code></a>, <code>prt</code> offers an interface for working with partitioned <code>data.frame</code>s, saved as individual <code>fst</code> files.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -93,29 +94,30 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">flights</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/new_prt.html">as_prt</a></span><span class="op">(</span><span class="fu">nycflights13</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/nycflights13/man/flights.html" class="external-link">flights</a></span>, n_chunks <span class="op">=</span> <span class="fl">2L</span>, dir <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; fstcore package v0.9.12</span></span>
+<span><span class="co">#&gt; fstcore package v0.9.14</span></span>
 <span><span class="co">#&gt; (OpenMP was not detected, using single threaded mode)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">flights</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A prt:        336,776 × 19</span></span>
 <span><span class="co">#&gt; # Partitioning: [168,388, 168,388] rows</span></span>
-<span><span class="co">#&gt;          year month   day dep_time sched_dep_time dep_delay arr_time</span></span>
-<span><span class="co">#&gt;         &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;</span></span>
-<span><span class="co">#&gt;       1  2013     1     1      517            515         2      830</span></span>
-<span><span class="co">#&gt;       2  2013     1     1      533            529         4      850</span></span>
-<span><span class="co">#&gt;       3  2013     1     1      542            540         2      923</span></span>
-<span><span class="co">#&gt;       4  2013     1     1      544            545        -1     1004</span></span>
-<span><span class="co">#&gt;       5  2013     1     1      554            600        -6      812</span></span>
-<span><span class="co">#&gt;       …</span></span>
-<span><span class="co">#&gt; 336,772  2013     9    30       NA           1455        NA       NA</span></span>
-<span><span class="co">#&gt; 336,773  2013     9    30       NA           2200        NA       NA</span></span>
-<span><span class="co">#&gt; 336,774  2013     9    30       NA           1210        NA       NA</span></span>
-<span><span class="co">#&gt; 336,775  2013     9    30       NA           1159        NA       NA</span></span>
-<span><span class="co">#&gt; 336,776  2013     9    30       NA            840        NA       NA</span></span>
-<span><span class="co">#&gt; # … with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,</span></span>
-<span><span class="co">#&gt; #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt;          year month   day dep_time sched_dep_t…¹ dep_delay arr_time sched_arr_…²</span></span>
+<span><span class="co">#&gt;         &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;         &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;        &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1        2013     1     1      517           515         2      830          819</span></span>
+<span><span class="co">#&gt; 2        2013     1     1      533           529         4      850          830</span></span>
+<span><span class="co">#&gt; 3        2013     1     1      542           540         2      923          850</span></span>
+<span><span class="co">#&gt; 4        2013     1     1      544           545        -1     1004         1022</span></span>
+<span><span class="co">#&gt; 5        2013     1     1      554           600        -6      812          837</span></span>
+<span><span class="co">#&gt; …</span></span>
+<span><span class="co">#&gt; 336,772  2013     9    30       NA          1455        NA       NA         1634</span></span>
+<span><span class="co">#&gt; 336,773  2013     9    30       NA          2200        NA       NA         2312</span></span>
+<span><span class="co">#&gt; 336,774  2013     9    30       NA          1210        NA       NA         1330</span></span>
+<span><span class="co">#&gt; 336,775  2013     9    30       NA          1159        NA       NA         1344</span></span>
+<span><span class="co">#&gt; 336,776  2013     9    30       NA           840        NA       NA         1020</span></span>
+<span><span class="co">#&gt; # ℹ 336,771 more rows</span></span>
+<span><span class="co">#&gt; # ℹ abbreviated names: ¹​sched_dep_time, ²​sched_arr_time</span></span>
+<span><span class="co">#&gt; # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,</span></span>
+<span><span class="co">#&gt; #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
 <p>In case a <code>prt</code> object is created from a <code>data.frame</code>, the specified number of files is written to the directory of choice (a newly created directory within <code><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir()</a></code> by default).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span></span>
@@ -226,7 +228,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

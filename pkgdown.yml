@@ -1,7 +1,7 @@
-pandoc: 2.14.2
-pkgdown: 2.0.5
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   prt: prt.html
-last_built: 2022-07-11T07:34Z
+last_built: 2023-04-08T12:26Z
 

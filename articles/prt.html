@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -80,8 +80,29 @@
 
     
     
-<p>The <code>prt</code> object introduced by this package is intended to represent tabular data stored as one or more <a href="https://www.fstpackage.org" class="external-link"><code>fst</code></a> files. This is in similar spirit as <a href="https://diskframe.com" class="external-link"><code>disk.frame</code></a>, but is much less ambitious in scope and therefore much simpler in implementation. While the <code>disk.frame</code> package attempts to provide a <a href="https://dplyr.tidyverse.org" class="external-link"><code>dplyr</code></a> compliant API and offers parallel computation via the <a href="https://cran.r-project.org/package=future" class="external-link"><code>future</code></a> package, the intended use-case for <code>prt</code> objects is the situation where only a (small) subset of rows of the (large) tabular dataset are of interest for analysis at once. This subset can be specified using the base generic function <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> and the selected data is read into memory as a <code>data.table</code> object. Subsequent data operations and analysis is then preformed on this <code>data.table</code> representation. For this reason, partition-level parallelism is not in-scope for <code>prt</code> as <code>fst</code> already provides an efficient shared memory parallel implementation for decompression. Furthermore the much more complex multi-function non-standard evaluation API provided by <code>dplyr</code> was forgone in favor of the very simple one-function approach presented by the base R S3 generic function <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>.</p>
-<p>For the purpose of illustration of some <code>prt</code> features and particularities, we instantiate a dataset as <code>data.table</code> object and create a temporary directory which will contain the file-based data back ends.</p>
+<p>The <code>prt</code> object introduced by this package is intended to
+represent tabular data stored as one or more <a href="https://www.fstpackage.org" class="external-link"><code>fst</code></a> files. This is in
+similar spirit as <a href="https://diskframe.com" class="external-link"><code>disk.frame</code></a>, but is much
+less ambitious in scope and therefore much simpler in implementation.
+While the <code>disk.frame</code> package attempts to provide a <a href="https://dplyr.tidyverse.org" class="external-link"><code>dplyr</code></a> compliant API
+and offers parallel computation via the <a href="https://cran.r-project.org/package=future" class="external-link"><code>future</code></a>
+package, the intended use-case for <code>prt</code> objects is the
+situation where only a (small) subset of rows of the (large) tabular
+dataset are of interest for analysis at once. This subset can be
+specified using the base generic function <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> and the
+selected data is read into memory as a <code>data.table</code> object.
+Subsequent data operations and analysis is then preformed on this
+<code>data.table</code> representation. For this reason, partition-level
+parallelism is not in-scope for <code>prt</code> as <code>fst</code>
+already provides an efficient shared memory parallel implementation for
+decompression. Furthermore the much more complex multi-function
+non-standard evaluation API provided by <code>dplyr</code> was forgone
+in favor of the very simple one-function approach presented by the base
+R S3 generic function <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>.</p>
+<p>For the purpose of illustration of some <code>prt</code> features and
+particularities, we instantiate a dataset as <code>data.table</code>
+object and create a temporary directory which will contain the
+file-based data back ends.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span><span class="op">)</span></span>
@@ -124,7 +145,8 @@
 <span><span class="co">#&gt; 336774:      764   12     10 2013-09-30 12:00:00</span></span>
 <span><span class="co">#&gt; 336775:      419   11     59 2013-09-30 11:00:00</span></span>
 <span><span class="co">#&gt; 336776:      431    8     40 2013-09-30 08:00:00</span></span></code></pre></div>
-<p>Creating a <code>prt</code> object consisting of 2 partitions can for example be done as</p>
+<p>Creating a <code>prt</code> object consisting of 2 partitions can for
+example be done as</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">flights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_prt.html">as_prt</a></span><span class="op">(</span><span class="va">dat</span>, n_chunks <span class="op">=</span> <span class="fl">2L</span>, dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>tmpdir <span class="op">=</span> <span class="va">tmp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">flights</span><span class="op">)</span></span>
@@ -132,22 +154,32 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># Partitioning: [168,388, 168,388] rows</span></span></span>
 <span><span class="co">#&gt;          year month   day dep_time sched_dep_time dep_delay arr_time</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">1</span>  <span style="text-decoration: underline;">2</span>013     1     1      517            515         2      830</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">2</span>  <span style="text-decoration: underline;">2</span>013     1     1      533            529         4      850</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">3</span>  <span style="text-decoration: underline;">2</span>013     1     1      542            540         2      923</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">4</span>  <span style="text-decoration: underline;">2</span>013     1     1      544            545        -<span style="color: #BB0000;">1</span>     <span style="text-decoration: underline;">1</span>004</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">5</span>  <span style="text-decoration: underline;">2</span>013     1     1      554            600        -<span style="color: #BB0000;">6</span>      812</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,772</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">1</span>455        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,773</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">2</span>200        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,774</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">1</span>210        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,775</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">1</span>159        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,776</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>            840        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   time_hour &lt;dttm&gt;</span></span></span></code></pre></div>
-<p>This simply splits rows of <code>dat</code> into 2 equally sized groups, preserving the original row ordering and writes each group to its own <code>fst</code> file. Depending on the types of queries that are most frequently run against the data, this naive partitioning might not be optimal. While <code>fst</code> does provide random row access, row selection is only possible via index ranges. Consequently, for each partition all rows that fall into the range between the minimum and the maximum required index will be read into memory and superfluous rows are discarded. If for example the data were to be most frequently accessed by airline, the resulting data loads would be more efficient if the data was already sorted by carrier codes.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1      </span>  <span style="text-decoration: underline;">2</span>013     1     1      517            515         2      830</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2      </span>  <span style="text-decoration: underline;">2</span>013     1     1      533            529         4      850</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3      </span>  <span style="text-decoration: underline;">2</span>013     1     1      542            540         2      923</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4      </span>  <span style="text-decoration: underline;">2</span>013     1     1      544            545        -<span style="color: #BB0000;">1</span>     <span style="text-decoration: underline;">1</span>004</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5      </span>  <span style="text-decoration: underline;">2</span>013     1     1      554            600        -<span style="color: #BB0000;">6</span>      812</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,772</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">1</span>455        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,773</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">2</span>200        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,774</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">1</span>210        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,775</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>           <span style="text-decoration: underline;">1</span>159        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,776</span>  <span style="text-decoration: underline;">2</span>013     9    30       <span style="color: #BB0000;">NA</span>            840        <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 336,771 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></span></code></pre></div>
+<p>This simply splits rows of <code>dat</code> into 2 equally sized
+groups, preserving the original row ordering and writes each group to
+its own <code>fst</code> file. Depending on the types of queries that
+are most frequently run against the data, this naive partitioning might
+not be optimal. While <code>fst</code> does provide random row access,
+row selection is only possible via index ranges. Consequently, for each
+partition all rows that fall into the range between the minimum and the
+maximum required index will be read into memory and superfluous rows are
+discarded. If for example the data were to be most frequently accessed
+by airline, the resulting data loads would be more efficient if the data
+was already sorted by carrier codes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">setorderv</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">"carrier"</span><span class="op">)</span></span>
 <span><span class="va">grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">carrier</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">0.5</span></span>
@@ -159,22 +191,27 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># Partitioning: [182,128, 154,648] rows</span></span></span>
 <span><span class="co">#&gt;          year month   day dep_time sched_dep_time dep_delay arr_time</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">1</span>  <span style="text-decoration: underline;">2</span>013     1     1      557            600        -<span style="color: #BB0000;">3</span>      709</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">2</span>  <span style="text-decoration: underline;">2</span>013     1     1      624            630        -<span style="color: #BB0000;">6</span>      909</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">3</span>  <span style="text-decoration: underline;">2</span>013     1     1      632            608        24      740</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">4</span>  <span style="text-decoration: underline;">2</span>013     1     1      809            815        -<span style="color: #BB0000;">6</span>     <span style="text-decoration: underline;">1</span>043</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">5</span>  <span style="text-decoration: underline;">2</span>013     1     1      811            815        -<span style="color: #BB0000;">4</span>     <span style="text-decoration: underline;">1</span>006</span></span>
-<span><span class="co">#&gt;       <span style="color: #949494;">…</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,772</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">1</span>955           <span style="text-decoration: underline;">2</span>000        -<span style="color: #BB0000;">5</span>     <span style="text-decoration: underline;">2</span>219</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,773</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">1</span>956           <span style="text-decoration: underline;">1</span>825        91     <span style="text-decoration: underline;">2</span>208</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,774</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">2</span>041           <span style="text-decoration: underline;">2</span>045        -<span style="color: #BB0000;">4</span>     <span style="text-decoration: underline;">2</span>147</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,775</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">2</span>050           <span style="text-decoration: underline;">2</span>045         5       20</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">336,776</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">2</span>121           <span style="text-decoration: underline;">2</span>100        21     <span style="text-decoration: underline;">2</span>349</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,</span></span></span>
-<span><span class="co"><span style="color: #949494;">#&gt; #   time_hour &lt;dttm&gt;</span></span></span></code></pre></div>
-<p>The behavior of subsetting operations on <code>prt</code> objects is modeled after that of <a href="https://tibble.tidyverse.org" class="external-link"><code>tibble</code></a> objects. Columns can be extracted using <code>[[</code>, <code>$</code> (with partial matching being disallowed), or by selecting a single column with <code>[</code> and passing <code>TRUE</code> as <code>drop</code> argument.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1      </span>  <span style="text-decoration: underline;">2</span>013     1     1      557            600        -<span style="color: #BB0000;">3</span>      709</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2      </span>  <span style="text-decoration: underline;">2</span>013     1     1      624            630        -<span style="color: #BB0000;">6</span>      909</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3      </span>  <span style="text-decoration: underline;">2</span>013     1     1      632            608        24      740</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4      </span>  <span style="text-decoration: underline;">2</span>013     1     1      809            815        -<span style="color: #BB0000;">6</span>     <span style="text-decoration: underline;">1</span>043</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5      </span>  <span style="text-decoration: underline;">2</span>013     1     1      811            815        -<span style="color: #BB0000;">4</span>     <span style="text-decoration: underline;">1</span>006</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,772</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">1</span>955           <span style="text-decoration: underline;">2</span>000        -<span style="color: #BB0000;">5</span>     <span style="text-decoration: underline;">2</span>219</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,773</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">1</span>956           <span style="text-decoration: underline;">1</span>825        91     <span style="text-decoration: underline;">2</span>208</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,774</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">2</span>041           <span style="text-decoration: underline;">2</span>045        -<span style="color: #BB0000;">4</span>     <span style="text-decoration: underline;">2</span>147</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,775</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">2</span>050           <span style="text-decoration: underline;">2</span>045         5       20</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">336,776</span>  <span style="text-decoration: underline;">2</span>013     9    30     <span style="text-decoration: underline;">2</span>121           <span style="text-decoration: underline;">2</span>100        21     <span style="text-decoration: underline;">2</span>349</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 336,771 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></span></code></pre></div>
+<p>The behavior of subsetting operations on <code>prt</code> objects is
+modeled after that of <a href="https://tibble.tidyverse.org" class="external-link"><code>tibble</code></a> objects.
+Columns can be extracted using <code>[[</code>, <code>$</code> (with
+partial matching being disallowed), or by selecting a single column with
+<code>[</code> and passing <code>TRUE</code> as <code>drop</code>
+argument.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">flights</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  int [1:336776] 2013 2013 2013 2013 2013 2013 2013 2013 2013 2013 ...</span></span>
@@ -185,7 +222,22 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">flights</span><span class="op">$</span><span class="va">yea</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Unknown or uninitialised column: `yea`.</span></span>
 <span><span class="co">#&gt;  NULL</span></span></code></pre></div>
-<p>If the object resulting from the subsetting operation is two-dimensional, it is returned as <code>data.table</code> object. Apart form this distinction, again the intent is to replicate <code>tibble</code> behavior. One way in which <code>tibble</code> and <code>data.frame</code> do not behave in the same way is in default coercion to lower dimensions. The default value for the <code>drop</code> argument of <code>[.data.frame</code> is <code>FALSE</code> if only one row is returned but changes to <code>TRUE</code> where the result is a single column, while it is always <code>FALSE</code> for <code>tibble</code>s. A difference in behavior between <code>data.table</code> and <code>tibble</code> (any by extension <code>prt</code>) is a missing <code>j</code> argument: in the <code>tibble</code> (and in the <code>data.frame</code>) implementation, the <code>i</code> argument is then interpreted as column specification, whereas for <code>data.frame</code>s, <code>i</code> remains a row selection.</p>
+<p>If the object resulting from the subsetting operation is
+two-dimensional, it is returned as <code>data.table</code> object. Apart
+form this distinction, again the intent is to replicate
+<code>tibble</code> behavior. One way in which <code>tibble</code> and
+<code>data.frame</code> do not behave in the same way is in default
+coercion to lower dimensions. The default value for the
+<code>drop</code> argument of <code>[.data.frame</code> is
+<code>FALSE</code> if only one row is returned but changes to
+<code>TRUE</code> where the result is a single column, while it is
+always <code>FALSE</code> for <code>tibble</code>s. A difference in
+behavior between <code>data.table</code> and <code>tibble</code> (any by
+extension <code>prt</code>) is a missing <code>j</code> argument: in the
+<code>tibble</code> (and in the <code>data.frame</code>) implementation,
+the <code>i</code> argument is then interpreted as column specification,
+whereas for <code>data.frame</code>s, <code>i</code> remains a row
+selection.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">datasets</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/datasets/mtcars.html" class="external-link">mtcars</a></span><span class="op">[</span>, <span class="st">"mpg"</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4</span></span>
@@ -227,24 +279,46 @@
 <span><span class="co">#&gt; 336774: 2013</span></span>
 <span><span class="co">#&gt; 336775: 2013</span></span>
 <span><span class="co">#&gt; 336776: 2013</span></span></code></pre></div>
-<p>Deviation of <code>prt</code> subsetting behavior from that of <code>tibble</code> objects is most likely unintentional and bug reports are much appreciated as github <a href="https://github.com/nbenn/prt/issues/new" class="external-link">issues</a>.</p>
-<p>The main feature of <code>prt</code> is the ability to load only a subset of a much larger tabular dataset and a useful function for selecting rows and columns of a table in a concise manner is the base R S3 generic function <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>. As such, a <code>prt</code> specific method is provided by this package. Using this functionality, above query for selecting all flights in January can be written as follows</p>
+<p>Deviation of <code>prt</code> subsetting behavior from that of
+<code>tibble</code> objects is most likely unintentional and bug reports
+are much appreciated as github <a href="https://github.com/nbenn/prt/issues/new" class="external-link">issues</a>.</p>
+<p>The main feature of <code>prt</code> is the ability to load only a
+subset of a much larger tabular dataset and a useful function for
+selecting rows and columns of a table in a concise manner is the base R
+S3 generic function <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>. As such, a <code>prt</code>
+specific method is provided by this package. Using this functionality,
+above query for selecting all flights in January can be written as
+follows</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">jan_dt</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">month</span> <span class="op">==</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>To illustrate the importance of row-ordering consider the following small benchmark example: we subset on the <code>carrier</code> column, selecting only American Airlines flights. In one <code>prt</code> object, rows are ordered by carrier whereas in the other they are not, which will cause rows that are interleaved with those corresponding to <code>AA</code> flights to be read and discarded.</p>
+<p>To illustrate the importance of row-ordering consider the following
+small benchmark example: we subset on the <code>carrier</code> column,
+selecting only American Airlines flights. In one <code>prt</code>
+object, rows are ordered by carrier whereas in the other they are not,
+which will cause rows that are interleaved with those corresponding to
+<code>AA</code> flights to be read and discarded.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="http://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">carrier</span> <span class="op">==</span> <span class="st">"AA"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">by_carrier</span>, <span class="va">carrier</span> <span class="op">==</span> <span class="st">"AA"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Some expressions had a GC in every iteration; so filtering is disabled.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
-<span><span class="co">#&gt;   expression                             min median `itr/sec` mem_alloc `gc/sec`</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;bch:&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> subset(flights, carrier == "AA")    93.3ms 94.9ms      8.85    56.3MB    12.4 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> subset(by_carrier, carrier == "AA") 26.5ms 26.8ms     34.7     17.7MB     9.65</span></span></code></pre></div>
-<p>A common problem with non-standard evaluation (NSE) is potential ambiguity. Symbols in expressions passed as <code>subset</code> and <code>select</code> arguments are first resolved in the context of the data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/topic-defuse.html" class="external-link">quosure</a> environment). Expressions are evaluated using <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html" class="external-link">rlang::eval_tidy()</a></code>, which makes possible the distinction between symbols referring to the data mask from those referring to the expression environment. This can either be achieved using the <code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/topic-inject.html" class="external-link">forcing parts of the expression</a>.</p>
+<span><span class="co">#&gt;   expression                               min   median `itr/sec` mem_alloc</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> subset(flights, carrier == "AA")       115ms    115ms      8.70    56.3MB</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> subset(by_carrier, carrier == "AA")   30.8ms     32ms     30.8     17.7MB</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: `gc/sec` &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>A common problem with non-standard evaluation (NSE) is potential
+ambiguity. Symbols in expressions passed as <code>subset</code> and
+<code>select</code> arguments are first resolved in the context of the
+data, followed by the environment the expression was created in (the <a href="https://rlang.r-lib.org/reference/topic-defuse.html" class="external-link">quosure</a>
+environment). Expressions are evaluated using
+<code><a href="https://rlang.r-lib.org/reference/eval_tidy.html" class="external-link">rlang::eval_tidy()</a></code>, which makes possible the distinction
+between symbols referring to the data mask from those referring to the
+expression environment. This can either be achieved using the
+<code>.data</code> and <code>.env</code> pronouns or by <a href="https://rlang.r-lib.org/reference/topic-inject.html" class="external-link">forcing parts
+of the expression</a>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">month</span> <span class="op">&lt;-</span> <span class="fl">1L</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">month</span> <span class="op">==</span> <span class="va">month</span>, <span class="fl">1L</span><span class="op">:</span><span class="fl">7L</span><span class="op">)</span></span>
@@ -265,7 +339,16 @@
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">jan_dt</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">.env</span><span class="op">$</span><span class="va">month</span> <span class="op">==</span> <span class="va">.data</span><span class="op">$</span><span class="va">month</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>While in the above example it is fairly clear what is happening and it should come as no surprise that the symbol <code>month</code> cannot simultaneously refer to a value in the calling environment and the name of a column in the data mask, a more subtle issue is considered in the following example. The environment which takes precedence for evaluating the <code>select</code> argument is a named list of column indices. This makes it possible for example to specify a range of columns as (and makes the behavior of <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> being applied to a <code>prt</code> object consistent with that of a <code>data.frame</code>).</p>
+<p>While in the above example it is fairly clear what is happening and
+it should come as no surprise that the symbol <code>month</code> cannot
+simultaneously refer to a value in the calling environment and the name
+of a column in the data mask, a more subtle issue is considered in the
+following example. The environment which takes precedence for evaluating
+the <code>select</code> argument is a named list of column indices. This
+makes it possible for example to specify a range of columns as (and
+makes the behavior of <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> being applied to a
+<code>prt</code> object consistent with that of a
+<code>data.frame</code>).</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, select <span class="op">=</span> <span class="va">year</span><span class="op">:</span><span class="va">day</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         year month day</span></span>
@@ -280,7 +363,11 @@
 <span><span class="co">#&gt; 336774: 2013     9  30</span></span>
 <span><span class="co">#&gt; 336775: 2013     9  30</span></span>
 <span><span class="co">#&gt; 336776: 2013     9  30</span></span></code></pre></div>
-<p>Now recall that symbols that cannot be resolved in this data environment will be looked up in the calling environment. Therefore the following effect, while potentially unintuitive, can easily be explained. Again, the <code>.data</code> and <code>.env</code> pronouns can be used to resolve potential issues.</p>
+<p>Now recall that symbols that cannot be resolved in this data
+environment will be looked up in the calling environment. Therefore the
+following effect, while potentially unintuitive, can easily be
+explained. Again, the <code>.data</code> and <code>.env</code> pronouns
+can be used to resolve potential issues.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sched_dep_time</span> <span class="op">&lt;-</span> <span class="st">"dep_time"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, select <span class="op">=</span> <span class="va">sched_dep_time</span><span class="op">)</span><span class="op">)</span></span>
@@ -300,7 +387,17 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">flights</span>, select <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">actual_dep_time</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `.data$actual_dep_time`:</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Column `actual_dep_time` not found in `.data`.</span></span></code></pre></div>
-<p>By default, <code>subset</code> expressions have to be evaluated on the entire dataset at once in order to be consistent with base R <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> for <code>data.frames</code>. Often times this is inefficient and this behavior can be modified using the <code>part_saft</code> argument. Consider the following query which selects all rows where the arrival delay is larger than the mean arrival delay. Obviously an expression like this can yield different results depending on whether it is evaluated on individual partitions or over the entire data. Other queries such as the one above where we threshold on a fixed value, however can safely be evaluated on partitions individually.</p>
+<p>By default, <code>subset</code> expressions have to be evaluated on
+the entire dataset at once in order to be consistent with base R
+<code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> for <code>data.frames</code>. Often times this is
+inefficient and this behavior can be modified using the
+<code>part_saft</code> argument. Consider the following query which
+selects all rows where the arrival delay is larger than the mean arrival
+delay. Obviously an expression like this can yield different results
+depending on whether it is evaluated on individual partitions or over
+the entire data. Other queries such as the one above where we threshold
+on a fixed value, however can safely be evaluated on partitions
+individually.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">is_true</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">x</span></span>
 <span><span class="va">expr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu">is_true</span><span class="op">(</span><span class="va">arr_delay</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">arr_delay</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -308,7 +405,13 @@
 <span><span class="co">#&gt; [1] 105827</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/nse.html">subset_quo</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">expr</span>, part_safe <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 104752</span></span></code></pre></div>
-<p>As an aside, in addition to <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>, which creates quosures from the expressions passed as <code>subset</code> and <code>select</code>, (using <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">rlang::enquo()</a></code>) the function <code><a href="../reference/nse.html">subset_quo()</a></code> which operates on already quoted expressions is exported as well. Thanks to the double curly brace forwarding operator introduced in rlang 0.4.0, this escape-hatch mechanism however is of lesser importance.</p>
+<p>As an aside, in addition to <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code>, which creates
+quosures from the expressions passed as <code>subset</code> and
+<code>select</code>, (using <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">rlang::enquo()</a></code>) the function
+<code><a href="../reference/nse.html">subset_quo()</a></code> which operates on already quoted expressions
+is exported as well. Thanks to the double curly brace forwarding
+operator introduced in rlang 0.4.0, this escape-hatch mechanism however
+is of lesser importance.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_safe_subset</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">expr</span>, <span class="va">cols</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="../reference/new_prt.html">is_prt</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">is.character</a></span><span class="op">(</span><span class="va">cols</span><span class="op">)</span><span class="op">)</span></span>
@@ -329,7 +432,16 @@
 <span><span class="co">#&gt; 27002:       NA       NA</span></span>
 <span><span class="co">#&gt; 27003:       NA       NA</span></span>
 <span><span class="co">#&gt; 27004:       NA       NA</span></span></code></pre></div>
-<p>In addition to subsetting, concise and informative printing is another area which effort ha been put into. Inspired by (and liberally borrowing code from) <code>tibble</code>, the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method of <code>fst</code> objects adds the <code>data.table</code> approach of showing both the first and last <code>n</code> rows of the table in question. This functionality can be used by other classes used to represent tabular data, as the function <code><a href="../reference/formatting.html">trunc_dt()</a></code> driving this is exported. All that is required are implementations of the base S3 generic functions <code><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail()</a></code> and of course <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>.</p>
+<p>In addition to subsetting, concise and informative printing is
+another area which effort ha been put into. Inspired by (and liberally
+borrowing code from) <code>tibble</code>, the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>
+method of <code>fst</code> objects adds the <code>data.table</code>
+approach of showing both the first and last <code>n</code> rows of the
+table in question. This functionality can be used by other classes used
+to represent tabular data, as the function <code>trunc_dt()</code>
+driving this is exported. All that is required are implementations of
+the base S3 generic functions <code><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code>,
+<code><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail()</a></code> and of course <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_tbl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"my_tbl"</span><span class="op">)</span></span>
 <span></span>
@@ -350,11 +462,10 @@
 <span><span class="va">print.my_tbl</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, <span class="va">n</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">width</span> <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>                         <span class="va">max_extra_cols</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
-<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/formatting.html">trunc_dt</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="va">n</span>, width <span class="op">=</span> <span class="va">width</span>, max_extra_cols <span class="op">=</span> <span class="va">max_extra_cols</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/formatting.html">format_dt</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="va">n</span>, width <span class="op">=</span> <span class="va">width</span>, max_extra_cols <span class="op">=</span> <span class="va">max_extra_cols</span><span class="op">)</span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">out</span>, <span class="st">"\n"</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">out</span>, <span class="st">"\n"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">out</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -363,19 +474,24 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># Description: my_tbl[,2]</span></span></span>
 <span><span class="co">#&gt;    a         b</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt;  <span style="color: #949494;">1</span> a         1</span></span>
-<span><span class="co">#&gt;  <span style="color: #949494;">2</span> b         2</span></span>
-<span><span class="co">#&gt;  <span style="color: #949494;">3</span> c         3</span></span>
-<span><span class="co">#&gt;  <span style="color: #949494;">4</span> d         4</span></span>
-<span><span class="co">#&gt;  <span style="color: #949494;">5</span> e         5</span></span>
-<span><span class="co">#&gt;  <span style="color: #949494;">…</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">22</span> v        22</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">23</span> w        23</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">24</span> x        24</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">25</span> y        25</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">26</span> z        26</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 16 more rows</span></span></span></code></pre></div>
-<p>Similarly, the function <code><a href="../reference/glimpse.html">glimpse_dt()</a></code> which can be used to implement a class-specific function for the <code>tibble</code> S3 generic <code><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">tibble::glimpse()</a></code>. In order to customize the text description of the object a class-specific function for the <code>tibble</code> S3 generic <code><a href="https://pillar.r-lib.org/reference/tbl_sum.html" class="external-link">tibble::tbl_sum()</a></code> can be provided.</p>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1 </span> a         1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2 </span> b         2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3 </span> c         3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4 </span> d         4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5 </span> e         5</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">…</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">22</span> v        22</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">23</span> w        23</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">24</span> x        24</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">25</span> y        25</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">26</span> z        26</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 21 more rows</span></span></span></code></pre></div>
+<p>Similarly, the function <code><a href="../reference/glimpse.html">glimpse_dt()</a></code> which can be used
+to implement a class-specific function for the <code>tibble</code> S3
+generic <code><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">tibble::glimpse()</a></code>. In order to customize the text
+description of the object a class-specific function for the
+<code>tibble</code> S3 generic <code><a href="https://pillar.r-lib.org/reference/tbl_sum.html" class="external-link">tibble::tbl_sum()</a></code> can be
+provided.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">tmp</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
   </div>
@@ -395,7 +511,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -23,7 +23,7 @@ as introduced by tibble."><!-- mathjax --><script src="https://cdnjs.cloudflare.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">prt</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -74,7 +74,14 @@ as introduced by <code>tibble</code>.</p>
 <span><span class="co"># S3 method for prt</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, n <span class="op">=</span> <span class="cn">NULL</span>, width <span class="op">=</span> <span class="cn">NULL</span>, max_extra_cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">trunc_dt</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="cn">NULL</span>, width <span class="op">=</span> <span class="cn">NULL</span>, max_extra_cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">format_dt</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_extra_cols <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_footer_lines <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -105,6 +112,11 @@ if the width is too small for the entire tibble. If <code>NULL</code>,
 the <code>max_extra_cols</code> <a href="https://pillar.r-lib.org/reference/pillar_options.html" class="external-link">option</a> is used.
 The previously defined <code>n_extra</code> argument is soft-deprecated.</p></dd>
 
+
+<dt>max_footer_lines</dt>
+<dd><p>Maximum number of footer lines. If <code>NULL</code>,
+the <code>max_footer_lines</code> <a href="https://pillar.r-lib.org/reference/pillar_options.html" class="external-link">option</a> is used.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -114,7 +126,7 @@ for formatting <code>tibble</code> printing output, <code>prt</code> exports the
 top/bottom <code>n</code> row concept. This function can be used for creating <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>
 methods for other classes which represent tabular data, given that this
 class implements <code><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code> and <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail()</a></code> (and optionally
-<code><a href="https://tibble.tidyverse.org/reference/reexports.html" class="external-link">tibble::tbl_sum()</a></code>) methods. For an example of this, see
+<code><a href="https://pillar.r-lib.org/reference/tbl_sum.html" class="external-link">pillar::tbl_sum()</a></code>) methods. For an example of this, see
 <a href="../doc/prt.html"><code><a href="../articles/prt.html">vignette("prt", package = "prt")</a></code></a>.</p>
 <p>The following session options are set by <code>tibble</code> and are respected by
 <code>prt</code>, as well as any other package that were to call <code>trunc_dt()</code>:</p><ul><li><p><code>tibble.print_max</code>: Row number threshold: Maximum number of rows printed.
@@ -133,58 +145,64 @@ printing as well.</p>
     
 
 
-<ul><li><p><code>print_max</code>: Maximum number of rows printed, default: <code>20</code>.
+<ul><li><p><code>pillar.print_max</code>: Maximum number of rows printed, default: <code>20</code>.
 Set to <code>Inf</code> to always print all rows.
 For compatibility reasons, <code>getOption("tibble.print_max")</code> and
 <code>getOption("dplyr.print_max")</code> are also consulted,
 this will be soft-deprecated in pillar v2.0.0.</p></li>
-<li><p><code>print_min</code>: Number of rows printed if the table has more than
+<li><p><code>pillar.print_min</code>: Number of rows printed if the table has more than
 <code>print_max</code> rows, default: <code>10</code>.
 For compatibility reasons, <code>getOption("tibble.print_min")</code> and
 <code>getOption("dplyr.print_min")</code> are also consulted,
 this will be soft-deprecated in pillar v2.0.0.</p></li>
-<li><p><code>width</code>: Output width. Default: <code>NULL</code>
+<li><p><code>pillar.width</code>: Output width. Default: <code>NULL</code>
 (use <code>getOption("width")</code>).
 This can be larger than <code>getOption("width")</code>, in this case the output
 of the table's body is distributed over multiple tiers for wide tibbles.
 For compatibility reasons, <code>getOption("tibble.width")</code> and
 <code>getOption("dplyr.width")</code> are also consulted,
 this will be soft-deprecated in pillar v2.0.0.</p></li>
-<li><p><code>max_footer_lines</code>: The maximum number of lines in the footer,
+<li><p><code>pillar.max_footer_lines</code>: The maximum number of lines in the footer,
 default: <code>7</code>. Set to <code>Inf</code> to turn off truncation of footer lines.
 The <code>max_extra_cols</code> option still limits
 the number of columns printed.</p></li>
-<li><p><code>max_extra_cols</code>: The maximum number of columns printed in the footer,
+<li><p><code>pillar.max_extra_cols</code>: The maximum number of columns printed in the footer,
 default: <code>100</code>. Set to <code>Inf</code> to show all columns.
 Set the more predictable <code>max_footer_lines</code> to control the number
 of footer lines instead.</p></li>
-<li><p><code>bold</code>: Use bold font, e.g. for column headers? This currently
+<li><p><code>pillar.bold</code>: Use bold font, e.g. for column headers? This currently
 defaults to <code>FALSE</code>, because many terminal fonts have poor support for
 bold fonts.</p></li>
-<li><p><code>subtle</code>: Use subtle style, e.g. for row numbers and data types?
+<li><p><code>pillar.subtle</code>: Use subtle style, e.g. for row numbers and data types?
 Default: <code>TRUE</code>.</p></li>
-<li><p><code>subtle_num</code>: Use subtle style for insignificant digits? Default:
+<li><p><code>pillar.subtle_num</code>: Use subtle style for insignificant digits? Default:
 <code>FALSE</code>, is also affected by the <code>subtle</code> option.</p></li>
-<li><p><code>neg</code>: Highlight negative numbers? Default: <code>TRUE</code>.</p></li>
-<li><p><code>sigfig</code>: The number of significant digits that will be printed and
+<li><p><code>pillar.neg</code>: Highlight negative numbers? Default: <code>TRUE</code>.</p></li>
+<li><p><code>pillar.sigfig</code>: The number of significant digits that will be printed and
 highlighted, default: <code>3</code>. Set the <code>subtle</code> option to <code>FALSE</code> to
 turn off highlighting of significant digits.</p></li>
-<li><p><code>min_title_chars</code>: The minimum number of characters for the column
-title, default: <code>15</code>.  Column titles may be truncated up to that width to
+<li><p><code>pillar.min_title_chars</code>: The minimum number of characters for the column
+title, default: <code>20</code>.  Column titles may be truncated up to that width to
 save horizontal space. Set to <code>Inf</code> to turn off truncation of column
 titles.</p></li>
-<li><p><code>min_chars</code>: The minimum number of characters wide to
+<li><p><code>pillar.min_chars</code>: The minimum number of characters wide to
 display character columns, default: <code>3</code>.  Character columns may be
 truncated up to that width to save horizontal space. Set to <code>Inf</code> to
 turn off truncation of character columns.</p></li>
-<li><p><code>max_dec_width</code>: The maximum allowed width for decimal notation,
+<li><p><code>pillar.max_dec_width</code>: The maximum allowed width for decimal notation,
 default: <code>13</code>.</p></li>
-<li><p><code>bidi</code>: Set to <code>TRUE</code> for experimental support for bidirectional scripts.
+<li><p><code>pillar.bidi</code>: Set to <code>TRUE</code> for experimental support for bidirectional scripts.
 Default: <code>FALSE</code>. When this option is set, "left right override"
 and "first strong isolate"
 <a href="https://www.w3.org/International/questions/qa-bidi-unicode-controls" class="external-link">Unicode controls</a>
 are inserted to ensure that text appears in its intended direction
 and that the column headings correspond to the correct columns.</p></li>
+<li><p><code>pillar.superdigit_sep</code>: The string inserted between superscript digits
+and column names in the footnote. Defaults to a <code>"\u200b"</code>, a zero-width
+space, on UTF-8 platforms, and to <code>": "</code> on non-UTF-8 platforms.</p></li>
+<li><p><code>pillar.advice</code>: Should advice be displayed in the footer when columns or rows
+are missing from the output? Defaults to <code>TRUE</code> for interactive sessions,
+and to <code>FALSE</code> otherwise.</p></li>
 </ul></div>
 
     <div id="ref-examples">
@@ -196,47 +214,47 @@ and that the column headings correspond to the correct columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Partitioning: [32] rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">1</span>  21       6 160     110  3.9   2.62  16.5     0     1     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">2</span>  21       6 160     110  3.9   2.88  17.0     0     1     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">3</span>  22.8     4 108      93  3.85  2.32  18.6     1     1     4     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">4</span>  21.4     6 258     110  3.08  3.22  19.4     1     0     3     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">5</span>  18.7     8 360     175  3.15  3.44  17.0     0     0     3     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">28</span>  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">29</span>  15.8     8 351     264  4.22  3.17  14.5     0     1     5     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">30</span>  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">31</span>  15       8 301     335  3.54  3.57  14.6     0     1     5     8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">32</span>  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1 </span>  21       6 160     110  3.9   2.62  16.5     0     1     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2 </span>  21       6 160     110  3.9   2.88  17.0     0     1     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3 </span>  22.8     4 108      93  3.85  2.32  18.6     1     1     4     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4 </span>  21.4     6 258     110  3.08  3.22  19.4     1     0     3     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5 </span>  18.7     8 360     175  3.15  3.44  17.0     0     0     3     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">…</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">28</span>  30.4     4  95.1   113  3.77  1.51  16.9     1     1     5     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">29</span>  15.8     8 351     264  4.22  3.17  14.5     0     1     5     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">30</span>  19.7     6 145     175  3.62  2.77  15.5     0     1     5     6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">31</span>  15       8 301     335  3.54  3.57  14.6     0     1     5     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">32</span>  21.4     4 121     109  4.11  2.78  18.6     1     1     4     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 27 more rows</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">cars</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A prt:        32 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Partitioning: [32] rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">1</span>  21       6   160   110  3.9   2.62  16.5     0     1     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">2</span>  21       6   160   110  3.9   2.88  17.0     0     1     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">31</span>  15       8   301   335  3.54  3.57  14.6     0     1     5     8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">32</span>  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 28 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1 </span>  21       6   160   110  3.9   2.62  16.5     0     1     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2 </span>  21       6   160   110  3.9   2.88  17.0     0     1     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">…</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">31</span>  15       8   301   335  3.54  3.57  14.6     0     1     5     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">32</span>  21.4     4   121   109  4.11  2.78  18.6     1     1     4     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 30 more rows</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">cars</span>, width <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A prt:        32 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Partitioning: [32] rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg   cyl  disp    hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">1</span>  21       6 160     110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">2</span>  21       6 160     110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">3</span>  22.8     4 108      93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">4</span>  21.4     6 258     110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">5</span>  18.7     8 360     175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">28</span>  30.4     4  95.1   113</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">29</span>  15.8     8 351     264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">30</span>  19.7     6 145     175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">31</span>  15       8 301     335</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">32</span>  21.4     4 121     109</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows, and 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   more variables:</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1 </span>  21       6 160     110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2 </span>  21       6 160     110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3 </span>  22.8     4 108      93</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4 </span>  21.4     6 258     110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5 </span>  18.7     8 360     175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">…</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">28</span>  30.4     4  95.1   113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">29</span>  15.8     8 351     264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">30</span>  19.7     6 145     175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">31</span>  15       8 301     335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">32</span>  21.4     4 121     109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 27 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables:</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   drat &lt;dbl&gt;, wt &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   qsec &lt;dbl&gt;, vs &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   am &lt;dbl&gt;, gear &lt;dbl&gt;,</span></span>
@@ -246,19 +264,19 @@ and that the column headings correspond to the correct columns.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Partitioning: [32] rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg   cyl  disp    hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">1</span>  21       6 160     110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">2</span>  21       6 160     110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">3</span>  22.8     4 108      93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">4</span>  21.4     6 258     110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">5</span>  18.7     8 360     175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  <span style="color: #949494;">…</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">28</span>  30.4     4  95.1   113</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">29</span>  15.8     8 351     264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">30</span>  19.7     6 145     175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">31</span>  15       8 301     335</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">32</span>  21.4     4 121     109</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows, and 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   more variables:</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1 </span>  21       6 160     110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2 </span>  21       6 160     110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3 </span>  22.8     4 108      93</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4 </span>  21.4     6 258     110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5 </span>  18.7     8 360     175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">…</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">28</span>  30.4     4  95.1   113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">29</span>  15.8     8 351     264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">30</span>  19.7     6 145     175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">31</span>  15       8 301     335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">32</span>  21.4     4 121     109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 27 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables:</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   drat &lt;dbl&gt;, wt &lt;dbl&gt;, …</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -275,7 +293,7 @@ and that the column headings correspond to the correct columns.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
