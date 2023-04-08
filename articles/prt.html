@@ -306,8 +306,8 @@ which will cause rows that are interleaved with those corresponding to
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
 <span><span class="co">#&gt;   expression                               min   median `itr/sec` mem_alloc</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> subset(flights, carrier == "AA")       115ms    115ms      8.70    56.3MB</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> subset(by_carrier, carrier == "AA")   30.8ms     32ms     30.8     17.7MB</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> subset(flights, carrier == "AA")     114.5ms  114.5ms      8.74    56.3MB</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> subset(by_carrier, carrier == "AA")   29.2ms   32.1ms     31.4     17.7MB</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: `gc/sec` &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>A common problem with non-standard evaluation (NSE) is potential
 ambiguity. Symbols in expressions passed as <code>subset</code> and
@@ -438,7 +438,7 @@ borrowing code from) <code>tibble</code>, the <code><a href="https://rdrr.io/r/b
 method of <code>fst</code> objects adds the <code>data.table</code>
 approach of showing both the first and last <code>n</code> rows of the
 table in question. This functionality can be used by other classes used
-to represent tabular data, as the function <code>trunc_dt()</code>
+to represent tabular data, as the function <code><a href="../reference/formatting.html">trunc_dt()</a></code>
 driving this is exported. All that is required are implementations of
 the base S3 generic functions <code><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim()</a></code>, <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code>,
 <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail()</a></code> and of course <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>.</p>
