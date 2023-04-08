@@ -5,7 +5,7 @@
 #' `prt` objects as well. Inspired by the output of [str()] when applied to
 #' `data.frames`, this function is intended to display the structure of the
 #' data in terms of columns, irrespective of how the data is organized in terms
-#' of `R` objects. Similarly to [trunc_dt()], the function providing the bulk
+#' of `R` objects. Similarly to [format_dt()], the function providing the bulk
 #' of functionality, `glimpse_dt()`, is exported such that implementing a
 #' class specific [pillar::glimpse()] function for other classes that
 #' representing tabular data is straightforward.
@@ -18,7 +18,7 @@
 #' respect to `R` objects is abstracted away as to show output as would be
 #' expected if the data were represented by a `data.frame`.
 #'
-#' In similar spirit as [trunc_dt()] and `glimpse_dt()`, a `str_dt()` function
+#' In similar spirit as [format_dt()] and `glimpse_dt()`, a `str_dt()` function
 #' is exported which provides the core functionality driving the `prt`
 #' implementation of [str()]. This function requires availability of a
 #' [head()] function for any object that is passed and output can be

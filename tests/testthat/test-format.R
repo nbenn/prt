@@ -9,20 +9,13 @@ prt_iris <- create_prt(demo_data_frame("iris"), dir = tmp, n_chunks = 2L)
 
 prt_all <- create_prt(df_all, dir = tmp)
 
-test_that("interface of print() identical to trunc_dt()", {
-  print_arg_names <- names(formals(print.prt))
-  trunc_dt_arg_names <- names(formals(trunc_dt))
-
-  expect_equal(setdiff(print_arg_names, "..."), trunc_dt_arg_names)
-})
-
 test_that("print() returns output invisibly", {
   expect_output(ret <- withVisible(print(prt_cars)))
   expect_false(ret$visible)
   expect_identical(ret$value, prt_cars)
 })
 
-test_that("trunc_dt output matches known output", {
+test_that("format_dt output matches known output", {
 
   skip_on_non_utf8_locale()
 
@@ -39,10 +32,10 @@ test_that("trunc_dt output matches known output", {
     print(prt_all, n = NULL, width = 300L)
     print(create_prt(tibble::tibble(a = seq.int(10000)), dir = tmp), n = 5L,
           width = 30L)
-    print(trunc_dt(prt_all, n = 1L, max_extra_cols = 2L, width = 30L))
-    print(trunc_dt(prt_all, n = 1L, max_extra_cols = 0L, width = 30L))
+    print(format_dt(prt_all, n = 1L, max_extra_cols = 2L, width = 30L))
+    print(format_dt(prt_all, n = 1L, max_extra_cols = 0L, width = 30L))
     print(
-      trunc_dt(
+      format_dt(
         create_prt(tibble::tibble("mean(x)" = 5, "var(x)" = 3), dir = tmp),
         width = 28
       )

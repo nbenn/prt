@@ -25,7 +25,7 @@
 #' to an error, as `prt` objects are immutable. The base `R` S3 generic
 #' functions [head()] and [tail()] are available as well and are used
 #' internally to provide an extensible mechanism for printing (see
-#' [trunc_dt()]).
+#' [format_dt()]).
 #'
 #' Coercion to other base `R` objects is possible via [as.list()],
 #' [as.data.frame()] and [as.matrix()] and for coercion to `data.table`, its

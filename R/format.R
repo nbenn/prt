@@ -15,7 +15,7 @@
 #' top/bottom `n` row concept. This function can be used for creating [print()]
 #' methods for other classes which represent tabular data, given that this
 #' class implements [dim()], [head()] and [tail()] (and optionally
-#' [tibble::tbl_sum()]) methods. For an example of this, see
+#' [pillar::tbl_sum()]) methods. For an example of this, see
 #' [`vignette("prt", package = "prt")`](../doc/prt.html).
 #'
 #' The following session options are set by `tibble` and are respected by
@@ -45,9 +45,6 @@
 #'
 #' @inheritParams tibble::print.tbl
 #'
-#' @importFrom utils packageVersion
-#' @importFrom tibble tbl_sum
-#'
 #' @rdname formatting
 #'
 #' @export
@@ -62,24 +59,17 @@ print.prt <- function(x, ..., n = NULL, width = NULL, max_extra_cols = NULL) {
 }
 
 #' @rdname formatting
-#'
 #' @export
-#'
 format.prt <- function(x, ..., n = NULL, width = NULL, max_extra_cols = NULL) {
-  format(trunc_dt(x, n = n, width = width, max_extra_cols = max_extra_cols))
-}
-
-#' @export
-print.trunc_dt <- function(x, ...) {
-  cat_line(format(x, ...))
-  invisible(x)
+  format_dt(
+    x, ..., n = n, width = width, max_extra_cols = max_extra_cols
+  )
 }
 
 #' @rdname formatting
-#'
 #' @export
-#'
-trunc_dt <- function(x, n = NULL, width = NULL, max_extra_cols = NULL) {
+format_dt <- function(x, ..., n = NULL, width = NULL, max_extra_cols = NULL,
+                      max_footer_lines = NULL) {
 
   rows <- nrow(x)
 
@@ -91,217 +81,120 @@ trunc_dt <- function(x, n = NULL, width = NULL, max_extra_cols = NULL) {
     }
   }
 
-  if (is.null(max_extra_cols)) max_extra_cols <- get_opt("max_extra_cols")
+  if (is.null(max_extra_cols)) {
+    max_extra_cols <- get_opt("max_extra_cols")
+  }
 
-  if (nrow(x) < 2 * n) {
-    df <- head(x, nrow(x))
-    rowid <- seq_len(nrow(x))
+  if (rows <= n * 2L) {
+    df <- head(x, rows)
+    rowid <- seq_len(rows)
+    print_all <- TRUE
   } else {
     df <- rbind(head(x, n), tail(x, n))
-    rowid <- c(seq_len(n), seq.int(nrow(x) - n + 1L, nrow(x)))
+    rowid <- c(seq_len(n), seq.int(rows - n + 1L, rows))
+    print_all <- FALSE
   }
-
-  df <- as.data.frame(df)
 
   rowid <- big_mark(rowid)
+  rowid_width <- max(nchar(rowid))
 
-  shrunk <- shrink_dt(df, rows)
+  tbl <- as.data.frame(df)
 
-  if (shrunk$rows_missing > 0L) {
-    rowid <- add_in_between(rowid, n, cli::symbol$ellipsis)
+  class(tbl) <- c(paste0(class(x), "_prnt"), "dt_prnt", "tbl", "data.frame")
+
+  attr(tbl, "row_ids") <- rowid
+  attr(tbl, "rowid_width") <- rowid_width
+
+  setup <- pillar::tbl_format_setup(tbl, width, ..., n = n * 2L,
+                                    max_extra_cols = max_extra_cols)
+
+  setup$n_half <- n
+  setup$print_all <- print_all
+  setup$rowid_width <- rowid_width
+
+  if (!print_all) {
+    setup$rows_total <- rows
+    setup$rows_missing <- rows - n
   }
 
-  trunc_info <- list(
-    width = width, rows_total = rows, rows_min = nrow(df),
-    max_extra_cols = max_extra_cols, summary = tbl_sum(x), row_id = rowid
-  )
+  setup$tbl_sum <- tbl_sum(x)
 
-  structure(
-    c(shrunk, trunc_info),
-    class = c(paste0("trunc_dt_", class(x)), "trunc_dt")
-  )
+  header <- pillar::tbl_format_header(tbl, setup)
+  body <- tbl_format_body(tbl, setup)
+  footer <- pillar::tbl_format_footer(tbl, setup)
+
+  c(header, body, footer)
 }
 
+#' @importFrom pillar tbl_format_body
 #' @export
-format.trunc_dt <- function(x, width = NULL, ...) {
+tbl_format_body.dt_prnt <- function(x, setup, ...) {
 
-  if (is.null(width)) {
-    width <- x$width
-  }
+  force(setup)
 
-  width <- print_width(width)
+  res <- setup$body
 
-  header <- format_header(x)
-  header <- paste0(justify(paste0(names(header), ":"),
-                           right = FALSE, space = "\u00a0"),
-                   " ", header)
+  if (!setup$print_all && length(res)) {
 
-  comment <- format_comment(header, width = width)
-  squeezed <- squeeze_dt(x, width = width)
+    col_head_len <- 2L
+    col_body_len <- setup$n_half * 2L
 
-  footer <- format_comment(pre_dots(format_footer(x, squeezed)), width = width)
+    stopifnot(length(res) %% (col_head_len + col_body_len) == 0L)
 
-  c(
-    pillar::style_subtle(comment),
-    format(squeezed),
-    pillar::style_subtle(footer)
-  )
-}
+    n_tiers <- length(res) %/% (col_head_len + col_body_len)
 
-shrink_dt <- function(df, rows) {
+    stopifnot(n_tiers >= 1L)
 
-  n <- nrow(df)
+    inds <- seq_len(n_tiers) * (col_head_len + setup$n_half) +
+      (seq_len(n_tiers) - 1L)
 
-  if (rows > n) {
-    rows_missing <- rows - n
-  } else {
-    rows_missing <- 0L
-  }
+    ell <- style_hint(cli::symbol$ellipsis)
 
-  list(
-    mcf = pillar::colonnade(df, has_row_id = FALSE),
-    rows_missing = rows_missing
-  )
-}
-
-add_empty_row <- function(x) {
-
-  if (length(x) == 0L) {
-    return(x)
-  }
-
-  add_row <- function(x) {
-    if (length(x) == 0L) return(x)
-    mid <- (length(x) - 2L) / 2L
-    res <- c(head(x, n = mid + 2L), " ", tail(x, n = mid))
-    structure(res, class = class(x))
-  }
-
-  add_shaft <- function(x, n) {
-    x[["shaft_format"]] <- add_in_between(x[["shaft_format"]], n, " ")
-    x
-  }
-
-  if (packageVersion("pillar") < "1.5.0") {
-
-    n <- length(x[[1L]][[1L]][["shaft_format"]]) / 2L
-
-    lapply(x, lapply, add_shaft, n)
-
-  } else {
-
-    lapply(x, add_row)
-  }
-}
-
-add_row_id <- function(x, rowid) {
-
-  if (length(x) == 0L) {
-    return(x)
-  }
-
-  if (packageVersion("pillar") < "1.5.0") {
-
-    do_add <- function(x, width, id) {
-      c(list(list(capital_format = rep(strrep(" ", width), 2L),
-                  shaft_format = format(id))), x)
-    }
-
-  } else {
-
-    do_add <- function(x, width, id) {
-      if (length(x) == 0L) return(x)
-      res <- paste(c(rep(strrep(" ", width), 2L),
-                   format(id, justify = "right")), x)
-      structure(res, class = class(x))
+    for (ind in inds) {
+      res <- c(res[seq_len(ind)], ell, res[seq.int(ind + 1L, length(res))])
     }
   }
-
-  lapply(x, do_add, max(crayon::col_nchar(rowid)), rowid)
-}
-
-squeeze_dt <- function(x, width) {
-
-  term_width <- getOption("width")
-  id_width <- max(nchar(x$row_id))
-
-  on.exit(options(width = term_width))
-  options(width = term_width - id_width - 1L)
-
-  res <- pillar::squeeze(x$mcf, width = width - id_width - 1L)
-
-  attribs <- attributes(res)
-
-  if (x$rows_missing > 0L) {
-    res <- add_empty_row(res)
-  }
-
-  res <- add_row_id(res, pillar::style_subtle(x$row_id))
-
-  attributes(res) <- attribs
 
   res
 }
 
-format_header <- function(x) {
-  x$summary
-}
+#' @importFrom pillar ctl_new_rowid_pillar
+#' @export
+ctl_new_rowid_pillar.dt_prnt <- function(controller, x, width, ...) {
 
-format_footer <- function(x, squeezed_colonnade) {
+  out <- NextMethod()
 
-  extra_rows <- format_footer_rows(x)
-  extra_cols <- format_footer_cols(x,
-    pillar::extra_cols(squeezed_colonnade, n = x$max_extra_cols)
-  )
+  rowid <- attr(controller, "row_ids")
+  width <- attr(controller, "rowid_width")
 
-  extra <- c(extra_rows, extra_cols)
-
-  if (length(extra) >= 1) {
-    extra[[1]] <- paste0("with ", extra[[1]])
-    extra[-1] <- vapply(extra[-1], function(ex) paste0("and ", ex),
-                        character(1L))
-    collapse(extra)
-  } else {
-    character()
-  }
-}
-
-format_footer_rows <- function(x) {
-  if (x$rows_missing == 0L) {
-    NULL
-  } else if (x$rows_missing == 1L) {
-    "1 more row"
-  } else {
-    paste0(big_mark(x$rows_missing), " more rows")
-  }
-}
-
-format_footer_cols <- function(x, extra_cols) {
-
-  if (length(extra_cols) == 0) return(NULL)
-
-  vars <- format_extra_vars(extra_cols)
-
-  paste0(
-    big_mark(length(extra_cols)), " ",
-    if (!identical(x$rows_total, 0L) && x$rows_min > 0) "more ",
-    if (length(extra_cols) == 1L) "variable" else "variables",
-    vars
+  pillar::new_pillar(
+    list(
+      title = out$title,
+      type = out$type,
+      data = pillar::pillar_component(
+        pillar::new_pillar_shaft(
+          list(row_ids = rowid),
+          width = width,
+          class = "pillar_rif_shaft"
+        )
+      )
+    ),
+    width = width
   )
 }
 
-format_extra_vars <- function(extra_cols) {
+cli_grey_80 <- cli::make_ansi_style("grey80", grey = TRUE)
 
-  if (is.na(extra_cols[1])) return("")
-
-  if (anyNA(extra_cols)) {
-    extra_cols <- c(extra_cols[!is.na(extra_cols)], cli::symbol$ellipsis)
+style_hint <- function(x) {
+  if (isTRUE(getOption("pillar.subtle", default = TRUE))) {
+    cli_grey_80(x)
+  } else {
+    x
   }
-
-  paste0(": ", collapse(extra_cols))
 }
 
-pre_dots <- function(x) {
-  if (length(x) > 0) paste0(cli::symbol$ellipsis, " ", x)
-  else character()
+#' @importFrom pillar tbl_sum
+#' @export
+tbl_sum.prt <- function(x) {
+  c("A prt" = dim_desc(x), "Partitioning" = part_desc(x))
 }

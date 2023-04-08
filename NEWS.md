@@ -1,3 +1,8 @@
+# prt 0.2.0
+
+* Maintenance release for a recent update to pillar. Printing has changed
+  slightly in accordance with developments in pillar.
+
 # prt 0.1.5
 
 * Maintenance release for upcoming update to pillar.

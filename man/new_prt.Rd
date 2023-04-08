@@ -80,7 +80,7 @@ calling replacement functions such as \verb{names<-()} or \verb{dimnames<-()} le
 to an error, as \code{prt} objects are immutable. The base \code{R} S3 generic
 functions \code{\link[=head]{head()}} and \code{\link[=tail]{tail()}} are available as well and are used
 internally to provide an extensible mechanism for printing (see
-\code{\link[=trunc_dt]{trunc_dt()}}).
+\code{\link[=format_dt]{format_dt()}}).
 
 Coercion to other base \code{R} objects is possible via \code{\link[=as.list]{as.list()}},
 \code{\link[=as.data.frame]{as.data.frame()}} and \code{\link[=as.matrix]{as.matrix()}} and for coercion to \code{data.table}, its

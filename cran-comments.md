@@ -10,4 +10,4 @@
 
 0 errors | 0 warnings | 0 notes
 
-* This is a maintenance release for an upcoming update to pillar.
+* This is a maintenance release for recent update to pillar.

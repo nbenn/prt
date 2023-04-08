@@ -35,7 +35,7 @@ The \code{tibble} S3 generic function \code{\link[pillar:glimpse]{pillar::glimps
 \code{prt} objects as well. Inspired by the output of \code{\link[=str]{str()}} when applied to
 \code{data.frames}, this function is intended to display the structure of the
 data in terms of columns, irrespective of how the data is organized in terms
-of \code{R} objects. Similarly to \code{\link[=trunc_dt]{trunc_dt()}}, the function providing the bulk
+of \code{R} objects. Similarly to \code{\link[=format_dt]{format_dt()}}, the function providing the bulk
 of functionality, \code{glimpse_dt()}, is exported such that implementing a
 class specific \code{\link[pillar:glimpse]{pillar::glimpse()}} function for other classes that
 representing tabular data is straightforward.
@@ -49,7 +49,7 @@ structure of the data that is printed. How this data is represents with
 respect to \code{R} objects is abstracted away as to show output as would be
 expected if the data were represented by a \code{data.frame}.
 
-In similar spirit as \code{\link[=trunc_dt]{trunc_dt()}} and \code{glimpse_dt()}, a \code{str_dt()} function
+In similar spirit as \code{\link[=format_dt]{format_dt()}} and \code{glimpse_dt()}, a \code{str_dt()} function
 is exported which provides the core functionality driving the \code{prt}
 implementation of \code{\link[=str]{str()}}. This function requires availability of a
 \code{\link[=head]{head()}} function for any object that is passed and output can be

@@ -48,29 +48,30 @@ tmp <- tempfile()
 dir.create(tmp)
 
 flights <- as_prt(nycflights13::flights, n_chunks = 2L, dir = tmp)
-#> fstcore package v0.9.12
+#> fstcore package v0.9.14
 #> (OpenMP was not detected, using single threaded mode)
 
 print(flights)
 #> # A prt:        336,776 × 19
 #> # Partitioning: [168,388, 168,388] rows
-#>          year month   day dep_time sched_dep_time dep_delay arr_time
-#>         <int> <int> <int>    <int>          <int>     <dbl>    <int>
-#>       1  2013     1     1      517            515         2      830
-#>       2  2013     1     1      533            529         4      850
-#>       3  2013     1     1      542            540         2      923
-#>       4  2013     1     1      544            545        -1     1004
-#>       5  2013     1     1      554            600        -6      812
-#>       …
-#> 336,772  2013     9    30       NA           1455        NA       NA
-#> 336,773  2013     9    30       NA           2200        NA       NA
-#> 336,774  2013     9    30       NA           1210        NA       NA
-#> 336,775  2013     9    30       NA           1159        NA       NA
-#> 336,776  2013     9    30       NA            840        NA       NA
-#> # … with 336,766 more rows, and 12 more variables: sched_arr_time <int>,
-#> #   arr_delay <dbl>, carrier <chr>, flight <int>, tailnum <chr>, origin <chr>,
-#> #   dest <chr>, air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>,
-#> #   time_hour <dttm>
+#>          year month   day dep_time sched_dep_t…¹ dep_delay arr_time sched_arr_…²
+#>         <int> <int> <int>    <int>         <int>     <dbl>    <int>        <int>
+#> 1        2013     1     1      517           515         2      830          819
+#> 2        2013     1     1      533           529         4      850          830
+#> 3        2013     1     1      542           540         2      923          850
+#> 4        2013     1     1      544           545        -1     1004         1022
+#> 5        2013     1     1      554           600        -6      812          837
+#> …
+#> 336,772  2013     9    30       NA          1455        NA       NA         1634
+#> 336,773  2013     9    30       NA          2200        NA       NA         2312
+#> 336,774  2013     9    30       NA          1210        NA       NA         1330
+#> 336,775  2013     9    30       NA          1159        NA       NA         1344
+#> 336,776  2013     9    30       NA           840        NA       NA         1020
+#> # ℹ 336,771 more rows
+#> # ℹ abbreviated names: ¹​sched_dep_time, ²​sched_arr_time
+#> # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+#> #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+#> #   hour <dbl>, minute <dbl>, time_hour <dttm>
 ```
 
 In case a `prt` object is created from a `data.frame`, the specified
@@ -90,12 +91,12 @@ of `data.table`s for any result of a subsetting operation and the
 complete disregard for `row.names`.
 
 In addition to standard subsetting operations involving the functions
-<code>\`\[\`()</code>, <code>\`\[\[\`()</code> and <code>\`$\`()</code>,
-the base generic function `subset()` is implemented for the `prt` class,
-enabling subsetting operations using non-standard evaluation. Combined
-with random access to tables stored as `fst` files, this can make data
-access more efficient in cases where only a subset of the data is of
-interest.
+<code>\`\[\`()</code>, <code>\`\[\[\`()</code> and
+<code>\`\$\`()</code>, the base generic function `subset()` is
+implemented for the `prt` class, enabling subsetting operations using
+non-standard evaluation. Combined with random access to tables stored as
+`fst` files, this can make data access more efficient in cases where
+only a subset of the data is of interest.
 
 ``` r
 jan <- flights[flights$month == 1, ]

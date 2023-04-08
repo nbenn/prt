@@ -1,6 +1,6 @@
 Package: prt
 Title: Tabular Data Backed by Partitioned 'fst' Files
-Version: 0.1.5
+Version: 0.2.0
 Authors@R: c(person(given = "Nicolas",
                     family = "Bennett",
                     role = c("aut", "cre"),
@@ -21,9 +21,8 @@ Imports:
     vctrs,
     tibble,
     cli,
-    pillar,
+    pillar (>= 1.7.0),
     crayon,
-    fansi,
     backports,
     rlang,
 Suggests:
@@ -38,5 +37,5 @@ Suggests:
     bench
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr

@@ -162,11 +162,10 @@ tail.my_tbl <- function(x, n = 6L, ...) {
 print.my_tbl <- function(x, ..., n = NULL, width = NULL,
                          max_extra_cols = NULL) {
 
-  out <- format(
-    trunc_dt(x, n = n, width = width, max_extra_cols = max_extra_cols)
-  )
+  out <- format_dt(x, n = n, width = width, max_extra_cols = max_extra_cols)
+  out <- paste0(out, "\n")
 
-  cat(paste0(out, "\n"), sep = "")
+  cat(out, sep = "")
 
   invisible(x)
 }

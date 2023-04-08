@@ -196,11 +196,6 @@ big_mark <- function(x, ...) {
   formatC(x, big.mark = mark, format = "d", ...)
 }
 
-#' @export
-tbl_sum.prt <- function(x) {
-  c("A prt" = dim_desc(x), "Partitioning" = part_desc(x))
-}
-
 dim_desc <- function(x) {
   paste0(vapply(dim(x), big_mark, character(1L)),
          collapse = spaces_around(cli::symbol$times))
@@ -265,30 +260,6 @@ str_trunc <- function(x, max_width) {
   }
 
   x
-}
-
-format_comment <- function(x, width) {
-  if (length(x) == 0L) return(character())
-  vapply(x, wrap, character(1L), prefix = "# ",
-         width = min(width, getOption("width")))
-}
-
-wrap <- function(..., indent = 0, prefix = "", width) {
-  x <- paste0(..., collapse = "")
-  wrapped <- strwrap2(x, width - nchar_width(prefix), indent)
-  wrapped <- paste0(prefix, wrapped)
-  wrapped <- gsub("\u00a0", " ", wrapped)
-  wrapped <- trimws(wrapped, "right")
-  paste0(wrapped, collapse = "\n")
-}
-
-strwrap2 <- function(x, width, indent) {
-  fansi::strwrap_ctl(x, width = max(width, 0), indent = indent,
-                     exdent = indent + 2)
-}
-
-add_in_between <- function(x, n, what) {
-  c(x[seq_len(n)], what, x[seq.int(n + 1L, 2L * n)])
 }
 
 warn_arg <- function(arg) {
