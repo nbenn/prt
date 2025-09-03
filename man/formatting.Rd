@@ -25,7 +25,7 @@ trunc_dt(...)
 \arguments{
 \item{x}{Object to format or print.}
 
-\item{...}{Passed on to \code{\link[=tbl_format_setup]{tbl_format_setup()}}.}
+\item{...}{These dots are for future extensions and must be empty.}
 
 \item{n}{Number of rows to show. If \code{NULL}, the default, will print all rows
 if less than the \code{print_max} \link[pillar:pillar_options]{option}.
@@ -58,8 +58,8 @@ for formatting \code{tibble} printing output, \code{prt} exports the function
 \code{trunc_dt()}, which drives analogous functionality while adding the
 top/bottom \code{n} row concept. This function can be used for creating \code{\link[=print]{print()}}
 methods for other classes which represent tabular data, given that this
-class implements \code{\link[=dim]{dim()}}, \code{\link[=head]{head()}} and \code{\link[=tail]{tail()}} (and optionally
-\code{\link[pillar:tbl_sum]{pillar::tbl_sum()}}) methods. For an example of this, see
+class implements \code{\link[=dim]{dim()}}, \code{\link[utils:head]{utils::head()}} and \code{\link[utils:head]{utils::tail()}} (and
+optionally \code{\link[pillar:tbl_sum]{pillar::tbl_sum()}}) methods. For an example of this, see
 \href{../doc/prt.html}{\code{vignette("prt", package = "prt")}}.
 
 The following session options are set by \code{tibble} and are respected by
@@ -82,6 +82,9 @@ printing as well.
 
 
 \itemize{
+\item \code{width}: The width option controls the output width.
+Setting \code{options(pillar.width = )} to a larger value
+will lead to printing in multiple tiers (stacks).
 \item \code{pillar.print_max}: Maximum number of rows printed, default: \code{20}.
 Set to \code{Inf} to always print all rows.
 For compatibility reasons, \code{getOption("tibble.print_max")} and

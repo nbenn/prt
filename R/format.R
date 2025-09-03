@@ -14,8 +14,8 @@
 #' `trunc_dt()`, which drives analogous functionality while adding the
 #' top/bottom `n` row concept. This function can be used for creating [print()]
 #' methods for other classes which represent tabular data, given that this
-#' class implements [dim()], [head()] and [tail()] (and optionally
-#' [pillar::tbl_sum()]) methods. For an example of this, see
+#' class implements [dim()], [utils::head()] and [utils::tail()] (and
+#' optionally [pillar::tbl_sum()]) methods. For an example of this, see
 #' [`vignette("prt", package = "prt")`](../doc/prt.html).
 #'
 #' The following session options are set by `tibble` and are respected by

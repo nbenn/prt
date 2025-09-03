@@ -25,7 +25,7 @@ index.}
 supported.}
 
 \item{name}{
-    A literal character string or a \link[base]{name} (possibly \link[base]{backtick}
+    a literal character string or a \link[base]{name} (possibly \link[base]{backtick}
     quoted).}
 
 \item{drop}{Coerce to a vector if fetching one column via \code{tbl[, j]}.
