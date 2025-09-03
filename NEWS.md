@@ -1,3 +1,7 @@
+# prt 0.2.1
+
+- Docs only update
+
 # prt 0.2.0
 
 * Maintenance release for a recent update to pillar. Printing has changed
